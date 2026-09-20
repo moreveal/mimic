@@ -46,6 +46,7 @@ compatibilityScrolling = (() => {
     // The main world owns canonical scroll state, but the observation being
     // consumed belongs to this isolated world. Invalidate both sides of that
     // boundary before the inspector callback performs another geometry read.
+    invalidateRetainedViewportGeometry();
     styleReadCache = null;
     return result;
   };

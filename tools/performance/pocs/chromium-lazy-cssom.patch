@@ -1,0 +1,21 @@
+diff --git a/internal/webapi/cssom_compatibility.js b/internal/webapi/cssom_compatibility.js
+--- a/internal/webapi/cssom_compatibility.js
++++ b/internal/webapi/cssom_compatibility.js
+@@ -280,7 +280,16 @@ const constructedStyleSheets = (() => {
+         configurable: true,
+       });
+     if (node.block)
+-      Object.defineProperty(rule, 'style', { value: makeStyle(state), configurable: true });
++      Object.defineProperty(rule, 'style', {
++        // Diagnostic PoC: declaration storage remains canonical in the parsed
++        // block. Allocate the script-facing wrapper only when it is observed.
++        get() {
++          const style = makeStyle(state);
++          Object.defineProperty(rule, 'style', { value: style, configurable: true });
++          return style;
++        },
++        configurable: true,
++      });
+     if (node.type === 'Atrule' && node.block) {
+       Object.defineProperty(rule, 'cssRules', { value: list(state.children), configurable: true });
+       Object.defineProperty(rule, 'conditionText', {

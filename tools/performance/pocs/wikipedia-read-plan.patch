@@ -1,0 +1,160 @@
+diff --git a/internal/webapi/css_computed_values.js b/internal/webapi/css_computed_values.js
+index 02f2b92..67e93c2 100644
+--- a/internal/webapi/css_computed_values.js
++++ b/internal/webapi/css_computed_values.js
+@@ -249,6 +249,40 @@ const cssBatchedForeignVisibility = (element) => {
+   const cached = checkpointForeignComputedValues.get(String(elementSlot(element).nodeId));
+   return cached?.version === styleReadCache.version ? cached.visibility : undefined;
+ };
++// Cache only the nearest specified ancestor, not its computed/animated value.
++// Paths are compressed within the existing observation epoch; dynamic reads
++// retain the original uncached walk. No derived state crosses a mutation epoch.
++const cssInheritedSource = (element, name) => {
++  let cache = null;
++  if (styleReadCache && !styleObservationDynamic) {
++    if (styleReadCache.inheritedSourceVersion !== styleReadCache.geometryVersion) {
++      styleReadCache.inheritedSources = new WeakMap();
++      styleReadCache.inheritedSourceVersion = styleReadCache.geometryVersion;
++    }
++    cache = styleReadCache.inheritedSources || (styleReadCache.inheritedSources = new WeakMap());
++  }
++  const visited = [];
++  let source = null;
++  for (let p = element; elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
++    const known = cache?.get(p);
++    if (known?.has(name)) {
++      source = known.get(name);
++      break;
++    }
++    if (cache) visited.push(p);
++    const value = computedCSSDeclarations(p).find((entry) => entry.name === name)?.value;
++    if (value != null && value !== 'inherit' && value !== 'unset') {
++      source = { element: p, value };
++      break;
++    }
++  }
++  for (const p of visited) {
++    let values = cache.get(p);
++    if (!values) cache.set(p, (values = new Map()));
++    if (values.size < 32) values.set(name, source);
++  }
++  return source;
++};
+ // Immutable scalar projections share the canonical observation epoch. Animation
+ // time is not a DOM mutation, so animated realms always resolve a fresh value.
+ const resolveCSSComputedValue = (element, name) => {
+@@ -265,17 +299,15 @@ const resolveCSSComputedValue = (element, name) => {
+     inherit = cssInheritedProperties.has(name);
+   if (value === 'inherit' || ((value == null || value === 'unset') && inherit)) {
+     value = undefined;
+-    for (let p = cssFontParent(element); elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
+-      const v = computedCSSDeclarations(p).find((e) => e.name === name)?.value;
+-      if (v != null && !['inherit', 'unset'].includes(v)) {
+-        value =
+-          v === 'currentcolor' ||
+-          (name === 'caret-color' && v === 'auto') ||
+-          (name === 'line-height' && cssNumberRegex.test(v))
+-            ? v
+-            : cssComputedValue(p, name);
+-        break;
+-      }
++    const source = cssInheritedSource(cssFontParent(element), name);
++    if (source) {
++      const v = source.value;
++      value =
++        v === 'currentcolor' ||
++        (name === 'caret-color' && v === 'auto') ||
++        (name === 'line-height' && cssNumberRegex.test(v))
++          ? v
++          : cssComputedValue(source.element, name);
+     }
+     if (value == null) value = initial;
+   }
+@@ -358,6 +390,18 @@ const resolveCSSComputedValue = (element, name) => {
+     )
+   )
+     return 'isolate';
++  // Diagnostic read-plan PoC: these scalar properties have no logical-axis,
++  // length, or box-dependent serialization below. Their cascade, inheritance,
++  // animation, and availability have already been resolved above.
++  if (
++    name === 'cursor' ||
++    name === 'visibility' ||
++    name === 'direction' ||
++    name === 'pointer-events' ||
++    name === 'white-space-collapse' ||
++    name === 'text-wrap-mode'
++  )
++    return value;
+   const writing = (() => {
+       for (let p = element; elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
+         const v = computedCSSDeclarations(p).find((e) => e.name === 'writing-mode')?.value;
+diff --git a/internal/webapi/cssom_compatibility.js b/internal/webapi/cssom_compatibility.js
+index 4065055..0ba768c 100644
+--- a/internal/webapi/cssom_compatibility.js
++++ b/internal/webapi/cssom_compatibility.js
+@@ -453,7 +453,8 @@ const constructedStyleSheets = (() => {
+     }
+     return false;
+   };
+-  function ownerSheet(owner) {
++  function ownerSheet(owner, sourceOnly = false) {
++    sourceOnly = sourceOnly === true;
+     if (!elementSlot(owner)) throw new TypeError('Illegal invocation');
+     const data = elementSlot(owner),
+       attribute = (name) => host.getAttribute(data.nodeId, name);
+@@ -483,18 +484,27 @@ const constructedStyleSheets = (() => {
+     const source = tag === 'link' ? resource.body : host.textContent(data.nodeId) || '',
+       key = tag === 'link' ? resource.url : source;
+     let sheet = prior?.key === key ? prior.sheet : null;
++    // Diagnostic source-plan PoC: style matching does not need observable
++    // CSSOM wrappers. Delay their creation until a CSSOM consumer requests
++    // them. Raw-source equivalence to normalized CSS is not yet validated.
++    if (sourceOnly && !sheet) {
++      const media = attribute('media') || '';
++      return media && !cssMediaMatches(media) ? '' : source;
++    }
+     if (!sheet) {
+       sheet = new CSSStyleSheet();
+       const s = sheets.get(sheet);
+       s.owner = owner;
+       s.href = resource?.url || null;
+       s.crossOrigin = !!resource?.crossOrigin;
++      s.originalSource = source;
++      s.originalSourceRevision = revision;
+       s.rules.push(...parsedRules(source, sheet));
+       owners.set(owner, { key, sheet });
+     }
+     const state = sheets.get(sheet);
+     state.media = attribute('media') || '';
+-    return sheet;
++    return sourceOnly ? sourceText(sheet) : sheet;
+   }
+   for (const type of ['HTMLStyleElement', 'SVGStyleElement', 'HTMLLinkElement'])
+     if (globalThis[type]) {
+@@ -564,6 +574,10 @@ const constructedStyleSheets = (() => {
+   const sourceText = (sheet) => {
+     const state = sheets.get(sheet);
+     if (state.disabled || (state.media && !cssMediaMatches(state.media))) return '';
++    // Any CSSOM edit conservatively restores canonical serialization for all
++    // existing sheets. The shortcut therefore cannot conceal rule edits.
++    if (state.originalSource !== undefined && state.originalSourceRevision === revision)
++      return state.originalSource;
+     let cached = sourceCache.get(sheet);
+     if (!cached || cached.revision !== revision) {
+       cached = { revision, text: state.rules.map((rule) => ruleText(rule, true)).join('\n') };
+@@ -634,9 +648,11 @@ const constructedStyleSheets = (() => {
+       return result;
+     },
+     sources(root) {
+-      return Array.from(ownerCollection(root))
+-        .concat(adopted.get(root) || [])
+-        .map(sourceText);
++      return compatibilitySelectors
++        .query(root, 'style,link', false, false)
++        .map((owner) => ownerSheet(owner, true))
++        .filter((source) => source !== null)
++        .concat((adopted.get(root) || []).map(sourceText));
+     },
+     snapshot(root) {
+       return (adopted.get(root) || [])

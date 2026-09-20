@@ -547,6 +547,34 @@ const compatibilitySelectors = (() => {
     }
     return key;
   }
+  const styleSelectorDependencies = (rule) => {
+    let groups;
+    try {
+      groups = library.parse(
+        rule.pseudo ? rule.selector.replace(/::?(before|after)$/, '') : rule.selector,
+      );
+    } catch {
+      return null;
+    }
+    const attributes = new Set();
+    let local = groups.length === 1;
+    const visit = (tokens, nested) => {
+      for (const token of tokens) {
+        if (token.type === 'attribute') attributes.add(token.name.toLowerCase());
+        if (Array.isArray(token.data)) for (const group of token.data) visit(group, true);
+        if (nested || !['attribute', 'tag', 'universal'].includes(token.type)) local = false;
+      }
+    };
+    for (const group of groups) visit(group, false);
+    return { attributes, local };
+  };
+  const retainedStyleMatchLimit = 32768;
+  let retainedStyleMatches = new WeakMap(),
+    retainedStyleMatchAdmissions = 0;
+  bootstrapRestoreHooks.push(() => {
+    retainedStyleMatches = new WeakMap();
+    retainedStyleMatchAdmissions = 0;
+  });
   const matchingStyles = (node, rules, pseudo = '') =>
     run(() => {
       let retained;
@@ -568,6 +596,9 @@ const compatibilitySelectors = (() => {
       let index = styleIndexes.get(rules);
       if (!index) {
         index = new Map();
+        index.reusable = true;
+        index.local = true;
+        index.attributes = new Set();
         for (const rule of rules) {
           const leaf = styleKey(rule),
             key = rule.pseudo + '|' + leaf;
@@ -582,9 +613,46 @@ const compatibilitySelectors = (() => {
               ),
             );
           } catch {}
+          const dependencies = styleSelectorDependencies(rule);
+          if (!dependencies) index.reusable = false;
+          else {
+            index.local &&= dependencies.local;
+            for (const attribute of dependencies.attributes) index.attributes.add(attribute);
+          }
           bucket.push({ rule, stable, ancestors: ancestorRequirements(rule) });
         }
         styleIndexes.set(rules, index);
+      }
+      let retainedAcrossRevision;
+      if (index.reusable && styleReadCache?.retainable) {
+        let byRules = retainedStyleMatches.get(node);
+        retainedAcrossRevision = byRules?.get(rules)?.get(pseudo);
+        if (retainedAcrossRevision?.environment === styleReadCache.environmentVersion) {
+          const journals =
+              styleReadCache.mutationJournals || (styleReadCache.mutationJournals = new Map()),
+            revision = retainedAcrossRevision.revision;
+          let journal = journals.get(revision);
+          if (!journal) {
+            journal = JSON.parse(host.observationMutationJournal(revision));
+            if (journals.size === 64) journals.delete(journals.keys().next().value);
+            journals.set(revision, journal);
+          }
+          const nodeID = elementSlot(node).nodeId,
+            safe =
+              !journal.overflow &&
+              journal.records.every(
+                (mutation) =>
+                  mutation.kind === 'attribute' &&
+                  (!index.attributes.has(mutation.attribute.toLowerCase()) ||
+                    (index.local && mutation.target !== nodeID)),
+              );
+          if (safe) {
+            const matched = retainedAcrossRevision.matches.slice();
+            for (const rule of retainedAcrossRevision.dynamic)
+              if (rule.matches(node)) matched.push(rule);
+            return matched.sort((a, b) => a.order - b.order);
+          }
+        }
       }
       const keys = new Set(['*', 't:' + adapter.getName(node)]),
         id = attribute(node, 'id'),
@@ -618,7 +686,24 @@ const compatibilitySelectors = (() => {
       // are retained as a program, never as a truth value, and are always matched
       // anew. Exact context and environment changes replace the entire record.
       if (retained) retained.pseudos.set(pseudo, { matches: staticMatches, dynamic });
-      return matched.sort((a, b) => a.order - b.order);
+      const sorted = matched.sort((a, b) => a.order - b.order);
+      if (index.reusable && styleReadCache?.retainable) {
+        let byRules = retainedStyleMatches.get(node);
+        let byPseudo = byRules?.get(rules);
+        const admitted = byPseudo?.has(pseudo);
+        if (admitted || retainedStyleMatchAdmissions < retainedStyleMatchLimit) {
+          if (!byRules) retainedStyleMatches.set(node, (byRules = new WeakMap()));
+          if (!byPseudo) byRules.set(rules, (byPseudo = new Map()));
+          if (!admitted) retainedStyleMatchAdmissions++;
+          byPseudo.set(pseudo, {
+            revision: host.observationRevision(),
+            environment: styleReadCache.environmentVersion,
+            matches: staticMatches,
+            dynamic,
+          });
+        }
+      }
+      return sorted;
     }, true);
   function closest(node, selector) {
     selector = String(selector);

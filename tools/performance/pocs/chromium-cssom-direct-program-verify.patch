@@ -1,0 +1,30 @@
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1540,6 +1540,29 @@
+       sources.length !== prior.sources.length ||
+       sources.some((text, index) => text !== prior.sources[index])
+     ) {
++      // Verification only: never include this recomputation in timing builds.
++      const reference = constructedStyleSheets.sources(root).flatMap(parsedStyleRules);
++      const describe = (rule) => ({
++        selector: rule.selector,
++        specificity: rule.specificity,
++        pseudo: rule.pseudo,
++        declarations: rule.declarations(),
++      });
++      if (sources.length !== reference.length)
++        throw new Error(
++          'CSSOM direct program count mismatch: ' + sources.length + ' / ' + reference.length,
++        );
++      for (let index = 0; index < sources.length; index++) {
++        const actual = JSON.stringify(describe(sources[index]));
++        const expected = JSON.stringify(describe(reference[index]));
++        if (actual !== expected)
++          throw new Error(
++            'CSSOM direct program mismatch at ' + index + ': ' + actual + ' != ' + expected,
++          );
++      }
+       rules = [];
+       let order = 0;
+       for (const rule of sources) rules.push({ ...rule, order: order++ });

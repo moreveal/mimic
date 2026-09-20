@@ -153,6 +153,42 @@ func TestDeterministicOrdering(t *testing.T) {
 	}
 }
 
+func TestReadyNavigationOvertakesQueuedDocumentWork(t *testing.T) {
+	s := New(time.Unix(0, 0), nil)
+	var order []string
+	s.Post(DOM, 0, func(context.Context) error { order = append(order, "dom"); return nil })
+	s.Post(ResourceScript, 0, func(context.Context) error {
+		order = append(order, "script")
+		return nil
+	})
+	s.Post(Navigation, 0, func(context.Context) error {
+		order = append(order, "navigation")
+		return nil
+	})
+	if err := s.RunUntilIdle(context.Background(), 10); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(order, []string{"navigation", "script", "dom"}) {
+		t.Fatal(order)
+	}
+}
+
+func TestFutureNavigationDoesNotOvertakeReadyDocumentWork(t *testing.T) {
+	s := New(time.Unix(0, 0), nil)
+	var order []string
+	s.Post(DOM, 0, func(context.Context) error { order = append(order, "dom"); return nil })
+	s.Post(Navigation, time.Millisecond, func(context.Context) error {
+		order = append(order, "navigation")
+		return nil
+	})
+	if worked, err := s.RunReadyStep(context.Background()); err != nil || !worked {
+		t.Fatalf("ready DOM task: %v %v", worked, err)
+	}
+	if !reflect.DeepEqual(order, []string{"dom"}) {
+		t.Fatal(order)
+	}
+}
+
 func TestWaitAnyWakesForAnotherQueue(t *testing.T) {
 	queues := []*Scheduler{New(time.Unix(0, 0), nil), New(time.Unix(0, 0), nil)}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

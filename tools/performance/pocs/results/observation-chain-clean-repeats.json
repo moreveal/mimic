@@ -1,0 +1,3718 @@
+{
+  "startedAt": "2026-09-19T20:39:47.322Z",
+  "counts": [
+    10000
+  ],
+  "orders": [
+    "rect"
+  ],
+  "trials": 3,
+  "position": "before",
+  "diagnostics": false,
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "headless": true,
+  "scriptSHA256": "0082bac55303acf9b702d5f6d682c2b5a83a667cbc7727908bedf44ec4339ef4",
+  "binaries": {
+    "mimic": {
+      "path": "E:\\GitHub\\mimic\\.build\\mimic-chromium-control.exe",
+      "sha256": "966091bed8ed5417296f1474ce626c1e67ae53bac9bc9e4bc6963e96d99ca34d",
+      "browserVersion": "152.0.7977.82"
+    },
+    "chrome": {
+      "path": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "browserVersion": "152.0.7977.82"
+    }
+  },
+  "notes": [
+    "First page in a browser process is labelled processFirstPage, not Wikipedia E2E cold.",
+    "Direct first rect/style executes in the same callback as DOM construction.",
+    "Playwright first visible/click necessarily crosses a command boundary after construction.",
+    "No assertion requires identical pixel metrics between browsers; dependency responses are checked.",
+    "Timings include controller wall time and page-local direct-read time separately.",
+    "DIAGNOSTICS runs include extra CDP traffic in phase/row totals and are not latency comparisons.",
+    "Phase totals overlap their individual stages: never sum both. after-input follows the settled input chain.",
+    "unrelated-text changes a fixed-height row; default positioning places it below the target."
+  ],
+  "rows": [
+    {
+      "browser": "mimic",
+      "trial": 0,
+      "n": 10000,
+      "order": "rect",
+      "processFirstPage": true,
+      "stages": [
+        {
+          "name": "page.create",
+          "wallMs": 1.7250000000000227,
+          "realmCosts": {}
+        },
+        {
+          "name": "page.navigate",
+          "wallMs": 219.15010000000007,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "fixture.build-and-first-direct",
+          "wallMs": 365.9674,
+          "result": {
+            "buildMs": 6.9,
+            "firstDirectMs": 348.59999999999997,
+            "first": {
+              "width": 800,
+              "height": 32,
+              "x": 0,
+              "y": 0
+            }
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.direct",
+          "wallMs": 2.197599999999966,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0.5,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.visible",
+          "wallMs": 184.73770000000013,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.role",
+          "wallMs": 78.03980000000001,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.scroll",
+          "wallMs": 63.92669999999998,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.dom-click",
+          "wallMs": 3.0762999999999465,
+          "result": {
+            "pageMs": 1.6999999999999318,
+            "clicks": 1
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.mouse-click",
+          "wallMs": 148.74720000000002,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.locator-click",
+          "wallMs": 168.64279999999985,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.verify",
+          "wallMs": 1.593900000000076,
+          "result": {
+            "clicks": 3,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.total",
+          "wallMs": 651.1658
+        },
+        {
+          "name": "settled-separate-repeat.0",
+          "wallMs": 1.488299999999981,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.1",
+          "wallMs": 1.0140999999998712,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.2",
+          "wallMs": 0.9786000000001422,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.3",
+          "wallMs": 1.0381999999999607,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.4",
+          "wallMs": 1.1210000000000946,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.direct",
+          "wallMs": 0.9981999999999971,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.visible",
+          "wallMs": 6.056599999999889,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.role",
+          "wallMs": 79.47379999999998,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.scroll",
+          "wallMs": 64.96030000000019,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.dom-click",
+          "wallMs": 1.7643000000000484,
+          "result": {
+            "pageMs": 0.6000000000001364,
+            "clicks": 4
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.mouse-click",
+          "wallMs": 4.288299999999936,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.locator-click",
+          "wallMs": 62.679099999999835,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.verify",
+          "wallMs": 0.8957000000000335,
+          "result": {
+            "clicks": 6,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.total",
+          "wallMs": 221.17470000000026
+        },
+        {
+          "name": "irrelevant-attribute.mutate",
+          "wallMs": 1.5686000000000604,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.direct",
+          "wallMs": 153.55920000000015,
+          "result": {
+            "rectMs": 152.10000000000014,
+            "styleMs": 0.09999999999990905,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.visible",
+          "wallMs": 61.32330000000002,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.role",
+          "wallMs": 66.86560000000009,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.scroll",
+          "wallMs": 56.320900000000165,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.dom-click",
+          "wallMs": 1.6994999999997162,
+          "result": {
+            "pageMs": 0.6000000000001364,
+            "clicks": 7
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.mouse-click",
+          "wallMs": 4.693500000000313,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.locator-click",
+          "wallMs": 98.57709999999997,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.verify",
+          "wallMs": 1.3356000000003405,
+          "result": {
+            "clicks": 9,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.total",
+          "wallMs": 445.9868999999999
+        },
+        {
+          "name": "width.mutate",
+          "wallMs": 2.6252000000004045,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.direct",
+          "wallMs": 216.89649999999983,
+          "result": {
+            "rectMs": 215.4000000000001,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.visible",
+          "wallMs": 59.703399999999874,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.role",
+          "wallMs": 70.48320000000012,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.scroll",
+          "wallMs": 54.40149999999994,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.dom-click",
+          "wallMs": 1.5752000000002226,
+          "result": {
+            "pageMs": 0.6000000000003638,
+            "clicks": 10
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.mouse-click",
+          "wallMs": 4.3322000000002845,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.locator-click",
+          "wallMs": 108.21330000000034,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.verify",
+          "wallMs": 1.3600999999998749,
+          "result": {
+            "clicks": 12,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.total",
+          "wallMs": 519.6419999999998
+        },
+        {
+          "name": "unrelated-text.mutate",
+          "wallMs": 1.2604000000001179,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.direct",
+          "wallMs": 147.3703999999998,
+          "result": {
+            "rectMs": 138.5,
+            "styleMs": 0.1999999999998181,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.visible",
+          "wallMs": 57.57049999999981,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.role",
+          "wallMs": 67.46759999999995,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.scroll",
+          "wallMs": 50.94399999999996,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.dom-click",
+          "wallMs": 1.60149999999976,
+          "result": {
+            "pageMs": 0.599999999999909,
+            "clicks": 13
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.mouse-click",
+          "wallMs": 4.429699999999684,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.locator-click",
+          "wallMs": 97.32879999999977,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.verify",
+          "wallMs": 1.4695000000001528,
+          "result": {
+            "clicks": 15,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.total",
+          "wallMs": 429.4903000000004
+        },
+        {
+          "name": "separate-repeat.0",
+          "wallMs": 0.9457999999999629,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.1",
+          "wallMs": 0.8596000000002277,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.2",
+          "wallMs": 1.4104000000002088,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.3",
+          "wallMs": 1.0495999999998276,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.4",
+          "wallMs": 0.8042000000000371,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.0",
+          "wallMs": 23.022500000000036,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.0",
+          "wallMs": 15.530299999999897,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.0",
+          "wallMs": 51.058100000000195,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.1",
+          "wallMs": 24.17489999999998,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.1",
+          "wallMs": 11.326700000000073,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.1",
+          "wallMs": 44.47479999999996,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.2",
+          "wallMs": 24.29509999999982,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.2",
+          "wallMs": 10.915700000000015,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.2",
+          "wallMs": 44.729799999999614,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "raf-cadence",
+          "wallMs": 99.37540000000035,
+          "result": [
+            {
+              "timestamp": 3129.1,
+              "elapsed": 20.300000000000182
+            },
+            {
+              "timestamp": 3148.8,
+              "elapsed": 39.90000000000009
+            },
+            {
+              "timestamp": 3169,
+              "elapsed": 60.19999999999982
+            },
+            {
+              "timestamp": 3189.1,
+              "elapsed": 80.40000000000009
+            },
+            {
+              "timestamp": 3208.9,
+              "elapsed": 100.09999999999991
+            }
+          ],
+          "realmCosts": {}
+        }
+      ],
+      "buildMs": 6.9,
+      "ok": true,
+      "totalMs": 3461.918
+    },
+    {
+      "browser": "chrome",
+      "trial": 0,
+      "n": 10000,
+      "order": "rect",
+      "processFirstPage": true,
+      "stages": [
+        {
+          "name": "page.create",
+          "wallMs": 93.29379999999946,
+          "realmCosts": {}
+        },
+        {
+          "name": "page.navigate",
+          "wallMs": 15.027799999999843,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "fixture.build-and-first-direct",
+          "wallMs": 19.58339999999953,
+          "result": {
+            "buildMs": 3.199999999254942,
+            "firstDirectMs": 11.5,
+            "first": {
+              "width": 800,
+              "height": 32,
+              "x": 0,
+              "y": 0
+            }
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.direct",
+          "wallMs": 1.17279999999937,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.visible",
+          "wallMs": 18.31880000000001,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.role",
+          "wallMs": 7.700299999999515,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.scroll",
+          "wallMs": 24.81790000000001,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.dom-click",
+          "wallMs": 0.9179999999996653,
+          "result": {
+            "pageMs": 0.20000000298023224,
+            "clicks": 1
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.mouse-click",
+          "wallMs": 1.4873000000006869,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.locator-click",
+          "wallMs": 101.79730000000018,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.verify",
+          "wallMs": 0.9111999999995533,
+          "result": {
+            "clicks": 3,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.total",
+          "wallMs": 157.1752000000006
+        },
+        {
+          "name": "settled-separate-repeat.0",
+          "wallMs": 0.6327000000001135,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.1",
+          "wallMs": 0.5673000000006141,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.2",
+          "wallMs": 0.7005000000008295,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.3",
+          "wallMs": 0.7809999999999491,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.4",
+          "wallMs": 0.5585000000000946,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.direct",
+          "wallMs": 0.6327000000001135,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.visible",
+          "wallMs": 2.275300000000243,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.role",
+          "wallMs": 6.07720000000063,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.scroll",
+          "wallMs": 7.636300000000119,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.dom-click",
+          "wallMs": 0.704899999999725,
+          "result": {
+            "pageMs": 0,
+            "clicks": 4
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.mouse-click",
+          "wallMs": 1.585599999999431,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.locator-click",
+          "wallMs": 13.01220000000012,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.verify",
+          "wallMs": 0.701600000000326,
+          "result": {
+            "clicks": 6,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.total",
+          "wallMs": 32.66939999999977
+        },
+        {
+          "name": "irrelevant-attribute.mutate",
+          "wallMs": 0.6469000000006417,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.direct",
+          "wallMs": 0.6005000000004657,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.visible",
+          "wallMs": 1.7722999999996318,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.role",
+          "wallMs": 4.5677999999998065,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.scroll",
+          "wallMs": 9.357200000000375,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.dom-click",
+          "wallMs": 0.6497999999992317,
+          "result": {
+            "pageMs": 0,
+            "clicks": 7
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.mouse-click",
+          "wallMs": 0.966099999999642,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.locator-click",
+          "wallMs": 13.940500000000611,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.verify",
+          "wallMs": 0.7075999999997293,
+          "result": {
+            "clicks": 9,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.total",
+          "wallMs": 33.25240000000031
+        },
+        {
+          "name": "width.mutate",
+          "wallMs": 0.5398000000004686,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.direct",
+          "wallMs": 5.395800000000236,
+          "result": {
+            "rectMs": 4.5,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.visible",
+          "wallMs": 3.5487999999995736,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.role",
+          "wallMs": 4.0943999999999505,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.scroll",
+          "wallMs": 11.80370000000039,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.dom-click",
+          "wallMs": 0.730399999999463,
+          "result": {
+            "pageMs": 0,
+            "clicks": 10
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.mouse-click",
+          "wallMs": 0.9360999999998967,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.locator-click",
+          "wallMs": 13.703599999999824,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.verify",
+          "wallMs": 0.7210999999997512,
+          "result": {
+            "clicks": 12,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.total",
+          "wallMs": 41.52059999999983
+        },
+        {
+          "name": "unrelated-text.mutate",
+          "wallMs": 0.5983999999998559,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.direct",
+          "wallMs": 2.4219999999995707,
+          "result": {
+            "rectMs": 1.800000000745058,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.visible",
+          "wallMs": 1.8715000000001965,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.role",
+          "wallMs": 4.474799999999959,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.scroll",
+          "wallMs": 11.842099999999846,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.dom-click",
+          "wallMs": 0.5887000000002445,
+          "result": {
+            "pageMs": 0,
+            "clicks": 13
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.mouse-click",
+          "wallMs": 0.8392999999996391,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.locator-click",
+          "wallMs": 13.616700000000492,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.verify",
+          "wallMs": 0.5159999999996217,
+          "result": {
+            "clicks": 15,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.total",
+          "wallMs": 36.81240000000071
+        },
+        {
+          "name": "separate-repeat.0",
+          "wallMs": 0.6702999999997701,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.1",
+          "wallMs": 0.6358000000000175,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.2",
+          "wallMs": 0.48509999999987485,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.3",
+          "wallMs": 0.4557999999997264,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.4",
+          "wallMs": 0.4762000000000626,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.0",
+          "wallMs": 4.0108000000000175,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.0",
+          "wallMs": 1.612899999999172,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.0",
+          "wallMs": 9.406200000000354,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.1",
+          "wallMs": 3.3405000000002474,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.1",
+          "wallMs": 1.741399999999885,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.1",
+          "wallMs": 12.340900000000147,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.2",
+          "wallMs": 3.3765000000003056,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.2",
+          "wallMs": 1.5248000000001412,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.2",
+          "wallMs": 10.805699999999888,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "raf-cadence",
+          "wallMs": 20.686000000000604,
+          "result": [
+            {
+              "timestamp": 391.3,
+              "elapsed": 3.100000001490116
+            },
+            {
+              "timestamp": 395.4,
+              "elapsed": 8.899999998509884
+            },
+            {
+              "timestamp": 399.6,
+              "elapsed": 11.300000000745058
+            },
+            {
+              "timestamp": 403.8,
+              "elapsed": 15.5
+            },
+            {
+              "timestamp": 407.9,
+              "elapsed": 19.699999999254942
+            }
+          ],
+          "realmCosts": {}
+        }
+      ],
+      "buildMs": 3.199999999254942,
+      "ok": true,
+      "totalMs": 505.72249999999985
+    },
+    {
+      "browser": "chrome",
+      "trial": 1,
+      "n": 10000,
+      "order": "rect",
+      "processFirstPage": true,
+      "stages": [
+        {
+          "name": "page.create",
+          "wallMs": 88.30090000000018,
+          "realmCosts": {}
+        },
+        {
+          "name": "page.navigate",
+          "wallMs": 22.76220000000012,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "fixture.build-and-first-direct",
+          "wallMs": 18.83519999999953,
+          "result": {
+            "buildMs": 3.400000002235174,
+            "firstDirectMs": 11.699999999254942,
+            "first": {
+              "width": 800,
+              "height": 32,
+              "x": 0,
+              "y": 0
+            }
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.direct",
+          "wallMs": 1.1990999999998166,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.visible",
+          "wallMs": 17.868899999999485,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.role",
+          "wallMs": 7.85570000000007,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.scroll",
+          "wallMs": 113.94210000000021,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.dom-click",
+          "wallMs": 0.9278000000003885,
+          "result": {
+            "pageMs": 0.19999999925494194,
+            "clicks": 1
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.mouse-click",
+          "wallMs": 1.7746999999999389,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.locator-click",
+          "wallMs": 16.21729999999934,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.verify",
+          "wallMs": 1.2579999999998108,
+          "result": {
+            "clicks": 3,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.total",
+          "wallMs": 161.08469999999943
+        },
+        {
+          "name": "settled-separate-repeat.0",
+          "wallMs": 0.7518000000000029,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.1",
+          "wallMs": 0.5658999999996013,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.2",
+          "wallMs": 0.6401999999998225,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.3",
+          "wallMs": 0.7934000000004744,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.4",
+          "wallMs": 0.7343000000000757,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.direct",
+          "wallMs": 0.9117000000005646,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.visible",
+          "wallMs": 2.0126000000000204,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.role",
+          "wallMs": 5.297600000000784,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.scroll",
+          "wallMs": 8.035899999999856,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.dom-click",
+          "wallMs": 0.5927000000001499,
+          "result": {
+            "pageMs": 0,
+            "clicks": 4
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.mouse-click",
+          "wallMs": 0.8825000000006185,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.locator-click",
+          "wallMs": 15.546800000000076,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.verify",
+          "wallMs": 0.5731000000005224,
+          "result": {
+            "clicks": 6,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.total",
+          "wallMs": 33.88169999999991
+        },
+        {
+          "name": "irrelevant-attribute.mutate",
+          "wallMs": 0.5671000000002095,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.direct",
+          "wallMs": 0.5487000000002809,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.visible",
+          "wallMs": 2.391599999999926,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.role",
+          "wallMs": 4.401299999999537,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.scroll",
+          "wallMs": 7.541999999999462,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.dom-click",
+          "wallMs": 0.7087999999994281,
+          "result": {
+            "pageMs": 0.09999999776482582,
+            "clicks": 7
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.mouse-click",
+          "wallMs": 0.9376000000002023,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.locator-click",
+          "wallMs": 13.362299999999777,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.verify",
+          "wallMs": 0.4888999999993757,
+          "result": {
+            "clicks": 9,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.total",
+          "wallMs": 30.99239999999918
+        },
+        {
+          "name": "width.mutate",
+          "wallMs": 0.6060999999999694,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.direct",
+          "wallMs": 5.460500000000138,
+          "result": {
+            "rectMs": 4.5,
+            "styleMs": 0.10000000149011612,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.visible",
+          "wallMs": 4.07050000000072,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.role",
+          "wallMs": 4.525799999999435,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.scroll",
+          "wallMs": 11.417300000000068,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.dom-click",
+          "wallMs": 0.5751999999993131,
+          "result": {
+            "pageMs": 0.09999999776482582,
+            "clicks": 10
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.mouse-click",
+          "wallMs": 0.8446000000003551,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.locator-click",
+          "wallMs": 13.659700000000157,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.verify",
+          "wallMs": 0.5444999999999709,
+          "result": {
+            "clicks": 12,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.total",
+          "wallMs": 41.73389999999927
+        },
+        {
+          "name": "unrelated-text.mutate",
+          "wallMs": 0.5338000000001557,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.direct",
+          "wallMs": 2.451299999999719,
+          "result": {
+            "rectMs": 1.8999999985098839,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.visible",
+          "wallMs": 1.6678000000001703,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.role",
+          "wallMs": 4.571599999999307,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.scroll",
+          "wallMs": 12.544799999999668,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.dom-click",
+          "wallMs": 0.5523999999995794,
+          "result": {
+            "pageMs": 0,
+            "clicks": 13
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.mouse-click",
+          "wallMs": 0.8807999999999083,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.locator-click",
+          "wallMs": 13.704999999999927,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.verify",
+          "wallMs": 0.5163000000002285,
+          "result": {
+            "clicks": 15,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.total",
+          "wallMs": 37.45049999999992
+        },
+        {
+          "name": "separate-repeat.0",
+          "wallMs": 0.6007000000008702,
+          "result": {
+            "rectMs": 0.10000000149011612,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.1",
+          "wallMs": 0.5664000000006126,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.2",
+          "wallMs": 0.44719999999961146,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.3",
+          "wallMs": 0.5127000000002226,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.4",
+          "wallMs": 0.45160000000032596,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.0",
+          "wallMs": 4.18119999999999,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.0",
+          "wallMs": 1.8006999999997788,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.0",
+          "wallMs": 9.115399999999681,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.1",
+          "wallMs": 3.436700000000201,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.1",
+          "wallMs": 1.6296000000002095,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.1",
+          "wallMs": 11.445099999999911,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.2",
+          "wallMs": 3.658400000000256,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.2",
+          "wallMs": 1.5177999999996246,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.2",
+          "wallMs": 11.511999999999716,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "raf-cadence",
+          "wallMs": 20.693199999999706,
+          "result": [
+            {
+              "timestamp": 401.2,
+              "elapsed": 4.100000001490116
+            },
+            {
+              "timestamp": 405.4,
+              "elapsed": 7.199999999254942
+            },
+            {
+              "timestamp": 409.6,
+              "elapsed": 11.399999998509884
+            },
+            {
+              "timestamp": 413.8,
+              "elapsed": 15.5
+            },
+            {
+              "timestamp": 418,
+              "elapsed": 19.699999999254942
+            }
+          ],
+          "realmCosts": {}
+        }
+      ],
+      "buildMs": 3.400000002235174,
+      "ok": true,
+      "totalMs": 511.1170999999995
+    },
+    {
+      "browser": "mimic",
+      "trial": 1,
+      "n": 10000,
+      "order": "rect",
+      "processFirstPage": true,
+      "stages": [
+        {
+          "name": "page.create",
+          "wallMs": 1.285200000000259,
+          "realmCosts": {}
+        },
+        {
+          "name": "page.navigate",
+          "wallMs": 221.88340000000062,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "fixture.build-and-first-direct",
+          "wallMs": 365.3896000000004,
+          "result": {
+            "buildMs": 6.699999999999999,
+            "firstDirectMs": 348.29999999999995,
+            "first": {
+              "width": 800,
+              "height": 32,
+              "x": 0,
+              "y": 0
+            }
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.direct",
+          "wallMs": 2.3665000000000873,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0.6000000000000227,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.visible",
+          "wallMs": 182.3139999999994,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.role",
+          "wallMs": 77.09800000000087,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.scroll",
+          "wallMs": 62,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.dom-click",
+          "wallMs": 2.7844999999997526,
+          "result": {
+            "pageMs": 1.8000000000000682,
+            "clicks": 1
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.mouse-click",
+          "wallMs": 153.46730000000025,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.locator-click",
+          "wallMs": 173.6178,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.verify",
+          "wallMs": 1.3218999999999141,
+          "result": {
+            "clicks": 3,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.total",
+          "wallMs": 655.0030999999999
+        },
+        {
+          "name": "settled-separate-repeat.0",
+          "wallMs": 0.9696999999996478,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.1",
+          "wallMs": 1.0781999999999243,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0.09999999999990905,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.2",
+          "wallMs": 0.8814999999995052,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.3",
+          "wallMs": 0.8356999999996333,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.4",
+          "wallMs": 0.9211000000004788,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.direct",
+          "wallMs": 0.9098999999996522,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.visible",
+          "wallMs": 5.914400000000569,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.role",
+          "wallMs": 74.95480000000043,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.scroll",
+          "wallMs": 61.4994999999999,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.dom-click",
+          "wallMs": 1.5870000000004438,
+          "result": {
+            "pageMs": 0.599999999999909,
+            "clicks": 4
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.mouse-click",
+          "wallMs": 4.417000000000371,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.locator-click",
+          "wallMs": 61.53769999999986,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.verify",
+          "wallMs": 0.8495000000002619,
+          "result": {
+            "clicks": 6,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.total",
+          "wallMs": 211.69970000000012
+        },
+        {
+          "name": "irrelevant-attribute.mutate",
+          "wallMs": 1.5627000000004045,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.direct",
+          "wallMs": 156.04340000000047,
+          "result": {
+            "rectMs": 154.79999999999995,
+            "styleMs": 0.10000000000013642,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.visible",
+          "wallMs": 58.77480000000014,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.role",
+          "wallMs": 69.59089999999924,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.scroll",
+          "wallMs": 55.00250000000051,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.dom-click",
+          "wallMs": 1.493199999999888,
+          "result": {
+            "pageMs": 0.5,
+            "clicks": 7
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.mouse-click",
+          "wallMs": 4.475500000000466,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.locator-click",
+          "wallMs": 99.03650000000016,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.verify",
+          "wallMs": 1.2878000000000611,
+          "result": {
+            "clicks": 9,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.total",
+          "wallMs": 447.3014000000003
+        },
+        {
+          "name": "width.mutate",
+          "wallMs": 2.7588000000005195,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.direct",
+          "wallMs": 236.90200000000004,
+          "result": {
+            "rectMs": 235.5,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.visible",
+          "wallMs": 60.879799999999705,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.role",
+          "wallMs": 73.1822000000002,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.scroll",
+          "wallMs": 60.566499999999905,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.dom-click",
+          "wallMs": 1.69629999999961,
+          "result": {
+            "pageMs": 0.6999999999998181,
+            "clicks": 10
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.mouse-click",
+          "wallMs": 4.409300000000258,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.locator-click",
+          "wallMs": 117.73899999999958,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.verify",
+          "wallMs": 1.3180000000011205,
+          "result": {
+            "clicks": 12,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.total",
+          "wallMs": 559.4877999999999
+        },
+        {
+          "name": "unrelated-text.mutate",
+          "wallMs": 1.2079000000012456,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.direct",
+          "wallMs": 155.41079999999965,
+          "result": {
+            "rectMs": 153.9000000000001,
+            "styleMs": 0.09999999999990905,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.visible",
+          "wallMs": 55.918400000000474,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.role",
+          "wallMs": 70.72010000000046,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.scroll",
+          "wallMs": 51.202400000000125,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.dom-click",
+          "wallMs": 1.8902000000016415,
+          "result": {
+            "pageMs": 0.5,
+            "clicks": 13
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.mouse-click",
+          "wallMs": 4.412000000000262,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.locator-click",
+          "wallMs": 97.97270000000026,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.verify",
+          "wallMs": 1.3435000000008586,
+          "result": {
+            "clicks": 15,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.total",
+          "wallMs": 440.1069000000007
+        },
+        {
+          "name": "separate-repeat.0",
+          "wallMs": 1.07970000000023,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.1",
+          "wallMs": 0.9190999999991618,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.2",
+          "wallMs": 0.8747000000003027,
+          "result": {
+            "rectMs": 0.1000000000003638,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.3",
+          "wallMs": 0.8271999999997206,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0.09999999999990905,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.4",
+          "wallMs": 0.8316999999988184,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.0",
+          "wallMs": 23.27939999999944,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.0",
+          "wallMs": 14.617500000000291,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.0",
+          "wallMs": 51.83810000000085,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.1",
+          "wallMs": 23.760299999999916,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.1",
+          "wallMs": 10.26890000000094,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.1",
+          "wallMs": 46.219600000000355,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.2",
+          "wallMs": 22.573500000000422,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.2",
+          "wallMs": 9.735200000000987,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.2",
+          "wallMs": 47.351699999999255,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "raf-cadence",
+          "wallMs": 99.29600000000028,
+          "result": [
+            {
+              "timestamp": 3183.6,
+              "elapsed": 20.09999999999991
+            },
+            {
+              "timestamp": 3204,
+              "elapsed": 40.5
+            },
+            {
+              "timestamp": 3224.4,
+              "elapsed": 60.90000000000009
+            },
+            {
+              "timestamp": 3244.3,
+              "elapsed": 80.80000000000018
+            },
+            {
+              "timestamp": 3264.1,
+              "elapsed": 100.70000000000027
+            }
+          ],
+          "realmCosts": {}
+        }
+      ],
+      "buildMs": 6.699999999999999,
+      "ok": true,
+      "totalMs": 3511.4523
+    },
+    {
+      "browser": "mimic",
+      "trial": 2,
+      "n": 10000,
+      "order": "rect",
+      "processFirstPage": true,
+      "stages": [
+        {
+          "name": "page.create",
+          "wallMs": 1.4232000000010885,
+          "realmCosts": {}
+        },
+        {
+          "name": "page.navigate",
+          "wallMs": 220.47860000000037,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "fixture.build-and-first-direct",
+          "wallMs": 371.42329999999856,
+          "result": {
+            "buildMs": 6.8,
+            "firstDirectMs": 353.79999999999995,
+            "first": {
+              "width": 800,
+              "height": 32,
+              "x": 0,
+              "y": 0
+            }
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.direct",
+          "wallMs": 2.1576999999997497,
+          "result": {
+            "rectMs": 0.10000000000002274,
+            "styleMs": 0.39999999999997726,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.visible",
+          "wallMs": 178.14569999999912,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.role",
+          "wallMs": 77.4979000000003,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.scroll",
+          "wallMs": 59.19909999999982,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.dom-click",
+          "wallMs": 2.886000000000422,
+          "result": {
+            "pageMs": 1.8000000000000682,
+            "clicks": 1
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.mouse-click",
+          "wallMs": 152.96819999999934,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.locator-click",
+          "wallMs": 172.6293000000005,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.verify",
+          "wallMs": 1.4614000000001397,
+          "result": {
+            "clicks": 3,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.total",
+          "wallMs": 646.9794000000002
+        },
+        {
+          "name": "settled-separate-repeat.0",
+          "wallMs": 0.9846999999990658,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.1",
+          "wallMs": 0.9467999999997119,
+          "result": {
+            "rectMs": 0.10000000000013642,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.2",
+          "wallMs": 0.8987000000015541,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.3",
+          "wallMs": 1.0282999999999447,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.4",
+          "wallMs": 0.9491999999991094,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.direct",
+          "wallMs": 0.8783999999996013,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.visible",
+          "wallMs": 5.715799999999945,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.role",
+          "wallMs": 74.6234000000004,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.scroll",
+          "wallMs": 63.05400000000009,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.dom-click",
+          "wallMs": 1.5661000000000058,
+          "result": {
+            "pageMs": 0.599999999999909,
+            "clicks": 4
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.mouse-click",
+          "wallMs": 4.371900000000096,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.locator-click",
+          "wallMs": 61.95159999999851,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.verify",
+          "wallMs": 0.8631999999997788,
+          "result": {
+            "clicks": 6,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.total",
+          "wallMs": 213.05259999999907
+        },
+        {
+          "name": "irrelevant-attribute.mutate",
+          "wallMs": 1.512800000000425,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.direct",
+          "wallMs": 157.14450000000033,
+          "result": {
+            "rectMs": 155.79999999999995,
+            "styleMs": 0.10000000000013642,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.visible",
+          "wallMs": 60.23880000000099,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.role",
+          "wallMs": 68.16480000000047,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.scroll",
+          "wallMs": 54.378600000000006,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.dom-click",
+          "wallMs": 1.5239000000001397,
+          "result": {
+            "pageMs": 0.6000000000001364,
+            "clicks": 7
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.mouse-click",
+          "wallMs": 5.513699999999517,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.locator-click",
+          "wallMs": 107.64170000000013,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.verify",
+          "wallMs": 1.3624999999992724,
+          "result": {
+            "clicks": 9,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.total",
+          "wallMs": 457.5144
+        },
+        {
+          "name": "width.mutate",
+          "wallMs": 2.694100000000617,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.direct",
+          "wallMs": 229.83719999999994,
+          "result": {
+            "rectMs": 228.4000000000001,
+            "styleMs": 0.09999999999990905,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.visible",
+          "wallMs": 57.78049999999894,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.role",
+          "wallMs": 74.98170000000027,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.scroll",
+          "wallMs": 58.74529999999868,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.dom-click",
+          "wallMs": 1.6260000000002037,
+          "result": {
+            "pageMs": 0.6999999999998181,
+            "clicks": 10
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.mouse-click",
+          "wallMs": 4.182900000001609,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.locator-click",
+          "wallMs": 118.95789999999943,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.verify",
+          "wallMs": 1.3580000000001746,
+          "result": {
+            "clicks": 12,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.total",
+          "wallMs": 550.2003000000004
+        },
+        {
+          "name": "unrelated-text.mutate",
+          "wallMs": 1.355199999999968,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.direct",
+          "wallMs": 157.80209999999897,
+          "result": {
+            "rectMs": 156.5,
+            "styleMs": 0.09999999999990905,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.visible",
+          "wallMs": 56.57210000000123,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.role",
+          "wallMs": 67.87279999999919,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.scroll",
+          "wallMs": 50.20420000000013,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.dom-click",
+          "wallMs": 1.5609000000004016,
+          "result": {
+            "pageMs": 0.5,
+            "clicks": 13
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.mouse-click",
+          "wallMs": 4.322200000000521,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.locator-click",
+          "wallMs": 97.62410000000091,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.verify",
+          "wallMs": 1.3461000000006607,
+          "result": {
+            "clicks": 15,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.total",
+          "wallMs": 438.6939000000002
+        },
+        {
+          "name": "separate-repeat.0",
+          "wallMs": 0.92870000000039,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.1",
+          "wallMs": 0.9724999999998545,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.2",
+          "wallMs": 0.8490000000001601,
+          "result": {
+            "rectMs": 0.09999999999990905,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.3",
+          "wallMs": 0.7839999999996508,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.4",
+          "wallMs": 0.8166000000001077,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.0",
+          "wallMs": 23.271499999998923,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.0",
+          "wallMs": 14.33520000000135,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.0",
+          "wallMs": 53.20629999999983,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.1",
+          "wallMs": 23.965899999999237,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.1",
+          "wallMs": 10.251899999999296,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.1",
+          "wallMs": 45.18969999999899,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.2",
+          "wallMs": 23.262000000000626,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.2",
+          "wallMs": 10.155500000000757,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.2",
+          "wallMs": 47.03640000000087,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "raf-cadence",
+          "wallMs": 98.8744999999999,
+          "result": [
+            {
+              "timestamp": 3178.9,
+              "elapsed": 20.09999999999991
+            },
+            {
+              "timestamp": 3198.8,
+              "elapsed": 40
+            },
+            {
+              "timestamp": 3219.3,
+              "elapsed": 60.59999999999991
+            },
+            {
+              "timestamp": 3239.5,
+              "elapsed": 80.59999999999991
+            },
+            {
+              "timestamp": 3259.8,
+              "elapsed": 101
+            }
+          ],
+          "realmCosts": {}
+        }
+      ],
+      "buildMs": 6.8,
+      "ok": true,
+      "totalMs": 3521.5437999999995
+    },
+    {
+      "browser": "chrome",
+      "trial": 2,
+      "n": 10000,
+      "order": "rect",
+      "processFirstPage": true,
+      "stages": [
+        {
+          "name": "page.create",
+          "wallMs": 93.45870000000104,
+          "realmCosts": {}
+        },
+        {
+          "name": "page.navigate",
+          "wallMs": 13.225500000000466,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "fixture.build-and-first-direct",
+          "wallMs": 20.082500000000437,
+          "result": {
+            "buildMs": 3.2999999970197678,
+            "firstDirectMs": 11.600000001490116,
+            "first": {
+              "width": 800,
+              "height": 32,
+              "x": 0,
+              "y": 0
+            }
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.direct",
+          "wallMs": 0.9032999999999447,
+          "result": {
+            "rectMs": 0.10000000149011612,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.visible",
+          "wallMs": 17.901599999999235,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.role",
+          "wallMs": 7.949099999999817,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.scroll",
+          "wallMs": 115.98120000000017,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.dom-click",
+          "wallMs": 0.8901999999998225,
+          "result": {
+            "pageMs": 0.19999999925494194,
+            "clicks": 1
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.mouse-click",
+          "wallMs": 1.9799999999995634,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.locator-click",
+          "wallMs": 16.750899999999092,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.verify",
+          "wallMs": 1.0167999999994208,
+          "result": {
+            "clicks": 3,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settle.total",
+          "wallMs": 163.40820000000167
+        },
+        {
+          "name": "settled-separate-repeat.0",
+          "wallMs": 0.6630000000004657,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.1",
+          "wallMs": 0.5746000000017375,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.2",
+          "wallMs": 0.8853999999992084,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.3",
+          "wallMs": 0.6327999999994063,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "settled-separate-repeat.4",
+          "wallMs": 0.826600000000326,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0.09999999776482582,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.direct",
+          "wallMs": 0.581000000000131,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0.09999999776482582,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.visible",
+          "wallMs": 1.7954000000008818,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.role",
+          "wallMs": 4.88340000000062,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.scroll",
+          "wallMs": 9.248900000000503,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.dom-click",
+          "wallMs": 0.5661999999992986,
+          "result": {
+            "pageMs": 0,
+            "clicks": 4
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.mouse-click",
+          "wallMs": 0.875,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.locator-click",
+          "wallMs": 13.849700000000666,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.verify",
+          "wallMs": 0.6126000000003842,
+          "result": {
+            "clicks": 6,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "after-input.total",
+          "wallMs": 32.441100000000006
+        },
+        {
+          "name": "irrelevant-attribute.mutate",
+          "wallMs": 0.7859000000007654,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.direct",
+          "wallMs": 0.5928000000003522,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 800,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.visible",
+          "wallMs": 1.7070000000003347,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.role",
+          "wallMs": 4.3422000000009575,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.scroll",
+          "wallMs": 10.921399999999267,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.dom-click",
+          "wallMs": 0.6651000000001659,
+          "result": {
+            "pageMs": 0,
+            "clicks": 7
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.mouse-click",
+          "wallMs": 1.1581000000005588,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.locator-click",
+          "wallMs": 12.425500000001193,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.verify",
+          "wallMs": 0.5872999999992317,
+          "result": {
+            "clicks": 9,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "irrelevant-attribute.total",
+          "wallMs": 33.214599999999336
+        },
+        {
+          "name": "width.mutate",
+          "wallMs": 0.559000000001106,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.direct",
+          "wallMs": 5.4473999999991065,
+          "result": {
+            "rectMs": 4.599999997764826,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.visible",
+          "wallMs": 3.644000000000233,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.role",
+          "wallMs": 3.7849000000005617,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.scroll",
+          "wallMs": 12.363400000000183,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.dom-click",
+          "wallMs": 0.632499999999709,
+          "result": {
+            "pageMs": 0,
+            "clicks": 10
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.mouse-click",
+          "wallMs": 0.974900000001071,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.locator-click",
+          "wallMs": 13.40689999999995,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "width.verify",
+          "wallMs": 0.5023000000001048,
+          "result": {
+            "clicks": 12,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "width.total",
+          "wallMs": 41.34509999999864
+        },
+        {
+          "name": "unrelated-text.mutate",
+          "wallMs": 0.5799000000006345,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.direct",
+          "wallMs": 2.417299999999159,
+          "result": {
+            "rectMs": 1.699999999254942,
+            "styleMs": 0.10000000149011612,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.visible",
+          "wallMs": 2.3814000000002125,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.role",
+          "wallMs": 3.9914999999982683,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.scroll",
+          "wallMs": 12.650400000000445,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.dom-click",
+          "wallMs": 0.6311999999998079,
+          "result": {
+            "pageMs": 0.10000000149011612,
+            "clicks": 13
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.mouse-click",
+          "wallMs": 0.8981999999996333,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.locator-click",
+          "wallMs": 13.528599999999642,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.verify",
+          "wallMs": 0.585399999999936,
+          "result": {
+            "clicks": 15,
+            "rows": 10000
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "unrelated-text.total",
+          "wallMs": 37.691900000001624
+        },
+        {
+          "name": "separate-repeat.0",
+          "wallMs": 0.6257000000005064,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.1",
+          "wallMs": 0.540500000000975,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.2",
+          "wallMs": 0.51759999999922,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.3",
+          "wallMs": 0.6923000000006141,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "separate-repeat.4",
+          "wallMs": 0.4565999999995256,
+          "result": {
+            "rectMs": 0,
+            "styleMs": 0,
+            "width": 640,
+            "height": 32,
+            "x": 0,
+            "y": 0,
+            "display": "block"
+          },
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.0",
+          "wallMs": 3.598500000000058,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.0",
+          "wallMs": 1.5320000000010623,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.0",
+          "wallMs": 9.494399999999587,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.1",
+          "wallMs": 3.4233000000003813,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.1",
+          "wallMs": 1.6157000000002881,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.1",
+          "wallMs": 11.632200000000012,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-role.2",
+          "wallMs": 3.578299999999217,
+          "result": 1,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-visible.2",
+          "wallMs": 1.6151000000008935,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "clean-scroll.2",
+          "wallMs": 13.109399999999368,
+          "result": true,
+          "realmCosts": {}
+        },
+        {
+          "name": "raf-cadence",
+          "wallMs": 18.94999999999891,
+          "result": [
+            {
+              "timestamp": 396.3,
+              "elapsed": 1.199999999254942
+            },
+            {
+              "timestamp": 400.5,
+              "elapsed": 5.400000002235174
+            },
+            {
+              "timestamp": 404.6,
+              "elapsed": 9.5
+            },
+            {
+              "timestamp": 408.8,
+              "elapsed": 15.300000000745058
+            },
+            {
+              "timestamp": 412.9,
+              "elapsed": 17.800000000745058
+            }
+          ],
+          "realmCosts": {}
+        }
+      ],
+      "buildMs": 3.2999999970197678,
+      "ok": true,
+      "totalMs": 511.52150000000074
+    }
+  ],
+  "serverEvents": [],
+  "launches": [
+    {
+      "browser": "mimic",
+      "trial": 0,
+      "wallMs": 136.95780000000002
+    },
+    {
+      "browser": "chrome",
+      "trial": 0,
+      "wallMs": 174.90449999999964
+    },
+    {
+      "browser": "chrome",
+      "trial": 1,
+      "wallMs": 131.27959999999985
+    },
+    {
+      "browser": "mimic",
+      "trial": 1,
+      "wallMs": 112.56039999999939
+    },
+    {
+      "browser": "mimic",
+      "trial": 2,
+      "wallMs": 113.02009999999973
+    },
+    {
+      "browser": "chrome",
+      "trial": 2,
+      "wallMs": 129.5604000000003
+    }
+  ],
+  "finishedAt": "2026-09-19T20:40:00.672Z"
+}

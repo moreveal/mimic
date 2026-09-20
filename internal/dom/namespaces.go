@@ -83,6 +83,8 @@ func (d *Document) SetAttributeNS(id int64, namespace, name, value string) error
 			if namespace == "" && old == "nonce" {
 				n.Nonce = value
 			}
+			d.recordMutationLocked("attribute", id, old)
+			d.recordConnectedMutationLocked("attribute", id, old)
 			return nil
 		}
 	}
@@ -96,5 +98,7 @@ func (d *Document) SetAttributeNS(id int64, namespace, name, value string) error
 		n.AttributeNamespaces[name] = namespace
 	}
 	n.setAttribute(name, value)
+	d.recordMutationLocked("attribute", id, name)
+	d.recordConnectedMutationLocked("attribute", id, name)
 	return nil
 }

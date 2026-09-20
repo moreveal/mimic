@@ -26,6 +26,10 @@ type styleProjectionCache struct {
 	dynamic bool
 }
 
+func (r *Realm) styleDocumentRevision() uint64 {
+	return r.document.ObservationRevision()
+}
+
 func (r *Realm) styleProjectionEpoch(kind string) styleProjectionEpoch {
 	e := r.agent.Page().environmentView()
 	resources := r.resourceRevision.Load()
@@ -36,7 +40,7 @@ func (r *Realm) styleProjectionEpoch(kind string) styleProjectionEpoch {
 	if kind == "value" || kind == "values" || kind == "documentValues" || kind == "document" || kind == "" || kind == "visibility" {
 		resources = r.styleResourceRevision.Load()
 	}
-	return styleProjectionEpoch{r.document.Revision(), resources, r.selectorTargetID,
+	return styleProjectionEpoch{r.styleDocumentRevision(), resources, r.selectorTargetID,
 		e.Window.ViewportWidth, e.Window.ViewportHeight, e.Preferences.ColorScheme, e.Preferences.ReducedMotion}
 }
 

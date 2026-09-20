@@ -1,0 +1,93 @@
+{
+  "note": "Attributed runs are diagnostic and not acceptance timings.",
+  "runs": {
+    "control-cold": {
+      "elapsedMs": 11656,
+      "schedulerUnionMs": 5364,
+      "sourceDurationMs": {
+        "dom": 3319,
+        "control": 6,
+        "navigation": 408,
+        "network": 519,
+        "script-resource": 1,
+        "timer": 1121,
+        "low-priority-resource": 0
+      },
+      "sourceCounts": {
+        "navigation": 8,
+        "dom": 85,
+        "control": 58,
+        "network": 209,
+        "script-resource": 17,
+        "timer": 248,
+        "low-priority-resource": 3
+      }
+    },
+    "control-warm": {
+      "elapsedMs": 7269,
+      "schedulerUnionMs": 1766,
+      "sourceDurationMs": {
+        "dom": 738,
+        "control": 7,
+        "navigation": 206,
+        "network": 415,
+        "script-resource": 1,
+        "timer": 408,
+        "low-priority-resource": 0
+      },
+      "sourceCounts": {
+        "navigation": 8,
+        "dom": 30,
+        "control": 51,
+        "network": 194,
+        "script-resource": 5,
+        "timer": 85,
+        "low-priority-resource": 3
+      }
+    },
+    "candidate-cold": {
+      "elapsedMs": 8364,
+      "schedulerUnionMs": 1924,
+      "sourceDurationMs": {
+        "dom": 146,
+        "control": 2,
+        "navigation": 407,
+        "network": 481,
+        "script-resource": 1,
+        "timer": 894,
+        "low-priority-resource": 0
+      },
+      "sourceCounts": {
+        "navigation": 8,
+        "dom": 42,
+        "control": 53,
+        "network": 213,
+        "script-resource": 22,
+        "timer": 143,
+        "low-priority-resource": 4
+      }
+    },
+    "candidate-warm": {
+      "elapsedMs": 7787,
+      "schedulerUnionMs": 1542,
+      "sourceDurationMs": {
+        "dom": 136,
+        "control": 4,
+        "navigation": 203,
+        "network": 480,
+        "script-resource": 3,
+        "timer": 721,
+        "low-priority-resource": 0
+      },
+      "sourceCounts": {
+        "navigation": 8,
+        "dom": 41,
+        "control": 54,
+        "network": 213,
+        "script-resource": 22,
+        "timer": 141,
+        "low-priority-resource": 4
+      }
+    }
+  }
+}

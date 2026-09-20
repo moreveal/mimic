@@ -1,0 +1,265 @@
+{
+  "binaries": {
+    "control": {
+      "file": "E:\\GitHub\\mimic\\.build\\mimic-poc-author-freeze.exe",
+      "sha256": "9d362539ec4f33450b2e809160c7ea2f286c28b36f16769879799c76b13e8c7e"
+    },
+    "candidate": {
+      "file": "E:\\GitHub\\mimic\\.build\\mimic-poc-author-read-hints.exe",
+      "sha256": "335e26c4e06677598bc6e55221a78801822620d8aea97502fa63c2fe5c7c1915"
+    }
+  },
+  "diagnosticEnvironment": {
+    "MIMIC_POC_FREEZE_DERIVED": "1",
+    "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+    "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+  },
+  "results": [
+    {
+      "build": "control",
+      "trial": 1,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+      },
+      "cold": {
+        "milliseconds": 4619,
+        "stages": {
+          "Search fill": 294.99,
+          "Search inputValue": 5.05,
+          "Search press + navigation": 208.86,
+          "JavaScript heading visible": 748.12,
+          "ECMAScript scrollIntoViewIfNeeded": 733.4,
+          "ECMAScript innerText": 187.64,
+          "ECMAScript getAttribute href": 183.82,
+          "ECMAScript click + navigation": 590.77,
+          "ECMAScript heading visible": 313.44,
+          "ECMAScript heading innerText": 5.32,
+          "ECMAScript page.title": 0.99
+        }
+      },
+      "warm": {
+        "milliseconds": 3958,
+        "stages": {
+          "Search fill": 236.7,
+          "Search inputValue": 4.9,
+          "Search press + navigation": 197.07,
+          "JavaScript heading visible": 726.44,
+          "ECMAScript scrollIntoViewIfNeeded": 766.7,
+          "ECMAScript innerText": 188.34,
+          "ECMAScript getAttribute href": 176.39,
+          "ECMAScript click + navigation": 543.62,
+          "ECMAScript heading visible": 314.36,
+          "ECMAScript heading innerText": 5.37,
+          "ECMAScript page.title": 1.15
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 1,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+      },
+      "cold": {
+        "milliseconds": 4329,
+        "stages": {
+          "Search fill": 272.76,
+          "Search inputValue": 5.4,
+          "Search press + navigation": 220.36,
+          "JavaScript heading visible": 717.36,
+          "ECMAScript scrollIntoViewIfNeeded": 753.66,
+          "ECMAScript innerText": 190.87,
+          "ECMAScript getAttribute href": 178.77,
+          "ECMAScript click + navigation": 369.36,
+          "ECMAScript heading visible": 298.19,
+          "ECMAScript heading innerText": 5.14,
+          "ECMAScript page.title": 1.07
+        }
+      },
+      "warm": {
+        "milliseconds": 3733,
+        "stages": {
+          "Search fill": 252.21,
+          "Search inputValue": 5.3,
+          "Search press + navigation": 204.84,
+          "JavaScript heading visible": 685.39,
+          "ECMAScript scrollIntoViewIfNeeded": 746.78,
+          "ECMAScript innerText": 185.31,
+          "ECMAScript getAttribute href": 183.04,
+          "ECMAScript click + navigation": 364.29,
+          "ECMAScript heading visible": 323.77,
+          "ECMAScript heading innerText": 5.63,
+          "ECMAScript page.title": 0.99
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 2,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+      },
+      "cold": {
+        "milliseconds": 4276,
+        "stages": {
+          "Search fill": 271.95,
+          "Search inputValue": 5.06,
+          "Search press + navigation": 205.35,
+          "JavaScript heading visible": 718.57,
+          "ECMAScript scrollIntoViewIfNeeded": 739.88,
+          "ECMAScript innerText": 192.39,
+          "ECMAScript getAttribute href": 174.86,
+          "ECMAScript click + navigation": 361.76,
+          "ECMAScript heading visible": 301.29,
+          "ECMAScript heading innerText": 5.31,
+          "ECMAScript page.title": 0.98
+        }
+      },
+      "warm": {
+        "milliseconds": 3735,
+        "stages": {
+          "Search fill": 235.95,
+          "Search inputValue": 4.64,
+          "Search press + navigation": 194.14,
+          "JavaScript heading visible": 683.11,
+          "ECMAScript scrollIntoViewIfNeeded": 790.7,
+          "ECMAScript innerText": 191.07,
+          "ECMAScript getAttribute href": 176.13,
+          "ECMAScript click + navigation": 353.99,
+          "ECMAScript heading visible": 294.97,
+          "ECMAScript heading innerText": 5.37,
+          "ECMAScript page.title": 0.98
+        }
+      }
+    },
+    {
+      "build": "control",
+      "trial": 2,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+      },
+      "cold": {
+        "milliseconds": 4564,
+        "stages": {
+          "Search fill": 278.86,
+          "Search inputValue": 5.27,
+          "Search press + navigation": 201.11,
+          "JavaScript heading visible": 760.22,
+          "ECMAScript scrollIntoViewIfNeeded": 751.65,
+          "ECMAScript innerText": 184.88,
+          "ECMAScript getAttribute href": 183.55,
+          "ECMAScript click + navigation": 534.79,
+          "ECMAScript heading visible": 312.76,
+          "ECMAScript heading innerText": 5.22,
+          "ECMAScript page.title": 0.99
+        }
+      },
+      "warm": {
+        "milliseconds": 3934,
+        "stages": {
+          "Search fill": 234.52,
+          "Search inputValue": 4.82,
+          "Search press + navigation": 194.48,
+          "JavaScript heading visible": 709.61,
+          "ECMAScript scrollIntoViewIfNeeded": 754.2,
+          "ECMAScript innerText": 188.51,
+          "ECMAScript getAttribute href": 175.72,
+          "ECMAScript click + navigation": 554.75,
+          "ECMAScript heading visible": 312.36,
+          "ECMAScript heading innerText": 5.2,
+          "ECMAScript page.title": 1.25
+        }
+      }
+    },
+    {
+      "build": "control",
+      "trial": 3,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+      },
+      "cold": {
+        "milliseconds": 4538,
+        "stages": {
+          "Search fill": 290.24,
+          "Search inputValue": 7.11,
+          "Search press + navigation": 209.44,
+          "JavaScript heading visible": 760.16,
+          "ECMAScript scrollIntoViewIfNeeded": 735.61,
+          "ECMAScript innerText": 186.33,
+          "ECMAScript getAttribute href": 184.73,
+          "ECMAScript click + navigation": 540.91,
+          "ECMAScript heading visible": 315.99,
+          "ECMAScript heading innerText": 5.27,
+          "ECMAScript page.title": 1.19
+        }
+      },
+      "warm": {
+        "milliseconds": 3888,
+        "stages": {
+          "Search fill": 237.77,
+          "Search inputValue": 4.74,
+          "Search press + navigation": 195.58,
+          "JavaScript heading visible": 709.3,
+          "ECMAScript scrollIntoViewIfNeeded": 725.77,
+          "ECMAScript innerText": 189.84,
+          "ECMAScript getAttribute href": 173.85,
+          "ECMAScript click + navigation": 529.25,
+          "ECMAScript heading visible": 313.82,
+          "ECMAScript heading innerText": 5.32,
+          "ECMAScript page.title": 1.11
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 3,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1"
+      },
+      "cold": {
+        "milliseconds": 4280,
+        "stages": {
+          "Search fill": 268.62,
+          "Search inputValue": 4.84,
+          "Search press + navigation": 207.48,
+          "JavaScript heading visible": 730.53,
+          "ECMAScript scrollIntoViewIfNeeded": 741.14,
+          "ECMAScript innerText": 191.34,
+          "ECMAScript getAttribute href": 173.87,
+          "ECMAScript click + navigation": 362.73,
+          "ECMAScript heading visible": 284.89,
+          "ECMAScript heading innerText": 5.21,
+          "ECMAScript page.title": 1.08
+        }
+      },
+      "warm": {
+        "milliseconds": 3646,
+        "stages": {
+          "Search fill": 238.23,
+          "Search inputValue": 4.92,
+          "Search press + navigation": 196.54,
+          "JavaScript heading visible": 675.15,
+          "ECMAScript scrollIntoViewIfNeeded": 728.89,
+          "ECMAScript innerText": 187.14,
+          "ECMAScript getAttribute href": 173.86,
+          "ECMAScript click + navigation": 362.18,
+          "ECMAScript heading visible": 288.13,
+          "ECMAScript heading innerText": 5.67,
+          "ECMAScript page.title": 1.02
+        }
+      }
+    }
+  ]
+}

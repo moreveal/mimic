@@ -7,6 +7,9 @@ func (d *Document) CopyInlineStyle(source, destination int64) {
 	defer d.mu.Unlock()
 	a, b := d.nodes[source], d.nodes[destination]
 	if a != nil && b != nil && a.Attributes["style"] == b.Attributes["style"] {
+		if b.StyleDeclarationsJSON != a.StyleDeclarationsJSON {
+			d.markConnectedMutationLocked(destination)
+		}
 		b.StyleDeclarationsJSON = a.StyleDeclarationsJSON
 	}
 }
@@ -40,5 +43,7 @@ func (d *Document) SetInlineStyle(id int64, text, declarationsJSON string) (any,
 	}
 	n.setAttribute("style", text)
 	n.StyleDeclarationsJSON = declarationsJSON
+	d.recordMutationLocked("attribute", id, "style")
+	d.recordConnectedMutationLocked("attribute", id, "style")
 	return old, nil
 }

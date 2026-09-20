@@ -1,0 +1,473 @@
+{
+  "binaries": {
+    "control": {
+      "file": "E:\\GitHub\\mimic\\.build\\mimic-poc-joint-topology.exe",
+      "sha256": "46cda8afc995de6343c5e89de84c030ab311278117cd633895089c0144982c2d"
+    },
+    "candidate": {
+      "file": "E:\\GitHub\\mimic\\.build\\mimic-poc-joint-query-all.exe",
+      "sha256": "303d728fa6c6658ef2625a399511472cd53d50aab78a97550a8ad38f7318bc35"
+    }
+  },
+  "diagnosticEnvironment": {
+    "MIMIC_POC_FREEZE_DERIVED": "1",
+    "MIMIC_POC_FREE_GEOMETRY": "1",
+    "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+    "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+    "MIMIC_POC_QUERY_MEMO": "1",
+    "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+    "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+  },
+  "results": [
+    {
+      "build": "control",
+      "trial": 1,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2717,
+        "stages": {
+          "Search fill": 17.26,
+          "Search inputValue": 3.9,
+          "Search press + navigation": 157.03,
+          "JavaScript heading visible": 270.76,
+          "ECMAScript scrollIntoViewIfNeeded": 256.7,
+          "ECMAScript innerText": 143.52,
+          "ECMAScript getAttribute href": 126.23,
+          "ECMAScript click + navigation": 294.37,
+          "ECMAScript heading visible": 164.58,
+          "ECMAScript heading innerText": 4.86,
+          "ECMAScript page.title": 0.95
+        }
+      },
+      "warm": {
+        "milliseconds": 2664,
+        "stages": {
+          "Search fill": 18.81,
+          "Search inputValue": 3.87,
+          "Search press + navigation": 254.32,
+          "JavaScript heading visible": 288.68,
+          "ECMAScript scrollIntoViewIfNeeded": 267.55,
+          "ECMAScript innerText": 149.22,
+          "ECMAScript getAttribute href": 133.85,
+          "ECMAScript click + navigation": 365.08,
+          "ECMAScript heading visible": 181,
+          "ECMAScript heading innerText": 5.48,
+          "ECMAScript page.title": 1.41
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 1,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2251,
+        "stages": {
+          "Search fill": 17.16,
+          "Search inputValue": 2.11,
+          "Search press + navigation": 160.96,
+          "JavaScript heading visible": 267.05,
+          "ECMAScript scrollIntoViewIfNeeded": 261.99,
+          "ECMAScript innerText": 1.98,
+          "ECMAScript getAttribute href": 1.61,
+          "ECMAScript click + navigation": 156.72,
+          "ECMAScript heading visible": 163.82,
+          "ECMAScript heading innerText": 3.29,
+          "ECMAScript page.title": 1.05
+        }
+      },
+      "warm": {
+        "milliseconds": 2147,
+        "stages": {
+          "Search fill": 28.46,
+          "Search inputValue": 2.89,
+          "Search press + navigation": 238.79,
+          "JavaScript heading visible": 300.84,
+          "ECMAScript scrollIntoViewIfNeeded": 286.32,
+          "ECMAScript innerText": 1.95,
+          "ECMAScript getAttribute href": 1.55,
+          "ECMAScript click + navigation": 248.94,
+          "ECMAScript heading visible": 185.09,
+          "ECMAScript heading innerText": 3.82,
+          "ECMAScript page.title": 1.64
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 2,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2257,
+        "stages": {
+          "Search fill": 17.55,
+          "Search inputValue": 2.45,
+          "Search press + navigation": 158.19,
+          "JavaScript heading visible": 264.61,
+          "ECMAScript scrollIntoViewIfNeeded": 250.36,
+          "ECMAScript innerText": 1.96,
+          "ECMAScript getAttribute href": 1.67,
+          "ECMAScript click + navigation": 155.4,
+          "ECMAScript heading visible": 170.45,
+          "ECMAScript heading innerText": 4.5,
+          "ECMAScript page.title": 1.16
+        }
+      },
+      "warm": {
+        "milliseconds": 2221,
+        "stages": {
+          "Search fill": 21.56,
+          "Search inputValue": 2.55,
+          "Search press + navigation": 268,
+          "JavaScript heading visible": 333.54,
+          "ECMAScript scrollIntoViewIfNeeded": 289.7,
+          "ECMAScript innerText": 1.94,
+          "ECMAScript getAttribute href": 1.7,
+          "ECMAScript click + navigation": 230.01,
+          "ECMAScript heading visible": 174.5,
+          "ECMAScript heading innerText": 3.45,
+          "ECMAScript page.title": 0.98
+        }
+      }
+    },
+    {
+      "build": "control",
+      "trial": 2,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2731,
+        "stages": {
+          "Search fill": 18.8,
+          "Search inputValue": 4.46,
+          "Search press + navigation": 160.64,
+          "JavaScript heading visible": 268.92,
+          "ECMAScript scrollIntoViewIfNeeded": 258.74,
+          "ECMAScript innerText": 143.63,
+          "ECMAScript getAttribute href": 131.05,
+          "ECMAScript click + navigation": 301.2,
+          "ECMAScript heading visible": 163.03,
+          "ECMAScript heading innerText": 4.88,
+          "ECMAScript page.title": 0.95
+        }
+      },
+      "warm": {
+        "milliseconds": 2699,
+        "stages": {
+          "Search fill": 19.26,
+          "Search inputValue": 4.28,
+          "Search press + navigation": 281.84,
+          "JavaScript heading visible": 290.25,
+          "ECMAScript scrollIntoViewIfNeeded": 286.39,
+          "ECMAScript innerText": 156.97,
+          "ECMAScript getAttribute href": 129.37,
+          "ECMAScript click + navigation": 402.63,
+          "ECMAScript heading visible": 178.5,
+          "ECMAScript heading innerText": 6.11,
+          "ECMAScript page.title": 1.41
+        }
+      }
+    },
+    {
+      "build": "control",
+      "trial": 3,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2726,
+        "stages": {
+          "Search fill": 18.39,
+          "Search inputValue": 4.67,
+          "Search press + navigation": 156.64,
+          "JavaScript heading visible": 277.31,
+          "ECMAScript scrollIntoViewIfNeeded": 261.37,
+          "ECMAScript innerText": 152.23,
+          "ECMAScript getAttribute href": 159.17,
+          "ECMAScript click + navigation": 305.15,
+          "ECMAScript heading visible": 153.54,
+          "ECMAScript heading innerText": 5,
+          "ECMAScript page.title": 1
+        }
+      },
+      "warm": {
+        "milliseconds": 2702,
+        "stages": {
+          "Search fill": 18.86,
+          "Search inputValue": 4.34,
+          "Search press + navigation": 255.39,
+          "JavaScript heading visible": 292.16,
+          "ECMAScript scrollIntoViewIfNeeded": 264.68,
+          "ECMAScript innerText": 143.66,
+          "ECMAScript getAttribute href": 129.72,
+          "ECMAScript click + navigation": 356.68,
+          "ECMAScript heading visible": 175.34,
+          "ECMAScript heading innerText": 7.39,
+          "ECMAScript page.title": 1.64
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 3,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2251,
+        "stages": {
+          "Search fill": 16.79,
+          "Search inputValue": 2.15,
+          "Search press + navigation": 161.57,
+          "JavaScript heading visible": 267.97,
+          "ECMAScript scrollIntoViewIfNeeded": 262.81,
+          "ECMAScript innerText": 2.13,
+          "ECMAScript getAttribute href": 1.59,
+          "ECMAScript click + navigation": 164.72,
+          "ECMAScript heading visible": 156.37,
+          "ECMAScript heading innerText": 3.74,
+          "ECMAScript page.title": 1.18
+        }
+      },
+      "warm": {
+        "milliseconds": 2231,
+        "stages": {
+          "Search fill": 18.87,
+          "Search inputValue": 2.63,
+          "Search press + navigation": 354.32,
+          "JavaScript heading visible": 298,
+          "ECMAScript scrollIntoViewIfNeeded": 268.82,
+          "ECMAScript innerText": 2.39,
+          "ECMAScript getAttribute href": 1.66,
+          "ECMAScript click + navigation": 271.1,
+          "ECMAScript heading visible": 182.66,
+          "ECMAScript heading innerText": 3.71,
+          "ECMAScript page.title": 1.31
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 4,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2290,
+        "stages": {
+          "Search fill": 16.7,
+          "Search inputValue": 2.16,
+          "Search press + navigation": 154.55,
+          "JavaScript heading visible": 262.29,
+          "ECMAScript scrollIntoViewIfNeeded": 262.02,
+          "ECMAScript innerText": 2.06,
+          "ECMAScript getAttribute href": 1.62,
+          "ECMAScript click + navigation": 155.61,
+          "ECMAScript heading visible": 159.89,
+          "ECMAScript heading innerText": 3.13,
+          "ECMAScript page.title": 0.94
+        }
+      },
+      "warm": {
+        "milliseconds": 2120,
+        "stages": {
+          "Search fill": 19.64,
+          "Search inputValue": 2.77,
+          "Search press + navigation": 233.52,
+          "JavaScript heading visible": 296.44,
+          "ECMAScript scrollIntoViewIfNeeded": 262.8,
+          "ECMAScript innerText": 2.4,
+          "ECMAScript getAttribute href": 1.8,
+          "ECMAScript click + navigation": 293.49,
+          "ECMAScript heading visible": 179.49,
+          "ECMAScript heading innerText": 3.3,
+          "ECMAScript page.title": 1.06
+        }
+      }
+    },
+    {
+      "build": "control",
+      "trial": 4,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2676,
+        "stages": {
+          "Search fill": 16.8,
+          "Search inputValue": 3.57,
+          "Search press + navigation": 159.16,
+          "JavaScript heading visible": 265.39,
+          "ECMAScript scrollIntoViewIfNeeded": 262.66,
+          "ECMAScript innerText": 139.62,
+          "ECMAScript getAttribute href": 126.59,
+          "ECMAScript click + navigation": 298.51,
+          "ECMAScript heading visible": 158.79,
+          "ECMAScript heading innerText": 4.81,
+          "ECMAScript page.title": 0.89
+        }
+      },
+      "warm": {
+        "milliseconds": 2651,
+        "stages": {
+          "Search fill": 17.98,
+          "Search inputValue": 4.04,
+          "Search press + navigation": 248.28,
+          "JavaScript heading visible": 295.82,
+          "ECMAScript scrollIntoViewIfNeeded": 287,
+          "ECMAScript innerText": 150.62,
+          "ECMAScript getAttribute href": 126.29,
+          "ECMAScript click + navigation": 372.41,
+          "ECMAScript heading visible": 177.97,
+          "ECMAScript heading innerText": 5.85,
+          "ECMAScript page.title": 1.37
+        }
+      }
+    },
+    {
+      "build": "control",
+      "trial": 5,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2675,
+        "stages": {
+          "Search fill": 16.87,
+          "Search inputValue": 3.44,
+          "Search press + navigation": 158.01,
+          "JavaScript heading visible": 266.53,
+          "ECMAScript scrollIntoViewIfNeeded": 258.97,
+          "ECMAScript innerText": 141.51,
+          "ECMAScript getAttribute href": 126,
+          "ECMAScript click + navigation": 295.22,
+          "ECMAScript heading visible": 160.96,
+          "ECMAScript heading innerText": 5.44,
+          "ECMAScript page.title": 1.1
+        }
+      },
+      "warm": {
+        "milliseconds": 2649,
+        "stages": {
+          "Search fill": 19.57,
+          "Search inputValue": 3.93,
+          "Search press + navigation": 239.36,
+          "JavaScript heading visible": 285.63,
+          "ECMAScript scrollIntoViewIfNeeded": 275.34,
+          "ECMAScript innerText": 147.23,
+          "ECMAScript getAttribute href": 129.38,
+          "ECMAScript click + navigation": 378.13,
+          "ECMAScript heading visible": 167.08,
+          "ECMAScript heading innerText": 9.05,
+          "ECMAScript page.title": 2.82
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 5,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_FREEZE_DERIVED": "1",
+        "MIMIC_POC_FREE_GEOMETRY": "1",
+        "MIMIC_POC_NO_AUTHOR_SCRIPT": "1",
+        "MIMIC_POC_NO_AUTHOR_STYLE": "1",
+        "MIMIC_POC_QUERY_MEMO": "1",
+        "MIMIC_POC_SNAPSHOT_ATTRIBUTES": "1",
+        "MIMIC_POC_SNAPSHOT_TOPOLOGY": "1"
+      },
+      "cold": {
+        "milliseconds": 2243,
+        "stages": {
+          "Search fill": 17.15,
+          "Search inputValue": 2.23,
+          "Search press + navigation": 158.65,
+          "JavaScript heading visible": 273.48,
+          "ECMAScript scrollIntoViewIfNeeded": 254.35,
+          "ECMAScript innerText": 2.06,
+          "ECMAScript getAttribute href": 1.82,
+          "ECMAScript click + navigation": 162.53,
+          "ECMAScript heading visible": 157.76,
+          "ECMAScript heading innerText": 3.13,
+          "ECMAScript page.title": 0.93
+        }
+      },
+      "warm": {
+        "milliseconds": 2107,
+        "stages": {
+          "Search fill": 20.59,
+          "Search inputValue": 2.48,
+          "Search press + navigation": 251,
+          "JavaScript heading visible": 325.68,
+          "ECMAScript scrollIntoViewIfNeeded": 262.07,
+          "ECMAScript innerText": 2.49,
+          "ECMAScript getAttribute href": 1.77,
+          "ECMAScript click + navigation": 227.2,
+          "ECMAScript heading visible": 173,
+          "ECMAScript heading innerText": 4.88,
+          "ECMAScript page.title": 1.89
+        }
+      }
+    }
+  ]
+}

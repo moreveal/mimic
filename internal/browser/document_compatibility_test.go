@@ -42,6 +42,37 @@ func TestInertHTMLDocumentOwnershipChrome152(t *testing.T) {
 	}
 }
 
+// Topology, ownership and attribute projections may share an internal pure-read
+// observation, but ordinary script can mutate between any two public getters.
+// Keep this as a single callback so a retained public snapshot cannot pass by
+// relying on the next protocol command to invalidate it.
+func TestDOMReadMutationReparentAndAdoption(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const first=document.createElement('section'),second=document.createElement('section'),node=document.createElement('span');
+ document.body.append(first,second);first.append(node);node.setAttribute('data-state','before');
+ const before=node.parentNode===first&&node.ownerDocument===document&&node.getAttribute('data-state')==='before';
+ second.append(node);node.setAttribute('data-state','after');
+ const moved=node.parentNode===second&&node.ownerDocument===document&&node.getAttribute('data-state')==='after';
+ const inert=document.implementation.createHTMLDocument('owner');inert.body.append(node);
+ const adopted=node.parentNode===inert.body&&node.ownerDocument===inert&&node.getAttribute('data-state')==='after';
+ document.body.append(node);
+ return before&&moved&&adopted&&node.parentNode===document.body&&node.ownerDocument===document;
+})()`)
+	if err != nil || value != true {
+		t.Fatalf("DOM read/mutate/read semantics: %v %v", value, err)
+	}
+}
+
 func TestXMLDocumentFactoryChrome152(t *testing.T) {
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {

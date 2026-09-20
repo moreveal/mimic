@@ -48,4 +48,8 @@ func (d *Document) ShareNodeArena(other *Document) {
 	other.hasFrameElements = other.hasFrameElements || d.hasFrameElements
 	d.root = ids[oldRoot]
 	d.nodeArena = other.nodeArena
+	if other.activeObservationRoots == nil {
+		other.activeObservationRoots = make(map[int64]bool)
+	}
+	other.activeObservationRoots[d.root] = true
 }

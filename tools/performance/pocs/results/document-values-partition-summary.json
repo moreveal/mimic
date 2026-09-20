@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "R": "real properties and real visibility",
+    "A": "real properties and constant true visibility",
+    "B": "constant properties and real visibility",
+    "C": "constant properties and constant true visibility, retaining query/rows/JSON",
+    "D": "real compute with structured rows across the bridge instead of JSON"
+  },
+  "firstJavascriptDocumentBatchMsRepresentative": {
+    "R": 237.3,
+    "A": 190.8,
+    "B": 197.7,
+    "C": 4.3,
+    "D": 222.5
+  },
+  "fullE2EMediansMs": {
+    "A": { "controlCold": 10125, "candidateCold": 10211, "controlWarm": 6333, "candidateWarm": 6273 },
+    "B": { "controlCold": 9958, "candidateCold": 10056, "controlWarm": 6316, "candidateWarm": 6309 }
+  },
+  "singleRunSmokeMs": { "CCold": 9923, "DCold": 11118 },
+  "conclusion": "Properties and visibility share first-build state: either real branch pays nearly the whole batch. Removing both reduces the owner loop to about 4 ms, but does not establish an E2E-sized independent contributor. Structured transfer is slower in the full smoke."
+}

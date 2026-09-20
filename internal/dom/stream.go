@@ -25,6 +25,7 @@ func (d *Document) NewStream() (*Stream, error) {
 		d.mu.Unlock()
 		return nil, fmt.Errorf("HTML stream requires a document")
 	}
+	d.markConnectedMutationLocked(d.root)
 	for _, id := range root.Children {
 		if node := d.nodes[id]; node != nil {
 			node.Parent = 0
@@ -213,6 +214,7 @@ func (b streamBackend) SetNamespace(id int64, namespace string) {
 	d := b.d
 	d.mu.Lock()
 	defer d.mu.Unlock()
+	d.markConnectedMutationLocked(id)
 	d.nodes[id].Namespace = streamNamespace(namespace)
 }
 func (b streamBackend) SetAttributes(id int64, attrs []html.Attribute) {
@@ -220,6 +222,7 @@ func (b streamBackend) SetAttributes(id int64, attrs []html.Attribute) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	n := d.nodes[id]
+	d.markConnectedMutationLocked(id)
 	n.Attributes = map[string]string{}
 	n.AttributeNames = nil
 	n.AttributeNamespaces = nil

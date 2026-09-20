@@ -1,0 +1,100 @@
+diff --git a/internal/browser/document_compatibility.go b/internal/browser/document_compatibility.go
+index a01e1d3..b70aab8 100644
+--- a/internal/browser/document_compatibility.go
++++ b/internal/browser/document_compatibility.go
+@@ -4,5 +4,6 @@ import (
+ 	"context"
+ 	"encoding/json"
+ 	"fmt"
++	"os"
+ 	"sort"
+ 	"strings"
+@@ -12,4 +13,10 @@ import (
+ )
+ 
+ func (r *Realm) installDocumentCompatibility(host map[string]any) {
++	host["pocDocumentValuesMode"] = os.Getenv("MIMIC_POC_DOCUMENT_VALUES_MODE")
++	host["pocDocumentValuesDuration"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
++		fmt.Fprintf(os.Stderr, "POC_DOCUMENT_VALUES mode=%s duration_ms=%.3f rows=%d properties=%d\n",
++			os.Getenv("MIMIC_POC_DOCUMENT_VALUES_MODE"), numarg(args, 0), int(numarg(args, 1)), int(numarg(args, 2)))
++		return nil, nil
++	})
+ 	host["disableStyleProjectionCache"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+index d60266e..c2ffac5 100644
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -3188,16 +3188,38 @@
+       : kind === 'documentValues'
+         ? withStyleReadCache(() => {
+             const properties = JSON.parse(name),
+-              rows = [];
++              rows = [],
++              mode = host.pocDocumentValuesMode,
++              started = performance.now(),
++              constantValue = (property) =>
++                property === 'display'
++                  ? 'block'
++                  : property === 'visibility'
++                    ? 'visible'
++                    : property === 'cursor'
++                      ? 'auto'
++                      : property === 'content'
++                        ? 'normal'
++                        : '';
+             for (const candidate of compatibilitySelectors.query(document, '*')) {
+               const values = {};
+               for (const property of properties)
+-                values[property] = cssComputedValue(candidate, property);
++                values[property] =
++                  mode === 'B' || mode === 'C'
++                    ? constantValue(property)
++                    : cssComputedValue(candidate, property);
+               rows.push([
+                 elementSlot(candidate).nodeId,
+                 values,
+-                observeElementVisibility(candidate),
++                mode === 'A' || mode === 'C' ? true : observeElementVisibility(candidate),
+               ]);
+             }
+-            return JSON.stringify(rows);
++            const encoded = JSON.stringify(rows);
++            if (mode)
++              host.pocDocumentValuesDuration(
++                performance.now() - started,
++                rows.length,
++                properties.length,
++              );
++            return mode === 'D' ? rows : encoded;
+           })
+diff --git a/internal/webapi/css_computed_values.js b/internal/webapi/css_computed_values.js
+index 53231e6..81385c8 100644
+--- a/internal/webapi/css_computed_values.js
++++ b/internal/webapi/css_computed_values.js
+@@ -208,7 +208,9 @@ const cssComputedValue = (element, name) => {
+           documentBatch ? 'documentValues' : 'values',
+           JSON.stringify(properties),
+         );
+       if (foreign !== null) {
+         if (documentBatch) {
+-          for (const [nodeID, record, visibility] of JSON.parse(foreign)) {
++          for (const [nodeID, record, visibility] of Array.isArray(foreign)
++            ? foreign
++            : JSON.parse(foreign)) {
+             const key = String(nodeID),
+diff --git a/internal/browser/style_projection_cache.go b/internal/browser/style_projection_cache.go
+index 15c1700..9375719 100644
+--- a/internal/browser/style_projection_cache.go
++++ b/internal/browser/style_projection_cache.go
+@@ -72,6 +72,11 @@ func (c *styleProjectionCache) put(epoch styleProjectionEpoch, key styleProjecti
+ 		scalarBytes = len(scalar)
+ 	case bool:
+ 		scalarBytes = 1
++	case []any:
++		// Destructive structured-bridge experiment only. The row count is bounded
++		// by the existing document projection and this estimate preserves cache
++		// admission so D differs only in transport representation.
++		scalarBytes = len(scalar) * 48
+ 	default:
+ 		return
+ 	}

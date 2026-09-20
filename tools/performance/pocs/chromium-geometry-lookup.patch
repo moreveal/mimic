@@ -1,0 +1,15 @@
+diff --git a/internal/webapi/css_box_geometry.js b/internal/webapi/css_box_geometry.js
+--- a/internal/webapi/css_box_geometry.js
++++ b/internal/webapi/css_box_geometry.js
+@@ -746,6 +746,11 @@ const cssBoxGeometry = (() => {
+       plans = styleReadCache.sizePlans || (styleReadCache.sizePlans = new WeakMap()),
+       active = plans.get(element);
+     if (active?.state === 'computing') return active.value;
++    // An existing observation-valid box already includes table allocation.
++    // Avoid walking every ancestor again merely to rediscover that allocation.
++    // The lookup below the walk remains necessary: constructing a table can
++    // populate the requested row/cell box as a side effect.
++    if (cache.has(element)) return cache.get(element);
+     for (let parent = geometryParent(element); parent; parent = geometryParent(parent))
+       if (state(parent).display === 'table') {
+         if (!cache.has(parent)) size(parent);

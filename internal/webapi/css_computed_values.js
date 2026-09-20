@@ -190,9 +190,19 @@ const cssComputedValue = (element, name) => {
         (selectorTarget === 0 || cached.version === styleReadCache.version)
       )
         return cached.values.get(name);
-      const properties = Array.from(new Set([name, 'display', 'visibility'])),
-        documentBatch =
-          selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128,
+      // A retained document projection is additive within one canonical epoch.
+      // Role, visibility, scrolling and input ask for overlapping property
+      // sets; replacing a row here made those consumers repeatedly transfer
+      // and parse the complete document merely because the last property name
+      // differed. Request only the missing columns and merge them below.
+      const required = Array.from(new Set([name, 'display', 'visibility'])),
+        properties = required.filter((property) => !cached?.values.has(property));
+      if (checkpointForeignDocumentBatchVersion !== stableEpoch) {
+        checkpointForeignDocumentBatchVersion = stableEpoch;
+        checkpointForeignDocumentBatch =
+          selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128;
+      }
+      const documentBatch = selectorTarget === 0 && checkpointForeignDocumentBatch,
         foreign = foreignCSSObservation(
           element,
           documentBatch ? 'documentValues' : 'values',
@@ -200,15 +210,22 @@ const cssComputedValue = (element, name) => {
         );
       if (foreign !== null) {
         if (documentBatch) {
-          for (const [nodeID, record, visibility] of JSON.parse(foreign))
-            activeBatches.set(String(nodeID), {
+          for (const [nodeID, record, visibility] of JSON.parse(foreign)) {
+            const key = String(nodeID),
+              prior = activeBatches.get(key),
+              values = prior?.version === styleReadCache.version ? prior.values : new Map();
+            for (const [property, value] of Object.entries(record)) values.set(property, value);
+            activeBatches.set(key, {
               version: styleReadCache.version,
-              values: new Map(Object.entries(record)),
+              values,
               visibility,
             });
+          }
           return activeBatches.get(nodeID)?.values.get(name) ?? '';
         }
-        const values = new Map(Object.entries(JSON.parse(foreign)));
+        const values = cached?.version === styleReadCache.version ? cached.values : new Map();
+        for (const [property, value] of Object.entries(JSON.parse(foreign)))
+          values.set(property, value);
         activeBatches.set(nodeID, { version: styleReadCache.version, values });
         return values.get(name) ?? '';
       }
@@ -249,6 +266,39 @@ const cssBatchedForeignVisibility = (element) => {
   const cached = checkpointForeignComputedValues.get(String(elementSlot(element).nodeId));
   return cached?.version === styleReadCache.version ? cached.visibility : undefined;
 };
+// Remember only where inheritance found an explicit specified value. The
+// computed value is still resolved at the source element, preserving relative
+// units, currentcolor and animation sampling. This is observation-local path
+// compression: dynamic observations bypass it and mutation epochs receive a
+// fresh map from withStyleReadCache.
+const cssInheritedSource = (element, name) => {
+  const cache =
+      styleReadCache && !styleObservationDynamic
+        ? styleReadCache.inheritedSources || (styleReadCache.inheritedSources = new WeakMap())
+        : null,
+    visited = [];
+  let source = null;
+  for (let node = element; elementSlot(node)?.type === 'element'; node = cssFontParent(node)) {
+    const known = cache?.get(node);
+    if (known?.has(name)) {
+      source = known.get(name);
+      break;
+    }
+    if (cache) visited.push(node);
+    const value = computedCSSDeclarations(node).find((entry) => entry.name === name)?.value;
+    if (value != null && value !== 'inherit' && value !== 'unset') {
+      source = { element: node, value };
+      break;
+    }
+  }
+  if (cache && name.length <= 128)
+    for (const node of visited) {
+      let values = cache.get(node);
+      if (!values) cache.set(node, (values = new Map()));
+      if (values.size < 32) values.set(name, source);
+    }
+  return source;
+};
 // Immutable scalar projections share the canonical observation epoch. Animation
 // time is not a DOM mutation, so animated realms always resolve a fresh value.
 const resolveCSSComputedValue = (element, name) => {
@@ -265,17 +315,15 @@ const resolveCSSComputedValue = (element, name) => {
     inherit = cssInheritedProperties.has(name);
   if (value === 'inherit' || ((value == null || value === 'unset') && inherit)) {
     value = undefined;
-    for (let p = cssFontParent(element); elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
-      const v = computedCSSDeclarations(p).find((e) => e.name === name)?.value;
-      if (v != null && !['inherit', 'unset'].includes(v)) {
-        value =
-          v === 'currentcolor' ||
-          (name === 'caret-color' && v === 'auto') ||
-          (name === 'line-height' && cssNumberRegex.test(v))
-            ? v
-            : cssComputedValue(p, name);
-        break;
-      }
+    const source = cssInheritedSource(cssFontParent(element), name);
+    if (source) {
+      const v = source.value;
+      value =
+        v === 'currentcolor' ||
+        (name === 'caret-color' && v === 'auto') ||
+        (name === 'line-height' && cssNumberRegex.test(v))
+          ? v
+          : cssComputedValue(source.element, name);
     }
     if (value == null) value = initial;
   }
@@ -358,6 +406,18 @@ const resolveCSSComputedValue = (element, name) => {
     )
   )
     return 'isolate';
+  // These scalar values have no logical-axis, length or box-dependent
+  // serialization. Cascade, inheritance, animation and special initial-value
+  // handling above are complete, so avoid constructing unrelated box state.
+  if (
+    name === 'cursor' ||
+    name === 'visibility' ||
+    name === 'direction' ||
+    name === 'pointer-events' ||
+    name === 'white-space-collapse' ||
+    name === 'text-wrap-mode'
+  )
+    return value;
   const writing = (() => {
       for (let p = element; elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
         const v = computedCSSDeclarations(p).find((e) => e.name === 'writing-mode')?.value;

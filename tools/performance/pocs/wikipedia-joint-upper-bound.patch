@@ -1,0 +1,686 @@
+diff --git a/internal/browser/debugger.go b/internal/browser/debugger.go
+index e977ae6..4294d10 100644
+--- a/internal/browser/debugger.go
++++ b/internal/browser/debugger.go
+@@ -281,6 +281,9 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
+ 	d.profileCallFunctionPhase("arguments", phaseStarted)
+ 	var value engine.Value
+ 	phaseStarted = time.Now()
++	if os.Getenv("MIMIC_POC_QUERY_MEMO") == "1" {
++		declaration = diagnosticQueryMemoDeclaration(declaration)
++	}
+ 	err = state.realm.debuggerInline(ctx, true, func(ctx context.Context) error {
+ 		declarationStarted := time.Now()
+ 		function, err := state.realm.Evaluate(ctx, "(\n"+declaration+"\n)", "__pyppeteer_evaluation_script__")
+@@ -294,6 +297,15 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
+ 		d.profileCallFunctionPhase("declaration", declarationStarted)
+ 		invokeStarted := time.Now()
+ 		value, err = state.invoke(ctx, "call", params, function)
++		if os.Getenv("MIMIC_POC_QUERY_MEMO_DIAG") == "1" {
++			stats, statsErr := state.realm.Evaluate(ctx, `JSON.stringify(globalThis[Symbol.for('mimic.diagnostic.playwrightQueryMemo')]?.stats || null)`, "mimic-query-memo-stats")
++			if statsErr == nil {
++				fmt.Fprintf(os.Stderr, "[QUERY_MEMO] realm=%s %s\n", state.realm.ID, stats.String())
++				releaseDebuggerValue(state.realm, stats)
++			} else {
++				fmt.Fprintf(os.Stderr, "[QUERY_MEMO] realm=%s error=%v\n", state.realm.ID, statsErr)
++			}
++		}
+ 		d.profileCallFunctionPhase("invoke", invokeStarted)
+ 		return err
+ 	})
+diff --git a/internal/browser/document_compatibility.go b/internal/browser/document_compatibility.go
+index a01e1d3..0a938e1 100644
+--- a/internal/browser/document_compatibility.go
++++ b/internal/browser/document_compatibility.go
+@@ -4,6 +4,7 @@ import (
+ 	"context"
+ 	"encoding/json"
+ 	"fmt"
++	"os"
+ 	"sort"
+ 	"strings"
+ 
+@@ -12,6 +13,10 @@ import (
+ )
+ 
+ func (r *Realm) installDocumentCompatibility(host map[string]any) {
++	host["pocNoAuthorStyle"] = os.Getenv("MIMIC_POC_NO_AUTHOR_STYLE") == "1"
++	host["pocFreeGeometry"] = os.Getenv("MIMIC_POC_FREE_GEOMETRY") == "1"
++	host["pocSnapshotAttributes"] = os.Getenv("MIMIC_POC_SNAPSHOT_ATTRIBUTES") == "1"
++	host["pocSnapshotTopology"] = os.Getenv("MIMIC_POC_SNAPSHOT_TOPOLOGY") == "1"
+ 	host["disableStyleProjectionCache"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+ 		// Animation time changes without a DOM mutation. Keep those observations
+ 		// in the canonical owner rather than freezing an intermediate sample.
+diff --git a/internal/browser/realm.go b/internal/browser/realm.go
+index 284b86f..1ab7423 100644
+--- a/internal/browser/realm.go
++++ b/internal/browser/realm.go
+@@ -16,6 +16,7 @@ import (
+ 	"fmt"
+ 	"net/http"
+ 	"net/url"
++	"os"
+ 	"sort"
+ 	"strconv"
+ 	"strings"
+@@ -451,6 +452,10 @@ func (r *Realm) evaluateClassicScript(ctx context.Context, source, name string,
+ 	previous := r.currentScript
+ 	r.currentScript = scriptID
+ 	defer func() { r.currentScript = previous }()
++	// Destructive diagnostic combination only.
++	if os.Getenv("MIMIC_POC_NO_AUTHOR_SCRIPT") == "1" {
++		return r.checkpoint(ctx)
++	}
+ 	_, evalErr := r.Evaluate(ctx, source, name)
+ 	return errors.Join(evalErr, r.checkpoint(ctx))
+ }
+diff --git a/internal/engine/v8/spike.go b/internal/engine/v8/spike.go
+index ca6f869..9c55002 100644
+--- a/internal/engine/v8/spike.go
++++ b/internal/engine/v8/spike.go
+@@ -8,6 +8,7 @@ import (
+ 	"encoding/json"
+ 	"errors"
+ 	"fmt"
++	"os"
+ 	"sync"
+ 
+ 	gov8 "github.com/maclof/gov8"
+@@ -63,6 +64,12 @@ var initialize = sync.OnceValues(func() (bool, error) {
+ 	if err := gov8.SetFlagsFromString("--no-extensible-ro-snapshot"); err != nil {
+ 		return false, err
+ 	}
++	// Temporary diagnostic: measure tier-up costs in newly created realms.
++	if flags := os.Getenv("MIMIC_POC_V8_FLAGS"); flags != "" {
++		if err := gov8.SetFlagsFromString(flags); err != nil {
++			return false, err
++		}
++	}
+ 	return true, gov8.Initialize()
+ })
+ 
+diff --git a/internal/webapi/css_box_geometry.js b/internal/webapi/css_box_geometry.js
+index 1657e3c..15ef42e 100644
+--- a/internal/webapi/css_box_geometry.js
++++ b/internal/webapi/css_box_geometry.js
+@@ -311,7 +311,21 @@ const cssBoxModel = (() => {
+     // Publish a complete recursive state before resolving font inheritance.
+     // Complex author selectors can re-enter geometry while font size walks the
+     // ancestor cascade; callers must never observe a half-built state object.
+-    result.fontSize = cssComputedFontSize(element) ?? 16;
++    // Diagnostic demand plan: display/visibility-only reads do not use fonts.
++    Object.defineProperty(result, 'fontSize', {
++      configurable: true,
++      enumerable: true,
++      get() {
++        const value = cssComputedFontSize(element) ?? 16;
++        Object.defineProperty(result, 'fontSize', {
++          value,
++          writable: true,
++          configurable: true,
++          enumerable: true,
++        });
++        return value;
++      },
++    });
+     // Only style-derived data is retained. Sizes, positions, children, text flow
+     // and availability are rebuilt in the current geometry graph after mutation.
+     if (context && styleReadCache.retainable) context.value = result;
+diff --git a/internal/webapi/css_computed_values.js b/internal/webapi/css_computed_values.js
+index 02f2b92..67e93c2 100644
+--- a/internal/webapi/css_computed_values.js
++++ b/internal/webapi/css_computed_values.js
+@@ -249,6 +249,40 @@ const cssBatchedForeignVisibility = (element) => {
+   const cached = checkpointForeignComputedValues.get(String(elementSlot(element).nodeId));
+   return cached?.version === styleReadCache.version ? cached.visibility : undefined;
+ };
++// Cache only the nearest specified ancestor, not its computed/animated value.
++// Paths are compressed within the existing observation epoch; dynamic reads
++// retain the original uncached walk. No derived state crosses a mutation epoch.
++const cssInheritedSource = (element, name) => {
++  let cache = null;
++  if (styleReadCache && !styleObservationDynamic) {
++    if (styleReadCache.inheritedSourceVersion !== styleReadCache.geometryVersion) {
++      styleReadCache.inheritedSources = new WeakMap();
++      styleReadCache.inheritedSourceVersion = styleReadCache.geometryVersion;
++    }
++    cache = styleReadCache.inheritedSources || (styleReadCache.inheritedSources = new WeakMap());
++  }
++  const visited = [];
++  let source = null;
++  for (let p = element; elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
++    const known = cache?.get(p);
++    if (known?.has(name)) {
++      source = known.get(name);
++      break;
++    }
++    if (cache) visited.push(p);
++    const value = computedCSSDeclarations(p).find((entry) => entry.name === name)?.value;
++    if (value != null && value !== 'inherit' && value !== 'unset') {
++      source = { element: p, value };
++      break;
++    }
++  }
++  for (const p of visited) {
++    let values = cache.get(p);
++    if (!values) cache.set(p, (values = new Map()));
++    if (values.size < 32) values.set(name, source);
++  }
++  return source;
++};
+ // Immutable scalar projections share the canonical observation epoch. Animation
+ // time is not a DOM mutation, so animated realms always resolve a fresh value.
+ const resolveCSSComputedValue = (element, name) => {
+@@ -265,17 +299,15 @@ const resolveCSSComputedValue = (element, name) => {
+     inherit = cssInheritedProperties.has(name);
+   if (value === 'inherit' || ((value == null || value === 'unset') && inherit)) {
+     value = undefined;
+-    for (let p = cssFontParent(element); elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
+-      const v = computedCSSDeclarations(p).find((e) => e.name === name)?.value;
+-      if (v != null && !['inherit', 'unset'].includes(v)) {
+-        value =
+-          v === 'currentcolor' ||
+-          (name === 'caret-color' && v === 'auto') ||
+-          (name === 'line-height' && cssNumberRegex.test(v))
+-            ? v
+-            : cssComputedValue(p, name);
+-        break;
+-      }
++    const source = cssInheritedSource(cssFontParent(element), name);
++    if (source) {
++      const v = source.value;
++      value =
++        v === 'currentcolor' ||
++        (name === 'caret-color' && v === 'auto') ||
++        (name === 'line-height' && cssNumberRegex.test(v))
++          ? v
++          : cssComputedValue(source.element, name);
+     }
+     if (value == null) value = initial;
+   }
+@@ -358,6 +390,18 @@ const resolveCSSComputedValue = (element, name) => {
+     )
+   )
+     return 'isolate';
++  // Diagnostic read-plan PoC: these scalar properties have no logical-axis,
++  // length, or box-dependent serialization below. Their cascade, inheritance,
++  // animation, and availability have already been resolved above.
++  if (
++    name === 'cursor' ||
++    name === 'visibility' ||
++    name === 'direction' ||
++    name === 'pointer-events' ||
++    name === 'white-space-collapse' ||
++    name === 'text-wrap-mode'
++  )
++    return value;
+   const writing = (() => {
+       for (let p = element; elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
+         const v = computedCSSDeclarations(p).find((e) => e.name === 'writing-mode')?.value;
+diff --git a/internal/webapi/cssom_compatibility.js b/internal/webapi/cssom_compatibility.js
+index 4065055..0ba768c 100644
+--- a/internal/webapi/cssom_compatibility.js
++++ b/internal/webapi/cssom_compatibility.js
+@@ -453,7 +453,8 @@ const constructedStyleSheets = (() => {
+     }
+     return false;
+   };
+-  function ownerSheet(owner) {
++  function ownerSheet(owner, sourceOnly = false) {
++    sourceOnly = sourceOnly === true;
+     if (!elementSlot(owner)) throw new TypeError('Illegal invocation');
+     const data = elementSlot(owner),
+       attribute = (name) => host.getAttribute(data.nodeId, name);
+@@ -483,18 +484,27 @@ const constructedStyleSheets = (() => {
+     const source = tag === 'link' ? resource.body : host.textContent(data.nodeId) || '',
+       key = tag === 'link' ? resource.url : source;
+     let sheet = prior?.key === key ? prior.sheet : null;
++    // Diagnostic source-plan PoC: style matching does not need observable
++    // CSSOM wrappers. Delay their creation until a CSSOM consumer requests
++    // them. Raw-source equivalence to normalized CSS is not yet validated.
++    if (sourceOnly && !sheet) {
++      const media = attribute('media') || '';
++      return media && !cssMediaMatches(media) ? '' : source;
++    }
+     if (!sheet) {
+       sheet = new CSSStyleSheet();
+       const s = sheets.get(sheet);
+       s.owner = owner;
+       s.href = resource?.url || null;
+       s.crossOrigin = !!resource?.crossOrigin;
++      s.originalSource = source;
++      s.originalSourceRevision = revision;
+       s.rules.push(...parsedRules(source, sheet));
+       owners.set(owner, { key, sheet });
+     }
+     const state = sheets.get(sheet);
+     state.media = attribute('media') || '';
+-    return sheet;
++    return sourceOnly ? sourceText(sheet) : sheet;
+   }
+   for (const type of ['HTMLStyleElement', 'SVGStyleElement', 'HTMLLinkElement'])
+     if (globalThis[type]) {
+@@ -564,6 +574,10 @@ const constructedStyleSheets = (() => {
+   const sourceText = (sheet) => {
+     const state = sheets.get(sheet);
+     if (state.disabled || (state.media && !cssMediaMatches(state.media))) return '';
++    // Any CSSOM edit conservatively restores canonical serialization for all
++    // existing sheets. The shortcut therefore cannot conceal rule edits.
++    if (state.originalSource !== undefined && state.originalSourceRevision === revision)
++      return state.originalSource;
+     let cached = sourceCache.get(sheet);
+     if (!cached || cached.revision !== revision) {
+       cached = { revision, text: state.rules.map((rule) => ruleText(rule, true)).join('\n') };
+@@ -634,9 +648,11 @@ const constructedStyleSheets = (() => {
+       return result;
+     },
+     sources(root) {
+-      return Array.from(ownerCollection(root))
+-        .concat(adopted.get(root) || [])
+-        .map(sourceText);
++      return compatibilitySelectors
++        .query(root, 'style,link', false, false)
++        .map((owner) => ownerSheet(owner, true))
++        .filter((source) => source !== null)
++        .concat((adopted.get(root) || []).map(sourceText));
+     },
+     snapshot(root) {
+       return (adopted.get(root) || [])
+diff --git a/internal/webapi/document_compatibility.js b/internal/webapi/document_compatibility.js
+index 5924090..0fa3d95 100644
+--- a/internal/webapi/document_compatibility.js
++++ b/internal/webapi/document_compatibility.js
+@@ -87,11 +87,17 @@ function wrapDocumentNode(data) {
+       throw new DOMException('Invalid namespace', 'NamespaceError');
+     return prefix ? prefix + ':' + local : local;
+   };
++  let pocOwners = new WeakMap();
++  bootstrapRestoreHooks.push(() => {
++    pocOwners = new WeakMap();
++  });
+   const ownerOf = (value) => {
+     if (value instanceof Document) return null;
+     const slot = elementSlot(value);
+     if (slot) {
++      if (host.pocSnapshotTopology && pocOwners.has(value)) return pocOwners.get(value);
+       const id = host.nodeOwnerDocument(slot.nodeId);
++      if (host.pocSnapshotTopology) pocOwners.set(value, id ? wrap(id) : null);
+       return id ? wrap(id) : null;
+     }
+     return fragmentOwnerDocuments.get(value) || document;
+diff --git a/internal/webapi/input.js b/internal/webapi/input.js
+index b851f9b..d413b90 100644
+--- a/internal/webapi/input.js
++++ b/internal/webapi/input.js
+@@ -701,6 +701,12 @@
+         y >= viewport.height
+       )
+         return [];
++      // Joint destructive geometry bound: fabricated boxes cannot establish
++      // paint order. Route the observation to the most recent measured target.
++      if (host.pocFreeGeometry) {
++        const hints = externalHints.length ? externalHints : geometryReadHints;
++        for (let i = hints.length - 1; i >= 0; i--) if (hints[i]?.isConnected) return [hints[i]];
++      }
+       const elements = [];
+       const collect = (tree) => {
+         for (const element of compatibilitySelectors.query(tree, '*')) {
+@@ -780,6 +786,9 @@
+         }
+       }
+       const hintAccepted = !!hint;
++      // Destructive diagnostic: trust the best validated hint without testing
++      // possible occluders. This deliberately truncates the complete hit list.
++      if (hintAccepted) return [hint];
+       for (const element of elements) {
+         if (element === hint) continue;
+         if (hintAccepted && !above(scope(element).rank, hintRank)) continue;
+@@ -919,15 +928,9 @@
+   const mouseCommand = (params, hintedTarget) => {
+     const x = Number(params.x),
+       y = Number(params.y),
+-      hintRect = hintedTarget?.isConnected ? clientRectFor(hintedTarget) : null,
+-      target =
+-        hintRect &&
+-        x >= hintRect.x &&
+-        x < hintRect.x + hintRect.width &&
+-        y >= hintRect.y &&
+-        y < hintRect.y + hintRect.height
+-          ? hintedTarget
+-          : pointTarget(x, y),
++      // Destructive diagnostic: movement or occlusion after actionability is
++      // ignored, but ordinary event dispatch and author handlers still run.
++      target = hintedTarget?.isConnected ? hintedTarget : pointTarget(x, y),
+       buttonName = params.button || 'none',
+       button = buttons[buttonName] ?? -1,
+       mask = buttonMasks[buttonName] || 0;
+diff --git a/internal/webapi/scrolling.js b/internal/webapi/scrolling.js
+index e5e1a0a..63e4d70 100644
+--- a/internal/webapi/scrolling.js
++++ b/internal/webapi/scrolling.js
+@@ -757,6 +757,18 @@ compatibilityScrolling = (() => {
+     windowScrollX = windowScrollY = 0;
+   });
+   const dispatch = (element, p) => {
++    if (
++      host.pocFreeGeometry &&
++      ['protocolInto', 'fragment', 'into', 'restore'].includes(p.action)
++    ) {
++      if (p.action === 'protocolInto' && element?.isConnected) {
++        const prior = geometryReadHints.indexOf(element);
++        if (prior >= 0) geometryReadHints.splice(prior, 1);
++        geometryReadHints.push(element);
++        if (geometryReadHints.length > 16) geometryReadHints.shift();
++      }
++      return {};
++    }
+     if (element) {
+       const foreign = foreignCSSObservation(element, 'scroll', JSON.stringify(p));
+       if (foreign !== null) return foreign;
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+index 5409cd0..ef58e9b 100644
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1127,6 +1127,28 @@
+     checkpointStyleVersion = '';
+   let checkpointObservations = null,
+     checkpointObservationVersion = '';
++  // DESTRUCTIVE DIAGNOSTIC: retain derived results across invalid inputs, but
++  // never retain the DOM read view. This is not a valid invalidation policy.
++  let frozenDerivedObservation = null;
++  const frozenDerivedKeys = [
++    'declarations',
++    'computedValues',
++    'fontSizes',
++    'rootFontSize',
++    'boxStyleContexts',
++    'boxStyles',
++    'inheritedValues',
++    'rendered',
++    'intrinsicWidths',
++    'controlSizes',
++    'widths',
++    'boxSizes',
++    'rects',
++    'tableColumns',
++    'taffyLayouts',
++    'scrollingOverflow',
++    'scrollMetrics',
++  ];
+   let checkpointForeignComputedValues = new Map(),
+     checkpointForeignComputedValueVersion = '';
+   let retainedGeometryVersion = '',
+@@ -1175,6 +1197,7 @@
+   };
+   resetRetainedGeometry('', -1);
+   const invalidateRetainedGeometry = (target) => {
++    if (frozenDerivedObservation) return;
+     const revision = host.domRevision();
+     if (!target) {
+       retainedGeometryRevision = -1;
+@@ -1196,6 +1219,7 @@
+   let styleObservationIsolated = host.isIsolatedInputWorld();
+   bootstrapRestoreHooks.push(() => {
+     styleObservationIsolated = host.isIsolatedInputWorld();
++    frozenDerivedObservation = null;
+     checkpointObservations = null;
+     checkpointStyleRules = null;
+     checkpointForeignComputedValues = new Map();
+@@ -1242,6 +1266,10 @@
+         resolvingRects: new Set(),
+         provisionalRects: new WeakSet(),
+       };
++    if (frozenDerivedObservation)
++      for (const key of frozenDerivedKeys)
++        if (Object.hasOwn(frozenDerivedObservation, key))
++          observation[key] = frozenDerivedObservation[key];
+     const canonicalParts = canonicalBundle.split('|'),
+       canonicalHead = canonicalParts[0].split(':'),
+       geometryVersion =
+@@ -1252,15 +1280,20 @@
+         constructedStyleSheets.revision() +
+         ':' +
+         elementStateVersion,
+-      documentRevision = Number(canonicalHead[0]);
++      documentRevision = Number(canonicalHead[0]),
++      effectiveGeometryVersion = frozenDerivedObservation
++        ? retainedGeometryVersion
++        : geometryVersion;
+     if (
+       !retain ||
+-      retainedGeometryVersion !== geometryVersion ||
+-      (retainedGeometryRevision !== -1 && retainedGeometryRevision !== documentRevision)
++      retainedGeometryVersion !== effectiveGeometryVersion ||
++      (!frozenDerivedObservation &&
++        retainedGeometryRevision !== -1 &&
++        retainedGeometryRevision !== documentRevision)
+     )
+-      resetRetainedGeometry(geometryVersion, documentRevision);
+-    else if (retainedGeometryRevision === -1)
+-      resetRetainedGeometry(geometryVersion, documentRevision);
++      resetRetainedGeometry(effectiveGeometryVersion, documentRevision);
++    else if (!frozenDerivedObservation && retainedGeometryRevision === -1)
++      resetRetainedGeometry(effectiveGeometryVersion, documentRevision);
+     if (retain) {
+       observation.retainedGeometryDirtyVersions = new WeakMap();
+       observation.widths = retainedGeometryWidths;
+@@ -1269,8 +1302,10 @@
+     }
+     if (observation.geometryVersion !== canonicalBundle) {
+       observation.geometryVersion = canonicalBundle;
+-      observation.computedValues = new WeakMap();
+-      observation.tableColumns = new WeakMap();
++      if (!frozenDerivedObservation) {
++        observation.computedValues = new WeakMap();
++        observation.tableColumns = new WeakMap();
++      }
+       if (!retain) {
+         observation.widths = new WeakMap();
+         observation.rects = new WeakMap();
+@@ -1292,6 +1327,17 @@
+       throw error;
+     } finally {
+       styleReadCache = previous;
++      if (
++        true &&
++        !frozenDerivedObservation &&
++        retain &&
++        !styleObservationIsolated &&
++        host.readyState() !== 'loading'
++      ) {
++        frozenDerivedObservation = {};
++        for (const key of frozenDerivedKeys)
++          if (Object.hasOwn(observation, key)) frozenDerivedObservation[key] = observation[key];
++      }
+       // Style/layout evaluation itself cannot run author code. Page mutations
+       // are serialized on the realm actor and the next outer observation
+       // validates the canonical host epoch before reusing this snapshot.
+@@ -1299,8 +1345,17 @@
+         checkpointObservations = null;
+     }
+   };
++  // Destructive bound: immutable first-observed ancestry, not valid for mutation.
++  let pocParents = new WeakMap();
++  bootstrapRestoreHooks.push(() => {
++    pocParents = new WeakMap();
++  });
+   const cachedDOMParent = (node) => {
+     const slot = elementSlot(node);
++    if (host.pocSnapshotTopology) {
++      if (!pocParents.has(node)) pocParents.set(node, wrap(host.parentNode(slot.nodeId)));
++      return pocParents.get(node);
++    }
+     if (!styleReadCache) return wrap(host.parentNode(slot.nodeId));
+     const cache = styleReadCache.domParents || (styleReadCache.domParents = new WeakMap());
+     if (!cache.has(node)) cache.set(node, wrap(host.parentNode(slot.nodeId)));
+@@ -1526,11 +1581,9 @@
+     styleCascades = new WeakMap();
+   });
+   const uncachedCSSDeclarations = (element, pseudo = '') => {
+-    const matched = compatibilitySelectors.matchingStyles(
+-      element,
+-      styleSheetRules(element),
+-      pseudo,
+-    );
++    const matched = host.pocNoAuthorStyle
++      ? []
++      : compatibilitySelectors.matchingStyles(element, styleSheetRules(element), pseudo);
+     const inline = pseudo ? '' : cssObservationNodeState(element).inline;
+     const dialog =
+       !pseudo && elementSlot(element)?.tagName === 'DIALOG'
+@@ -2399,6 +2452,16 @@
+       return this.children.length;
+     }
+     getAttribute(n) {
++      // Destructive DOM-read bound: uses the wrapper's captured attributes.
++      // Cross-realm/native changes after capture are deliberately not observed.
++      if (host.pocSnapshotAttributes) {
++        const data = elementSlot(this);
++        const name =
++          data.namespaceURI === 'http://www.w3.org/1999/xhtml'
++            ? String(n).toLowerCase()
++            : String(n);
++        return Object.hasOwn(data.attributes, name) ? data.attributes[name] : null;
++      }
+       return cachedDOMAttribute(this, String(n));
+     }
+     hasAttribute(n) {
+@@ -2907,8 +2970,26 @@
+     withStyleReadCache(
+       () => foreignCSSObservation(element, 'layout') ?? cssBoxModel.heightBox(element),
+     );
++  // Destructive joint geometry/scrolling bound. These boxes are fabricated,
++  // not valid layout; never a production optimization.
++  const pocGeometryBox = () => ({
++    x: 10,
++    y: 10,
++    left: 10,
++    top: 10,
++    right: 110,
++    bottom: 30,
++    width: 100,
++    height: 20,
++    offsetLeft: 10,
++    offsetTop: 10,
++    clientWidth: 100,
++    clientHeight: 20,
++  });
+   const layoutRectInObservation = (element) =>
+-    foreignCSSObservation(element, 'layout') ?? cssBoxModel.rect(element);
++    host.pocFreeGeometry
++      ? pocGeometryBox()
++      : (foreignCSSObservation(element, 'layout') ?? cssBoxModel.rect(element));
+   const layoutRectFor = (element) => withStyleReadCache(() => layoutRectInObservation(element));
+   const makeDOMRect = (value, element) =>
+     element
+@@ -2919,6 +3000,7 @@
+   // private canonical state and do not invoke author conversion callbacks.
+   let compatibilityScrolling = null;
+   const clientRectInObservation = (element) => {
++    if (host.pocFreeGeometry) return pocGeometryBox();
+     const foreign = foreignCSSObservation(element, 'rect');
+     if (foreign !== null) return foreign;
+     const box = layoutRectInObservation(element),
+diff --git a/internal/browser/diagnostic_query_memo.go b/internal/browser/diagnostic_query_memo.go
+new file mode 100644
+--- /dev/null
++++ b/internal/browser/diagnostic_query_memo.go
+@@ -0,0 +1,98 @@
++package browser
++
++// Diagnostic only: memoize Playwright InjectedScript selection across mutations.
++// This deliberately violates locator freshness and must never ship.
++func diagnosticQueryMemoDeclaration(declaration string) string {
++	return `(function(original) {
++  const slot = Symbol.for('mimic.diagnostic.playwrightQueryMemo');
++  let install = globalThis[slot];
++  if (!install) {
++    const stats = { calls: 0, inspected: 0, installed: 0, qs: 0, qsa: 0, hits: 0, misses: 0, seen: [], queries: [] };
++    const installed = new WeakSet();
++    const method = (object, name) => {
++      for (let current = object, depth = 0; current && depth < 5; depth++) {
++        const descriptor = Object.getOwnPropertyDescriptor(current, name);
++        if (descriptor) return typeof descriptor.value === 'function' ? descriptor.value : null;
++        current = Object.getPrototypeOf(current);
++      }
++      return null;
++    };
++    install = (candidate) => {
++      if (!candidate || typeof candidate !== 'object' || installed.has(candidate)) return;
++      stats.inspected++;
++      if (stats.seen.length < 24) {
++        const constructor = method(candidate, 'constructor');
++        const summary = (constructor && constructor.name || '?') + ':' + Object.getOwnPropertyNames(candidate).slice(0, 16).join(',');
++        if (!stats.seen.includes(summary)) stats.seen.push(summary);
++      }
++      const query = method(candidate, 'querySelector');
++      if (!query || !method(candidate, 'querySelectorAll') || !method(candidate, 'parseSelector')) return;
++      stats.installed++;
++      const queryAll = method(candidate, 'querySelectorAll');
++      const byRoot = new WeakMap();
++      const fifo = [];
++      const memoize = (name, originalQuery, all) => Object.defineProperty(candidate, name, {
++        configurable: true,
++        writable: true,
++        value: function(selector, root, strict) {
++          if (all) stats.qsa++;
++          else stats.qs++;
++          if (!root || (typeof root !== 'object' && typeof root !== 'function')) {
++            return Reflect.apply(originalQuery, this, arguments);
++          }
++          let key;
++          try {
++            key = JSON.stringify([name, selector, strict], (_name, value) => {
++              return value instanceof RegExp ? { regex: value.source, flags: value.flags } : value;
++            });
++          } catch {
++            return Reflect.apply(originalQuery, this, arguments);
++          }
++          if (key.length > 65536) return Reflect.apply(originalQuery, this, arguments);
++          if (stats.queries.length < 16 && !stats.queries.includes(key.slice(0, 256))) stats.queries.push(key.slice(0, 256));
++          let entries = byRoot.get(root);
++          if (entries && entries.has(key)) {
++            stats.hits++;
++            const retained = entries.get(key);
++            return all ? retained.slice() : retained;
++          }
++          stats.misses++;
++          const result = Reflect.apply(originalQuery, this, arguments);
++          if (result == null || (all && (!Array.isArray(result) || result.length === 0))) return result;
++          if (!entries) byRoot.set(root, (entries = new Map()));
++          entries.set(key, all ? result.slice() : result);
++          fifo.push({ root, key });
++          if (fifo.length > 64) {
++            const oldest = fifo.shift();
++            byRoot.get(oldest.root).delete(oldest.key);
++          }
++          return result;
++        }
++      });
++      memoize('querySelector', query, false);
++      memoize('querySelectorAll', queryAll, true);
++      installed.add(candidate);
++    };
++    install.stats = stats;
++    Object.defineProperty(globalThis, slot, { value: install, configurable: true });
++  }
++  return function(...args) {
++    install.stats.calls++;
++    install(this);
++    for (const argument of args) {
++      install(argument);
++      // Protocol utility wrappers can pack remote handles into an array.
++      if (Array.isArray(argument)) {
++        for (const handle of argument) install(handle);
++      }
++    }
++    const result = Reflect.apply(original, this, args);
++    // Also recognize the initial construction result without attaching to
++    // unrelated client objects or changing promise/task ordering.
++    install(result);
++    return result;
++  };
++})(
++` + declaration + `
++)`
++}

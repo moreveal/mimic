@@ -1128,14 +1128,19 @@
   let checkpointObservations = null,
     checkpointObservationVersion = '';
   let checkpointForeignComputedValues = new Map(),
-    checkpointForeignComputedValueVersion = '';
+    checkpointForeignComputedValueVersion = '',
+    checkpointForeignDocumentBatchVersion = '',
+    checkpointForeignDocumentBatch = false;
   let retainedGeometryVersion = '',
     retainedGeometryRevision = -1,
+    retainedGeometryCleanRevision = -1,
     retainedGeometryGeneration = 0,
     retainedGeometryDirty = new WeakMap(),
+    retainedStyleAttributeDependencies = new WeakMap(),
     retainedGeometryWidths,
     retainedGeometrySizes,
-    retainedGeometryRects;
+    retainedGeometryRects,
+    retainedGeometryClientRects;
   const retainedGeometryDirtyGeneration = (element) => {
     const cached = styleReadCache.retainedGeometryDirtyVersions;
     if (cached.has(element)) return cached.get(element);
@@ -1153,7 +1158,9 @@
         },
         get(element) {
           const record = values.get(element);
-          return record && record.generation >= retainedGeometryDirtyGeneration(element)
+          return record &&
+            (retainedGeometryCleanRevision === retainedGeometryRevision ||
+              record.generation >= retainedGeometryDirtyGeneration(element))
             ? record.value
             : undefined;
         },
@@ -1167,16 +1174,31 @@
   const resetRetainedGeometry = (version, revision) => {
     retainedGeometryVersion = version;
     retainedGeometryRevision = revision;
+    retainedGeometryCleanRevision = revision;
     retainedGeometryGeneration = 0;
     retainedGeometryDirty = new WeakMap();
     retainedGeometryWidths = retainedGeometryCache();
     retainedGeometrySizes = retainedGeometryCache();
     retainedGeometryRects = retainedGeometryCache();
+    retainedGeometryClientRects = retainedGeometryCache();
+  };
+  const invalidateRetainedViewportGeometry = () => {
+    retainedGeometryClientRects = retainedGeometryCache();
+    // Isolated worlds do not own the main world's scroll revision. Discard
+    // their whole checkpoint after a bridged scroll so a second read in the
+    // same inspector callback cannot reuse viewport coordinates sampled before
+    // the owner realm mutation.
+    if (styleObservationIsolated) checkpointObservations = null;
+    else if (checkpointObservations)
+      checkpointObservations.clientRects = retainedGeometryClientRects;
+    if (styleReadCache) styleReadCache.clientRects = retainedGeometryClientRects;
   };
   resetRetainedGeometry('', -1);
   const invalidateRetainedGeometry = (target) => {
-    const revision = host.domRevision();
+    const revision = host.observationRevision();
     if (!target) {
+      retainedStyleAttributeDependencies = new WeakMap();
+      retainedGeometryCleanRevision = -1;
       retainedGeometryRevision = -1;
       return;
     }
@@ -1184,14 +1206,44 @@
       // A connected mutation can move following siblings and descendants that
       // are not on the mutated node's ancestor chain. Retain the graph only
       // across observation-only revisions and detached construction.
+      retainedStyleAttributeDependencies = new WeakMap();
+      retainedGeometryCleanRevision = -1;
       retainedGeometryRevision = -1;
+      checkpointObservations = null;
       return;
     }
     retainedGeometryRevision = revision;
+    retainedGeometryCleanRevision = -1;
     retainedGeometryGeneration++;
     let element = elementSlot(target)?.type === 'element' ? target : target.parentElement;
     for (; element; element = geometryParent(element))
       retainedGeometryDirty.set(element, retainedGeometryGeneration);
+  };
+  const retainGeometryAcrossAttributeMutation = (element, name) => {
+    // Locating a containing shadow root itself walks canonical ancestry. Keep
+    // this fast path document-only; any live shadow tree uses the conservative
+    // path until dependencies are indexed per canonical tree root.
+    const dependencies = shadowHosts.size ? null : retainedStyleAttributeDependencies.get(document),
+      inline = String(elementSlot(element)?.attributes?.style || '').toLowerCase();
+    // This first dependency-aware slice is intentionally narrow. A data
+    // attribute cannot affect built-in box semantics, but it may participate
+    // in an author selector or attr(). Sources containing escapes are treated
+    // conservatively because the escaped identifier may name this attribute.
+    const irrelevant =
+      element.isConnected &&
+      name.startsWith('data-') &&
+      dependencies &&
+      !dependencies.unsafe &&
+      !dependencies.sources.some((source) => source.includes(name)) &&
+      !inline.includes(name) &&
+      !inline.includes('\\');
+    if (irrelevant) {
+      retainedGeometryRevision = host.observationRevision();
+      retainedGeometryCleanRevision = retainedGeometryRevision;
+    } else invalidateRetainedGeometry(element);
+    // A mutation performed from inside an injected callback ends any active
+    // read snapshot even when its retained geometry remains valid.
+    styleReadCache = null;
   };
   let styleObservationIsolated = host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(() => {
@@ -1200,6 +1252,9 @@
     checkpointStyleRules = null;
     checkpointForeignComputedValues = new Map();
     checkpointForeignComputedValueVersion = '';
+    checkpointForeignDocumentBatchVersion = '';
+    checkpointForeignDocumentBatch = false;
+    retainedStyleAttributeDependencies = new WeakMap();
     resetRetainedGeometry('', -1);
   });
   const withStyleReadCache = (callback) => {
@@ -1266,6 +1321,7 @@
       observation.widths = retainedGeometryWidths;
       observation.boxSizes = retainedGeometrySizes;
       observation.rects = retainedGeometryRects;
+      if (!styleObservationIsolated) observation.clientRects = retainedGeometryClientRects;
     }
     if (observation.geometryVersion !== canonicalBundle) {
       observation.geometryVersion = canonicalBundle;
@@ -1289,6 +1345,7 @@
       // A failed observation may have published provisional recursive boxes.
       // Do not retain that partial graph for a later command.
       if (checkpointObservations === observation) checkpointObservations = null;
+      if (retain) resetRetainedGeometry('', -1);
       throw error;
     } finally {
       styleReadCache = previous;
@@ -1299,12 +1356,32 @@
         checkpointObservations = null;
     }
   };
+  // Parentage, ownership and attributes are projections of the same canonical
+  // node. Keep their demand-loaded fields together only while the existing
+  // style/geometry observation owns a mutation-safe snapshot. Public getters
+  // outside that scope continue to cross the authoritative host on every read.
+  const domReadRecord = (node) => {
+    if (!styleReadCache) return null;
+    const records =
+      styleReadCache.domReadRecords || (styleReadCache.domReadRecords = new WeakMap());
+    let record = records.get(node);
+    if (!record) records.set(node, (record = {}));
+    return record;
+  };
   const cachedDOMParent = (node) => {
-    const slot = elementSlot(node);
-    if (!styleReadCache) return wrap(host.parentNode(slot.nodeId));
-    const cache = styleReadCache.domParents || (styleReadCache.domParents = new WeakMap());
-    if (!cache.has(node)) cache.set(node, wrap(host.parentNode(slot.nodeId)));
-    return cache.get(node);
+    const slot = elementSlot(node),
+      record = domReadRecord(node);
+    if (!record) return wrap(host.parentNode(slot.nodeId));
+    if (!Object.hasOwn(record, 'parent')) record.parent = wrap(host.parentNode(slot.nodeId));
+    return record.parent;
+  };
+  const cachedDOMOwnerDocument = (node) => {
+    const slot = elementSlot(node),
+      record = domReadRecord(node);
+    if (!record) return wrap(host.nodeOwnerDocument(slot.nodeId));
+    if (!Object.hasOwn(record, 'ownerDocument'))
+      record.ownerDocument = wrap(host.nodeOwnerDocument(slot.nodeId));
+    return record.ownerDocument;
   };
   const cachedDOMChildren = (node) => {
     const slot = elementSlot(node);
@@ -1314,27 +1391,32 @@
     return cache.get(node);
   };
   const cachedDOMAttribute = (node, name) => {
+    const data = elementSlot(node);
+    if (
+      data.namespaceURI === 'http://www.w3.org/1999/xhtml' ||
+      (!data.namespaceURI && !data.qualifiedName)
+    )
+      name = name.toLowerCase();
     if (!styleReadCache) return host.getAttribute(elementSlot(node).nodeId, name);
-    const nodes = styleReadCache.domAttributes || (styleReadCache.domAttributes = new WeakMap());
-    let cache = nodes.get(node);
-    if (!cache) nodes.set(node, (cache = new Map()));
+    const record = domReadRecord(node);
+    let cache = record.attributes;
+    if (!cache) record.attributes = cache = new Map();
     if (!cache.has(name)) cache.set(name, host.getAttribute(elementSlot(node).nodeId, name));
     return cache.get(name);
   };
   const cachedDOMAttributeNames = (node) => {
     if (!styleReadCache) return host.attributeNames(elementSlot(node).nodeId);
-    const cache =
-      styleReadCache.domAttributeNames || (styleReadCache.domAttributeNames = new WeakMap());
-    if (!cache.has(node)) cache.set(node, host.attributeNames(elementSlot(node).nodeId));
-    return cache.get(node);
+    const record = domReadRecord(node);
+    if (!Object.hasOwn(record, 'attributeNames'))
+      record.attributeNames = host.attributeNames(elementSlot(node).nodeId);
+    return record.attributeNames;
   };
   // All geometry projections consult the same canonical parent/child snapshot.
   // Keep native membership separate from flat-tree projection (slot/host links)
   // and invalidate both through the same canonical observation epoch.
   const cssObservationNodeState = (node) => {
-    const cache =
-      styleReadCache && (styleReadCache.nodeStates || (styleReadCache.nodeStates = new WeakMap()));
-    if (cache?.has(node)) return cache.get(node);
+    const record = domReadRecord(node);
+    if (record?.observationState) return record.observationState;
     const encoded = host.styleObservationState(
         node === document ? realmDocumentRootID : elementSlot(node).nodeId,
       ),
@@ -1349,7 +1431,12 @@
       (data?.tagName || '') +
       ':' +
       JSON.stringify(value.attributes);
-    cache?.set(node, value);
+    if (record) {
+      record.observationState = value;
+      record.parent = wrap(value.parent);
+      record.attributeNames = Object.keys(value.attributes);
+      record.attributes = new Map(Object.entries(value.attributes));
+    }
     return value;
   };
   const cssObservationAttribute = (node, name) => {
@@ -1506,6 +1593,17 @@
     if (cache?.has(root)) return cache.get(root);
     const sources = constructedStyleSheets.sources(root),
       prior = orderedStyleRules.get(root);
+    if (root === document) {
+      const dependencyBytes = sources.reduce((size, source) => size + source.length * 2, 0),
+        unsafe =
+          dependencyBytes > 8 * 1024 * 1024 || sources.some((source) => source.includes('\\'));
+      retainedStyleAttributeDependencies.set(root, {
+        unsafe,
+        // Bound the auxiliary lowercase projection independently of the rule
+        // cache. Oversized programs simply retain the old invalidation path.
+        sources: unsafe ? [] : sources.map((source) => source.toLowerCase()),
+      });
+    }
     let rules = prior?.rules;
     if (
       !prior ||
@@ -1802,6 +1900,9 @@
       const text = serializeCSS(entries),
         old = host.setInlineStyle(elementSlot(state.element).nodeId, text, JSON.stringify(entries));
       elementSlot(state.element).attributes.style = text;
+      // Native shadow descendants are stored detached and therefore cannot
+      // advance the active document's connected revision on their own.
+      if (containingShadowRoot(state.element)) host.invalidateStyleObservations();
       compatibilityElementState.inlineStyleChanged(state.element, old);
     };
   class CSSStyleDeclaration {
@@ -2416,12 +2517,20 @@
       v = trustedAttributeValue(this, n, v, '', "Failed to execute 'setAttribute' on 'Element': ");
       elementSlot(this).attributes[n] = v;
       host.setAttribute(elementSlot(this).nodeId, n, v);
+      // Synthetic shadow descendants are intentionally detached in the native
+      // arena, so their connected-document observation revision cannot advance
+      // from the host mutation alone. The shadow projection is observable from
+      // its connected host and must invalidate the realm style epoch.
+      if (containingShadowRoot(this)) host.invalidateStyleObservations();
+      retainGeometryAcrossAttributeMutation(this, n);
     }
     removeAttribute(n) {
       n =
         this.namespaceURI === 'http://www.w3.org/1999/xhtml' ? String(n).toLowerCase() : String(n);
       delete elementSlot(this).attributes[n];
       host.removeAttribute(elementSlot(this).nodeId, n);
+      if (containingShadowRoot(this)) host.invalidateStyleObservations();
+      retainGeometryAcrossAttributeMutation(this, n);
     }
     toggleAttribute(n, force) {
       n = String(n);
@@ -2918,7 +3027,7 @@
   // epoch boundary for every candidate is unnecessary: these helpers read
   // private canonical state and do not invoke author conversion callbacks.
   let compatibilityScrolling = null;
-  const clientRectInObservation = (element) => {
+  const uncachedClientRectInObservation = (element) => {
     const foreign = foreignCSSObservation(element, 'rect');
     if (foreign !== null) return foreign;
     const box = layoutRectInObservation(element),
@@ -3002,6 +3111,20 @@
       width,
       height,
     };
+  };
+  const clientRectInObservation = (element) => {
+    const cache =
+      styleReadCache &&
+      (styleReadCache.clientRects || (styleReadCache.clientRects = new WeakMap()));
+    const scrollRevision = compatibilityScrolling?.revision() || 0,
+      cached = cache?.get(element);
+    if (cached?.scrollRevision === scrollRevision) return cached.value;
+    const value = uncachedClientRectInObservation(element);
+    // This projection includes transforms and every current scroll offset.
+    // scrolling.js ends the observation after an effective scroll, while DOM,
+    // style, viewport, and pseudo-state changes advance its canonical epoch.
+    cache?.set(element, { scrollRevision, value });
+    return value;
   };
   const clientRectFor = (element) => withStyleReadCache(() => clientRectInObservation(element));
   const frameViewportSizes = new WeakMap();

@@ -429,8 +429,16 @@ const cssBoxModel = (() => {
     const cache =
       styleReadCache.intrinsicWidths || (styleReadCache.intrinsicWidths = new WeakMap());
     if (cache.has(element)) return cache.get(element);
+    const plans =
+        styleReadCache.intrinsicWidthPlans || (styleReadCache.intrinsicWidthPlans = new WeakMap()),
+      plan = plans.get(element);
+    // Cyclic min-content contributions use the legacy zero fallback, but it is
+    // deliberately not published as a completed measurement.
+    if (plan?.state === 'computing') return 0;
+    plans.set(element, { state: 'computing' });
     const value = uncachedIntrinsic(element);
     cache.set(element, value);
+    plans.set(element, { state: 'ready' });
     return value;
   };
   const uncachedIntrinsic = (element) => {
@@ -631,9 +639,17 @@ const cssBoxModel = (() => {
     if (known) return known.width;
     const cache = styleReadCache.widths;
     if (cache.has(element)) return cache.get(element);
-    cache.set(element, 0);
+    const plans = styleReadCache.widthPlans || (styleReadCache.widthPlans = new WeakMap());
+    // containingWidth() can re-enter through an ancestor formatting context.
+    // Keep the old cycle break explicit without making zero look cache-ready.
+    if (plans.get(element)?.state === 'computing') return 0;
+    plans.set(element, { state: 'computing' });
     const s = state(element);
-    if (s.display === 'none') return 0;
+    if (s.display === 'none') {
+      cache.set(element, 0);
+      plans.set(element, { state: 'ready' });
+      return 0;
+    }
     const basis = containingWidth(element),
       e = s.edges(basis),
       extra = e.pleft + e.pright + e.bleft + e.bright;
@@ -642,9 +658,12 @@ const cssBoxModel = (() => {
     if (content === null) {
       const attribute = host.getAttribute(elementSlot(element).nodeId, 'width');
       if (attribute && /^\d+(?:\.\d+)?$/.test(attribute)) content = Number(attribute);
-      else if (controlSize(element))
-        return cache.set(element, controlSize(element).width).get(element);
-      else if (s.display === 'table') {
+      else if (controlSize(element)) {
+        const value = controlSize(element).width;
+        cache.set(element, value);
+        plans.set(element, { state: 'ready' });
+        return value;
+      } else if (s.display === 'table') {
         content = tableColumns(element).width - extra;
       } else {
         const parent = geometryParent(element),
@@ -708,6 +727,7 @@ const cssBoxModel = (() => {
     if (minimum !== null) value = Math.max(value, minimum + (borderBox ? 0 : extra));
     if (maximum !== null) value = Math.min(value, maximum + (borderBox ? 0 : extra));
     cache.set(element, value);
+    plans.set(element, { state: 'ready' });
     return value;
   };
   const fixedContainer = (element) => {
@@ -722,7 +742,10 @@ const cssBoxModel = (() => {
     return null;
   };
   const size = (element) => {
-    const cache = styleReadCache.boxSizes || (styleReadCache.boxSizes = new WeakMap());
+    const cache = styleReadCache.boxSizes || (styleReadCache.boxSizes = new WeakMap()),
+      plans = styleReadCache.sizePlans || (styleReadCache.sizePlans = new WeakMap()),
+      active = plans.get(element);
+    if (active?.state === 'computing') return active.value;
     for (let parent = geometryParent(element); parent; parent = geometryParent(parent))
       if (state(parent).display === 'table') {
         if (!cache.has(parent)) size(parent);
@@ -739,6 +762,9 @@ const cssBoxModel = (() => {
         positions: new Map(),
         contentHeight: 0,
       };
+    // The provisional object is the defined fallback for cyclic percentage and
+    // containing-block dependencies. Only this recursive edge can observe it.
+    plans.set(element, { state: 'computing', value });
     cache.set(element, value);
     const parent = geometryParent(element),
       parentDisplay = parent ? state(parent).display : '';
@@ -759,9 +785,14 @@ const cssBoxModel = (() => {
       !computedStyleAvailable(element)
     ) {
       value.width = 0;
+      plans.set(element, { state: 'ready', value });
       return value;
     }
-    if (s.display === 'table') return tableSize(element, value);
+    if (s.display === 'table') {
+      tableSize(element, value);
+      plans.set(element, { state: 'ready', value });
+      return value;
+    }
     const rawHeight = s.get('height');
     let height =
       rawHeight?.endsWith('%') && !definiteGeometryHeight(parent)
@@ -1042,12 +1073,19 @@ const cssBoxModel = (() => {
       max = s.length(s.get('max-height'));
     if (min !== null) value.height = Math.max(value.height, min);
     if (max !== null) value.height = Math.min(value.height, max);
+    plans.set(element, { state: 'ready', value });
     return value;
   };
   const rect = (element) => {
-    const cache = styleReadCache.rects;
+    const cache = styleReadCache.rects,
+      plans = styleReadCache.placementPlans || (styleReadCache.placementPlans = new WeakMap()),
+      active = plans.get(element);
+    if (active?.state === 'computing') return active.value;
     if (cache.has(element)) return cache.get(element);
     const value = { x: 0, y: 0, left: 0, top: 0, width: 0, height: 0 };
+    // Placement recursion consumes this provisional origin; other consumers
+    // only see the same object after it transitions to ready below.
+    plans.set(element, { state: 'computing', value });
     cache.set(element, value);
     if (
       !rendered(element) ||
@@ -1056,6 +1094,7 @@ const cssBoxModel = (() => {
     ) {
       value.width = value.height = 0;
       value.right = value.bottom = 0;
+      plans.set(element, { state: 'ready', value });
       return value;
     }
     const s = state(element),
@@ -1135,6 +1174,7 @@ const cssBoxModel = (() => {
     value.clientHeight = Math.max(0, value.height - box.edges.btop - box.edges.bbottom);
     value.offsetLeft = value.x - (origin ? origin.x + oe.bleft : 0);
     value.offsetTop = value.y - (origin ? origin.y + oe.btop : 0);
+    plans.set(element, { state: 'ready', value });
     return value;
   };
   // Taffy owns flex/grid formatting-context geometry. Mimic supplies the
@@ -1143,24 +1183,47 @@ const cssBoxModel = (() => {
     // Custom elements retain the legacy intrinsic-width path; their authored
     // display can be upgraded or stylesheet-mutated after construction.
     if (tag(element).includes('-')) return null;
-    let root = null,
-      usesTaffy = false;
-    for (let node = element; node; node = geometryParent(node)) {
-      const display = state(node).display;
-      if (!/^(?:block|(?:inline-)?(?:flex|grid))$/.test(display)) {
-        if (root) break;
-        continue;
+    // This cache belongs to one observation and dies with its box graph. Keep
+    // one weak entry per queried/path-compressed node; no DOM wrappers survive
+    // navigation or Page teardown and there is no independent size model.
+    const roots = styleReadCache.taffyRoots || (styleReadCache.taffyRoots = new WeakMap());
+    let root;
+    if (roots.has(element)) root = roots.get(element);
+    else {
+      let usesTaffy = false;
+      const compress = [];
+      root = null;
+      for (let node = element; node; node = geometryParent(node)) {
+        const s = state(node),
+          display = s.display,
+          flex = /^(?:inline-)?(?:flex|grid)$/.test(display);
+        if (!usesTaffy && !flex) compress.push(node);
+        if (!/^(?:block|(?:inline-)?(?:flex|grid))$/.test(display)) {
+          if (root) break;
+          continue;
+        }
+        if (flex) usesTaffy = true;
+        if (usesTaffy) root = node;
+        const width = s.get('width');
+        if (root && node !== element && width && width !== 'auto') break;
       }
-      if (/^(?:inline-)?(?:flex|grid)$/.test(display)) usesTaffy = true;
-      if (usesTaffy) root = node;
-      const width = state(node).get('width');
-      if (root && node !== element && width && width !== 'auto') break;
+      roots.set(element, root);
+      // Nodes below the first flex/grid ancestor have the same result. Do not
+      // compress custom elements or the flex/width boundary itself: those have
+      // different semantics when queried as the starting element.
+      for (const node of compress) if (!tag(node).includes('-')) roots.set(node, root);
     }
     if (!root) return null;
     let cache = styleReadCache.taffyLayouts;
     if (!cache) cache = styleReadCache.taffyLayouts = new WeakMap();
     let boxes = cache.get(root);
     if (!boxes) {
+      const plans = styleReadCache.taffyPlans || (styleReadCache.taffyPlans = new WeakMap());
+      // Taffy input construction can re-enter through intrinsic measurement.
+      // The recursive edge stays on legacy geometry instead of observing a
+      // partially assembled node/box map.
+      if (plans.get(root)?.state === 'computing') return null;
+      plans.set(root, { state: 'computing' });
       const rootLegacy = rect(root),
         rootState = state(root),
         rootBasis = containingWidth(root),
@@ -1408,6 +1471,7 @@ const cssBoxModel = (() => {
         }
       }
       cache.set(root, boxes);
+      plans.set(root, { state: 'ready' });
     }
     return boxes.get(elementSlot(element).nodeId) || null;
   };

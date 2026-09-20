@@ -1,0 +1,96 @@
+package dom
+
+// Diagnostic-only snapshot generations. Never used to return a cached value.
+import (
+	"encoding/json"
+	"runtime"
+	"strings"
+	"sync"
+)
+
+type intrinsicNodeSnapshot struct {
+	parent          int64
+	structure, text string
+}
+type intrinsicDiagnosticState struct {
+	sync.Mutex
+	revision, style uint64
+	initialized     bool
+	unsafeInline    bool
+	nodes           map[int64]intrinsicNodeSnapshot
+	generations     map[int64]uint64
+}
+
+func (d *Document) DiagnosticIntrinsicGeneration(id int64) string {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	d.intrinsicDiagnosticOnce.Do(func() {
+		d.intrinsicDiagnostic = &intrinsicDiagnosticState{generations: map[int64]uint64{}}
+		d.mu.diagnosticUnlock = func() {
+			if len(d.mutationJournal) > 0 && d.mutationJournal[len(d.mutationJournal)-1].Revision == d.mu.revision+1 {
+				return
+			}
+			name := "unknown"
+			if pc, _, _, ok := runtime.Caller(2); ok {
+				name = runtime.FuncForPC(pc).Name()
+			}
+			d.recordMutationLocked("unknown:"+name, 0, "")
+		}
+	})
+	state := d.intrinsicDiagnostic
+	state.Lock()
+	defer state.Unlock()
+	if !state.initialized || state.revision != d.mu.revision {
+		next := map[int64]intrinsicNodeSnapshot{}
+		changed := []int64{}
+		styleChanged, autoDirection := !state.initialized, false
+		state.unsafeInline = false
+		for nodeID, n := range d.nodes {
+			inline := strings.ToLower(n.Attributes["style"])
+			if strings.Contains(inline, "attr(") || strings.Contains(inline, "\\") {
+				state.unsafeInline = true
+			}
+			data, _ := json.Marshal([]any{n.Parent, n.Children, n.Attributes, n.StyleDeclarationsJSON, n.OwnerDocument, n.Type, n.TagName, n.Namespace})
+			snapshot := intrinsicNodeSnapshot{n.Parent, string(data), n.Text + "\x00" + n.TextJSON}
+			next[nodeID] = snapshot
+			old, exists := state.nodes[nodeID]
+			if !exists || old != snapshot {
+				changed = append(changed, nodeID)
+			}
+			if !exists || old.structure != snapshot.structure || (old.text == "\x00") != (snapshot.text == "\x00") {
+				styleChanged = true
+			}
+			if n.Attributes["dir"] == "auto" {
+				autoDirection = true
+			}
+		}
+		for nodeID := range state.nodes {
+			if _, exists := next[nodeID]; !exists {
+				changed = append(changed, nodeID)
+				styleChanged = true
+			}
+		}
+		// Missing semantic detail (focus/form state etc.) and automatic text
+		// direction require a conservative global style invalidation.
+		if len(changed) == 0 || autoDirection {
+			styleChanged = true
+		}
+		if styleChanged {
+			state.style = d.mu.revision
+		}
+		for _, nodeID := range changed {
+			for _, nodes := range []map[int64]intrinsicNodeSnapshot{state.nodes, next} {
+				seen := map[int64]bool{}
+				for n := nodeID; n != 0 && !seen[n]; n = nodes[n].parent {
+					seen[n] = true
+					state.generations[n] = d.mu.revision
+				}
+			}
+		}
+		state.nodes = next
+		state.revision = d.mu.revision
+		state.initialized = true
+	}
+	data, _ := json.Marshal([]any{state.generations[id], state.style, state.unsafeInline})
+	return string(data)
+}

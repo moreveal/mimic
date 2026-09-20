@@ -78,6 +78,7 @@ func (d *Document) adoptNodeLocked(id, owner int64) {
 func (d *Document) AdoptNode(id, owner int64) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
+	d.markConnectedMutationLocked(id)
 	d.adoptNodeLocked(id, owner)
 }
 

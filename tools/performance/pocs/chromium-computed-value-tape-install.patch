@@ -1,0 +1,25 @@
+*** Begin Patch
+*** Update File: E:/GitHub/mimic/internal/browser/document_compatibility.go
+@@
+ func (r *Realm) installDocumentCompatibility(host map[string]any) {
++	r.installDiagnosticComputedTape(host)
+*** Update File: E:/GitHub/mimic/internal/webapi/css_computed_values.js
+@@
+     let values = cache.get(element);
+     if (!styleObservationDynamic && values?.has(name)) return values.get(name);
+-    const value = resolveCSSComputedValue(element, name);
++    const value = diagnosticResolveCSSComputedValue(element, name);
+*** Update File: E:/GitHub/mimic/internal/webapi/surface.js
+@@
+-  const uncachedCSSDeclarations = (element, pseudo = '') => {
++  const resolveDiagnosticCSSDeclarations = (element, pseudo = '') => {
+@@
+   // This private declaration array is read-only to all consumers and never
++  const uncachedCSSDeclarations = (element, pseudo = '') => {
++    if (!diagnosticComputedLayerEnabled('cascade'))
++      return resolveDiagnosticCSSDeclarations(element, pseudo);
++    return diagnosticComputedReplay('cascade', element, pseudo, () =>
++      resolveDiagnosticCSSDeclarations(element, pseudo),
++    );
++  };
+*** End Patch

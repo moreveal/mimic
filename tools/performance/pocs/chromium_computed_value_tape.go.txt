@@ -1,0 +1,99 @@
+package browser
+
+// DIAGNOSTIC FIXTURE TAPE. Not a production cache or browser implementation.
+// Copy this removable helper into internal/browser only for the experiment.
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+	"sync"
+
+	"github.com/moreveal/mimic/internal/engine"
+)
+
+var diagnosticComputedTape = struct {
+	sync.Mutex
+	loaded bool
+	rows   map[string]map[string]*string
+	output *os.File
+}{}
+
+func (r *Realm) installDiagnosticComputedTape(host map[string]any) {
+	host["diagnosticComputedTape"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		mode, path := os.Getenv("MIMIC_COMPUTED_TAPE_MODE"), os.Getenv("MIMIC_COMPUTED_TAPE_PATH")
+		if mode == "" || path == "" {
+			return r.val(`{"mode":""}`), nil
+		}
+		if mode != "record" && mode != "verify" && mode != "replay" {
+			return nil, fmt.Errorf("invalid MIMIC_COMPUTED_TAPE_MODE: %s", mode)
+		}
+		diagnosticComputedTape.Lock()
+		defer diagnosticComputedTape.Unlock()
+		if !diagnosticComputedTape.loaded {
+			diagnosticComputedTape.rows = map[string]map[string]*string{}
+			if mode == "record" {
+				file, err := os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+				if err != nil {
+					return nil, err
+				}
+				diagnosticComputedTape.output = file
+			} else {
+				file, err := os.Open(path)
+				if err != nil {
+					return nil, err
+				}
+				defer file.Close()
+				decoder := json.NewDecoder(file)
+				for {
+					var row struct {
+						URL, Key string
+						Value    *string
+					}
+					if err := decoder.Decode(&row); err == io.EOF {
+						break
+					} else if err != nil {
+						return nil, err
+					}
+					if diagnosticComputedTape.rows[row.URL] == nil {
+						diagnosticComputedTape.rows[row.URL] = map[string]*string{}
+					}
+					diagnosticComputedTape.rows[row.URL][row.Key] = row.Value
+				}
+			}
+			diagnosticComputedTape.loaded = true
+		}
+		url := r.documentURL().String()
+		if strarg(args, 0) == "read" {
+			layer := os.Getenv("MIMIC_COMPUTED_TAPE_LAYER")
+			if layer == "" { layer = "both" }
+			if layer != "both" && layer != "computed" && layer != "cascade" {
+				return nil, fmt.Errorf("invalid MIMIC_COMPUTED_TAPE_LAYER: %s", layer)
+			}
+			data, err := json.Marshal(map[string]any{"mode": mode, "layer": layer, "rows": diagnosticComputedTape.rows[url]})
+			return r.val(string(data)), err
+		}
+		key, value := strarg(args, 1), strarg(args, 2)
+		if mode != "record" {
+			fmt.Fprintf(os.Stderr, "COMPUTED_TAPE %s %s %s actual=%s\n", strarg(args, 0), url, key, value)
+			return nil, nil
+		}
+		if diagnosticComputedTape.rows[url] == nil {
+			diagnosticComputedTape.rows[url] = map[string]*string{}
+		}
+		rows := diagnosticComputedTape.rows[url]
+		var next *string = &value
+		if prior, ok := rows[key]; ok {
+			if prior == nil || *prior == value {
+				return nil, nil
+			}
+			next = nil // Permanently exclude ambiguous URL/node/property keys.
+		}
+		rows[key] = next
+		err := json.NewEncoder(diagnosticComputedTape.output).Encode(struct {
+			URL, Key string
+			Value    *string
+		}{url, key, next})
+		return nil, err
+	})
+}

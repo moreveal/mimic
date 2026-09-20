@@ -1,0 +1,95 @@
+{
+  "binaries": {
+    "control": {
+      "file": "E:\\GitHub\\mimic\\.build\\mimic-poc-read-source.exe",
+      "sha256": "5fdcba58638ce88eb3e8fd983449974356cb7a1819810712ba363cad6b9ce2d2"
+    },
+    "candidate": {
+      "file": "E:\\GitHub\\mimic\\.build\\mimic-poc-read-source.exe",
+      "sha256": "5fdcba58638ce88eb3e8fd983449974356cb7a1819810712ba363cad6b9ce2d2"
+    }
+  },
+  "diagnosticEnvironment": {
+    "MIMIC_POC_V8_FLAGS": "--always-sparkplug --invocation-count-for-maglev=40 --invocation-count-for-turbofan=300"
+  },
+  "results": [
+    {
+      "build": "control",
+      "trial": 1,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_V8_FLAGS": ""
+      },
+      "cold": {
+        "milliseconds": 9190,
+        "stages": {
+          "Search fill": 514.76,
+          "Search inputValue": 6.72,
+          "Search press + navigation": 1023.08,
+          "JavaScript heading visible": 1817.72,
+          "ECMAScript scrollIntoViewIfNeeded": 497.2,
+          "ECMAScript innerText": 184.88,
+          "ECMAScript getAttribute href": 179.77,
+          "ECMAScript click + navigation": 1307.29,
+          "ECMAScript heading visible": 634.9,
+          "ECMAScript heading innerText": 60.03,
+          "ECMAScript page.title": 2.35
+        }
+      },
+      "warm": {
+        "milliseconds": 5913,
+        "stages": {
+          "Search fill": 337.73,
+          "Search inputValue": 5.41,
+          "Search press + navigation": 301.02,
+          "JavaScript heading visible": 1293.7,
+          "ECMAScript scrollIntoViewIfNeeded": 485.2,
+          "ECMAScript innerText": 191.42,
+          "ECMAScript getAttribute href": 176.51,
+          "ECMAScript click + navigation": 854.53,
+          "ECMAScript heading visible": 698.39,
+          "ECMAScript heading innerText": 10.95,
+          "ECMAScript page.title": 2.68
+        }
+      }
+    },
+    {
+      "build": "candidate",
+      "trial": 1,
+      "diagnosticEnvironment": {
+        "MIMIC_POC_V8_FLAGS": "--always-sparkplug --invocation-count-for-maglev=40 --invocation-count-for-turbofan=300"
+      },
+      "cold": {
+        "milliseconds": 9167,
+        "stages": {
+          "Search fill": 341.15,
+          "Search inputValue": 15.52,
+          "Search press + navigation": 870.65,
+          "JavaScript heading visible": 1895.37,
+          "ECMAScript scrollIntoViewIfNeeded": 551.1,
+          "ECMAScript innerText": 177.59,
+          "ECMAScript getAttribute href": 172.38,
+          "ECMAScript click + navigation": 1296.09,
+          "ECMAScript heading visible": 717.61,
+          "ECMAScript heading innerText": 5.23,
+          "ECMAScript page.title": 3.93
+        }
+      },
+      "warm": {
+        "milliseconds": 6002,
+        "stages": {
+          "Search fill": 318.62,
+          "Search inputValue": 4.55,
+          "Search press + navigation": 310.15,
+          "JavaScript heading visible": 1318.1,
+          "ECMAScript scrollIntoViewIfNeeded": 458.71,
+          "ECMAScript innerText": 179.22,
+          "ECMAScript getAttribute href": 166.84,
+          "ECMAScript click + navigation": 903.65,
+          "ECMAScript heading visible": 751.48,
+          "ECMAScript heading innerText": 10.76,
+          "ECMAScript page.title": 3.73
+        }
+      }
+    }
+  ]
+}

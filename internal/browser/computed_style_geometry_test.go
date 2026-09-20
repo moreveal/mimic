@@ -33,3 +33,65 @@ func TestComputedStyleDoesNotInvokeAuthorGeometryGetters(t *testing.T) {
 		t.Fatalf("computed style: %v %v", value, err)
 	}
 }
+
+func TestScalarComputedValuesPreserveInheritanceAndMutation(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const root=document.createElement('div'),middle=document.createElement('div'),leaf=document.createElement('div');
+ root.style.cssText='color:rgb(1, 2, 3);cursor:crosshair;visibility:hidden;direction:rtl;pointer-events:none;white-space-collapse:preserve;text-wrap-mode:nowrap;line-height:1.5;caret-color:auto';
+ middle.style.cssText='cursor:inherit;visibility:unset;direction:inherit;pointer-events:inherit;white-space-collapse:inherit;text-wrap-mode:inherit;line-height:inherit;caret-color:inherit';
+ middle.append(leaf);root.append(middle);document.body.append(root);
+ const read=()=>{const s=getComputedStyle(leaf);return [s.cursor,s.visibility,s.direction,s.pointerEvents,s.whiteSpaceCollapse,s.textWrapMode,s.lineHeight,s.caretColor]};
+ const before=read();root.style.cssText='color:rgb(4, 5, 6);cursor:wait;visibility:visible;direction:ltr;pointer-events:auto;white-space-collapse:collapse;text-wrap-mode:wrap;line-height:2;caret-color:currentcolor';
+ const after=read();root.remove();return JSON.stringify([before,after]);
+ })()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := `[["crosshair","hidden","rtl","none","preserve","nowrap","24px","rgb(1, 2, 3)"],["wait","visible","ltr","auto","collapse","wrap","32px","rgb(4, 5, 6)"]]`
+	if value != want {
+		t.Fatalf("computed scalar inheritance: %v; want %s", value, want)
+	}
+}
+
+func TestTaffyRootMemoPreservesNegativeCustomAndWidthBoundaries(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const plain=document.createElement('section');plain.style.cssText='width:123px;height:17px';
+ const custom=document.createElement('x-layout');custom.style.cssText='display:flex;width:180px;height:19px';
+ const customChild=document.createElement('span');customChild.style.cssText='display:block;width:31px;height:7px';custom.append(customChild);
+ const outer=document.createElement('div');outer.style.cssText='display:flex;width:400px';
+ const boundary=document.createElement('div');boundary.style.cssText='display:flex;width:200px';
+ const leaf=document.createElement('div');leaf.style.cssText='width:50px;height:11px';boundary.append(leaf);outer.append(boundary);
+ document.body.append(plain,custom,outer);
+ const read=e=>{const r=e.getBoundingClientRect();return [r.width,r.height,r.x,r.y]};
+ const first=[read(plain),read(plain),read(custom),read(custom),read(customChild),read(leaf),read(boundary)];
+ const second=[read(plain),read(plain),read(custom),read(custom),read(customChild),read(leaf),read(boundary)];
+ return JSON.stringify({same:JSON.stringify(first)===JSON.stringify(second),first});
+})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := `{"same":true,"first":[[123,17,8,8],[123,17,8,8],[180,19,0,0],[180,19,0,0],[31,7,0,0],[50,11,0,0],[200,11,0,0]]}`
+	if value != want {
+		t.Fatalf("taffy root memo boundaries: %v; want %s", value, want)
+	}
+}

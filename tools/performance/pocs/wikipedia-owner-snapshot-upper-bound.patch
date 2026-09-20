@@ -1,0 +1,96 @@
+diff --git a/internal/browser/document_compatibility.go b/internal/browser/document_compatibility.go
+index a01e1d3..55f1cf2 100644
+--- a/internal/browser/document_compatibility.go
++++ b/internal/browser/document_compatibility.go
+@@ -4,6 +4,7 @@ import (
+ 	"context"
+ 	"encoding/json"
+ 	"fmt"
++	"os"
+ 	"sort"
+ 	"strings"
+ 
+@@ -12,6 +13,9 @@ import (
+ )
+ 
+ func (r *Realm) installDocumentCompatibility(host map[string]any) {
++	// DESTRUCTIVE DIAGNOSTIC ONLY. This intentionally permits a realm to replay
++	// derived observations after their canonical inputs have changed.
++	host["pocFreezeOwnerObservation"] = os.Getenv("MIMIC_POC_FREEZE_OWNER_OBSERVATION") == "1"
+ 	host["disableStyleProjectionCache"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+ 		// Animation time changes without a DOM mutation. Keep those observations
+ 		// in the canonical owner rather than freezing an intermediate sample.
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+index d60266e..92481dc 100644
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1127,6 +1127,32 @@
+     checkpointStyleVersion = '';
+   let checkpointObservations = null,
+     checkpointObservationVersion = '';
++  // DESTRUCTIVE DIAGNOSTIC ONLY: replay immutable derived owner state across
++  // later epochs while rebuilding the canonical DOM read view. This violates
++  // style/layout/font/viewport invalidation to measure a causal upper bound.
++  let diagnosticFrozenOwnerObservation = null;
++  const diagnosticFrozenOwnerKeys = [
++    'rules',
++    'declarations',
++    'computedValues',
++    'inheritedSources',
++    'fontSizes',
++    'rootFontSize',
++    'boxStyleContexts',
++    'boxStyles',
++    'inheritedValues',
++    'rendered',
++    'intrinsicWidths',
++    'controlSizes',
++    'widths',
++    'boxSizes',
++    'rects',
++    'clientRects',
++    'tableColumns',
++    'taffyLayouts',
++    'scrollingOverflow',
++    'scrollMetrics',
++  ];
+   let checkpointForeignComputedValues = new Map(),
+     checkpointForeignComputedValueVersion = '',
+     checkpointForeignDocumentBatchVersion = '',
+@@ -1247,6 +1273,7 @@
+   let styleObservationIsolated = host.isIsolatedInputWorld();
+   bootstrapRestoreHooks.push(() => {
+     styleObservationIsolated = host.isIsolatedInputWorld();
++    diagnosticFrozenOwnerObservation = null;
+     checkpointObservations = null;
+     checkpointStyleRules = null;
+     checkpointForeignComputedValues = new Map();
+@@ -1333,6 +1360,10 @@
+       observation.resolvingRects = new Set();
+       observation.provisionalRects = new WeakSet();
+     }
++    if (diagnosticFrozenOwnerObservation)
++      for (const key of diagnosticFrozenOwnerKeys)
++        if (Object.hasOwn(diagnosticFrozenOwnerObservation, key))
++          observation[key] = diagnosticFrozenOwnerObservation[key];
+     if (retain) {
+       checkpointObservations = observation;
+       checkpointObservationVersion = observationVersion;
+@@ -1348,6 +1379,17 @@
+       throw error;
+     } finally {
+       styleReadCache = previous;
++      if (
++        host.pocFreezeOwnerObservation &&
++        !diagnosticFrozenOwnerObservation &&
++        retain &&
++        host.readyState() === 'complete'
++      ) {
++        diagnosticFrozenOwnerObservation = {};
++        for (const key of diagnosticFrozenOwnerKeys)
++          if (Object.hasOwn(observation, key))
++            diagnosticFrozenOwnerObservation[key] = observation[key];
++      }
+       // Style/layout evaluation itself cannot run author code. Page mutations
+       // are serialized on the realm actor and the next outer observation
+       // validates the canonical host epoch before reusing this snapshot.

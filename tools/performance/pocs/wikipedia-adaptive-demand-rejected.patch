@@ -1,0 +1,45 @@
+diff --git a/internal/browser/document_compatibility.go b/internal/browser/document_compatibility.go
+index a01e1d3..bd34cad 100644
+--- a/internal/browser/document_compatibility.go
++++ b/internal/browser/document_compatibility.go
+@@ -4,6 +4,7 @@ import (
+ 	"context"
+ 	"encoding/json"
+ 	"fmt"
++	"os"
+ 	"sort"
+ 	"strings"
+ 
+@@ -12,6 +13,9 @@ import (
+ )
+ 
+ func (r *Realm) installDocumentCompatibility(host map[string]any) {
++	// Removable causal experiment: delay full-document isolated style
++	// projection until one observation has demonstrated a multi-node scan.
++	host["pocAdaptiveStyleDemand"] = os.Getenv("MIMIC_POC_ADAPTIVE_STYLE_DEMAND") == "1"
+ 	host["disableStyleProjectionCache"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+ 		// Animation time changes without a DOM mutation. Keep those observations
+ 		// in the canonical owner rather than freezing an intermediate sample.
+diff --git a/internal/webapi/css_computed_values.js b/internal/webapi/css_computed_values.js
+index 53231e6..cf609ab 100644
+--- a/internal/webapi/css_computed_values.js
++++ b/internal/webapi/css_computed_values.js
+@@ -199,8 +199,16 @@ const cssComputedValue = (element, name) => {
+         properties = required.filter((property) => !cached?.values.has(property));
+       if (checkpointForeignDocumentBatchVersion !== stableEpoch) {
+         checkpointForeignDocumentBatchVersion = stableEpoch;
+-        checkpointForeignDocumentBatch =
+-          selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128;
++        checkpointForeignDocumentBatch = host.pocAdaptiveStyleDemand
++          ? false
++          : selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128;
++      }
++      if (host.pocAdaptiveStyleDemand && selectorTarget === 0) {
++        const nodes =
++          styleReadCache.foreignStyleDemandNodes ||
++          (styleReadCache.foreignStyleDemandNodes = new Set());
++        nodes.add(nodeID);
++        if (nodes.size >= 32) checkpointForeignDocumentBatch = true;
+       }
+       const documentBatch = selectorTarget === 0 && checkpointForeignDocumentBatch,
+         foreign = foreignCSSObservation(

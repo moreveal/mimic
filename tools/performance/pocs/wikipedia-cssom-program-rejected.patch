@@ -1,0 +1,286 @@
+diff --git a/internal/browser/constructed_stylesheet_test.go b/internal/browser/constructed_stylesheet_test.go
+index 0d8f89a..3d44223 100644
+--- a/internal/browser/constructed_stylesheet_test.go
++++ b/internal/browser/constructed_stylesheet_test.go
+@@ -54,6 +54,40 @@ return sheet instanceof CSSStyleSheet&&sheet instanceof StyleSheet&&root.querySe
+ 	}
+ }
+ 
++func TestConstructedStylesheetAuthoritativeProgramMutations(t *testing.T) {
++	b, err := New(v8engine.Factory{}, chrome152.New())
++	if err != nil {
++		t.Fatal(err)
++	}
++	c := b.NewContext()
++	defer c.Close()
++	p, err := c.NewPage()
++	if err != nil {
++		t.Fatal(err)
++	}
++	got, err := p.Evaluate(context.Background(), `(()=>{
++const target=document.createElement('div');target.className='target';document.body.append(target);
++const sheet=new CSSStyleSheet();sheet.replaceSync('.target { color: red } @media (min-width: 1px) { .target { color: blue } }');
++document.adoptedStyleSheets=[sheet];
++const list=sheet.cssRules, first=list[0], style=first.style, media=list[1], nested=media.cssRules[0];
++const read=()=>getComputedStyle(target).color;
++if(read()!=='rgb(0, 0, 255)')return 'initial:'+read();
++style.setProperty('color','green');
++if(first!==list[0]||style!==first.style||nested!==media.cssRules[0])return 'identity';
++media.media.mediaText='(max-width: 0px)';
++if(read()!=='rgb(0, 128, 0)')return 'media:'+read();
++sheet.insertRule('.target { color: purple }',1);
++if(list[0]!==first||list[2]!==media||read()!=='rgb(128, 0, 128)')return 'insert:'+read();
++list[1].selectorText='.other';
++if(read()!=='rgb(0, 128, 0)')return 'selector:'+read();
++sheet.deleteRule(1);
++return list.length===2&&list[0]===first&&list[1]===media;
++})()`)
++	if err != nil || got != true {
++		t.Fatalf("authoritative stylesheet program: %v %v", got, err)
++	}
++}
++
+ func TestTreeWalkerCanonicalTemplatesAndFiltering(t *testing.T) {
+ 	b, err := New(v8engine.Factory{}, chrome152.New())
+ 	if err != nil {
+diff --git a/internal/webapi/cssom_compatibility.js b/internal/webapi/cssom_compatibility.js
+index 4065055..ff52af8 100644
+--- a/internal/webapi/cssom_compatibility.js
++++ b/internal/webapi/cssom_compatibility.js
+@@ -16,6 +16,7 @@ const constructedStyleSheets = (() => {
+     host.invalidateStyleObservations();
+   };
+   const sourceCache = new WeakMap();
++  const programCache = new WeakMap();
+   const sheets = new WeakMap(),
+     rules = new WeakMap(),
+     adopted = new WeakMap(),
+@@ -287,6 +288,28 @@ const constructedStyleSheets = (() => {
+         get: () => preludeText(node.prelude),
+         configurable: true,
+       });
++      if (node.name === 'media') {
++        const media = Object.create(globalThis.MediaList.prototype);
++        Object.defineProperties(media, {
++          mediaText: {
++            get: () => preludeText(node.prelude),
++            set: (value) => {
++              node.prelude = parse(String(value), { context: 'mediaQueryList' });
++              changed();
++            },
++          },
++          length: {
++            get: () => Array.from(node.prelude?.children || []).length,
++          },
++          item: {
++            value: (index) => {
++              const query = Array.from(node.prelude?.children || [])[Number(index)];
++              return query ? preludeText(query) : '';
++            },
++          },
++        });
++        Object.defineProperty(rule, 'media', { value: media, configurable: true });
++      }
+     }
+     return rule;
+   }
+@@ -571,6 +594,62 @@ const constructedStyleSheets = (() => {
+     }
+     return cached.text;
+   };
++  // Project the authoritative parsed rule tree directly into the cascade
++  // matcher. CSSOM wrappers and matching therefore observe the same nodes;
++  // no serialize -> parse round trip is needed on the first style read.
++  const ruleProgram = (sheet) => {
++    const state = sheets.get(sheet);
++    if (state.disabled || (state.media && !cssMediaMatches(state.media))) return [];
++    let cached = programCache.get(sheet);
++    if (cached?.revision === revision) return cached.rules;
++    const result = [];
++    const walk = (rule, conditions = []) => {
++      const ruleState = rules.get(rule),
++        node = ruleState.node;
++      if (node.type === 'Atrule') {
++        if (['media', 'supports', 'layer'].includes(node.name) && node.block) {
++          const next =
++            node.name === 'layer'
++              ? conditions
++              : [...conditions, { type: node.name, value: preludeText(node.prelude) }];
++          for (const child of ruleState.children) walk(child, next);
++        }
++        return;
++      }
++      if (node.type !== 'Rule' || !node.block || node.prelude?.type !== 'SelectorList') return;
++      for (const selectorNode of node.prelude.children) {
++        const selector = preludeText(selectorNode),
++          specificity =
++            (selector.match(/#[\w-]+/g) || []).length * 100 +
++            (selector.match(/\.[\w-]+|\[[^\]]+\]|::?[\w-]+/g) || []).length * 10 +
++            (selector.match(/(^|[\s>+~])[a-zA-Z][\w-]*/g) || []).length,
++          pseudo = /::?(before|after)$/.exec(selector)?.[1] || '';
++        let matcher;
++        result.push({
++          selector,
++          declarations: () => entriesForBlock(node.block),
++          specificity,
++          pseudo,
++          matches: (element) =>
++            conditions.every((condition) =>
++              condition.type === 'media'
++                ? cssMediaMatches(condition.value)
++                : compatibilityCSSSupports.matches?.(condition.value) === true,
++            ) &&
++            (
++              matcher ||
++              (matcher = compatibilitySelectors.compileStyle(
++                pseudo ? selector.replace(/::?(before|after)$/, '') : selector,
++              ))
++            )(element),
++        });
++      }
++    };
++    for (const rule of state.rules) walk(rule);
++    cached = { revision, rules: result };
++    programCache.set(sheet, cached);
++    return result;
++  };
+   function adoption(root) {
+     if (!(root instanceof Document) && !shadowSlots.has(root))
+       throw new TypeError('Illegal invocation');
+@@ -638,6 +717,12 @@ const constructedStyleSheets = (() => {
+         .concat(adopted.get(root) || [])
+         .map(sourceText);
+     },
++    programs(root) {
++      const result = [];
++      for (const sheet of Array.from(ownerCollection(root)).concat(adopted.get(root) || []))
++        result.push(...ruleProgram(sheet));
++      return result;
++    },
+     snapshot(root) {
+       return (adopted.get(root) || [])
+         .filter((sheet) => !requireSheet(sheet).disabled)
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+index 5409cd0..46a483b 100644
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1412,88 +1443,6 @@
+     if (cache) for (const node of visited) cache.set(node, root);
+     return root;
+   };
+-  // Cache only parsed immutable source text, never computed element state.
+-  // A bounded cache cannot retain unbounded revisions of author stylesheets.
+-  const parsedStyleSources = new Map();
+-  let parsedStyleSourceBytes = 0;
+-  const parsedStyleRules = (text) => {
+-    text = String(text);
+-    if (parsedStyleSources.has(text)) return parsedStyleSources.get(text);
+-    const rules = [],
+-      generate = mimicSelectorLibrary.generateCSS;
+-    const walk = (nodes, conditions = []) => {
+-      for (const node of nodes) {
+-        if (node.type === 'Atrule') {
+-          if (['media', 'supports', 'layer'].includes(node.name) && node.block)
+-            walk(
+-              node.block.children,
+-              node.name === 'layer'
+-                ? conditions
+-                : [...conditions, { type: node.name, value: generate(node.prelude) }],
+-            );
+-          continue;
+-        }
+-        if (node.type !== 'Rule' || !node.block) continue;
+-        const selectors =
+-          node.prelude?.type === 'SelectorList'
+-            ? Array.from(node.prelude.children, generate)
+-            : [generate(node.prelude)];
+-        const body = Array.from(node.block.children)
+-          .filter((n) => n.type === 'Declaration')
+-          .map(
+-            (n) => n.property + ':' + generate(n.value) + (n.important ? ' !important' : '') + ';',
+-          )
+-          .join('');
+-        let entries;
+-        const declarations = () => entries || (entries = parseCSS(body));
+-        for (const selector of selectors) {
+-          const specificity =
+-            (selector.match(/#[\w-]+/g) || []).length * 100 +
+-            (selector.match(/\.[\w-]+|\[[^\]]+\]|::?[\w-]+/g) || []).length * 10 +
+-            (selector.match(/(^|[\s>+~])[a-zA-Z][\w-]*/g) || []).length;
+-          const pseudo = /::?(before|after)$/.exec(selector)?.[1] || '';
+-          let matcher;
+-          rules.push({
+-            selector,
+-            declarations,
+-            specificity,
+-            pseudo,
+-            matches: (node) =>
+-              conditions.every((condition) =>
+-                condition.type === 'media'
+-                  ? cssMediaMatches(condition.value)
+-                  : compatibilityCSSSupports.matches?.(condition.value) === true,
+-              ) &&
+-              (
+-                matcher ||
+-                (matcher = compatibilitySelectors.compileStyle(
+-                  pseudo ? selector.replace(/::?(before|after)$/, '') : selector,
+-                ))
+-              )(node),
+-          });
+-        }
+-      }
+-    };
+-    try {
+-      walk(mimicSelectorLibrary.parseStylesheet(text).children);
+-    } catch (error) {
+-      if (error?.name !== 'SyntaxError') throw error;
+-    }
+-    const size = text.length * 2;
+-    if (size <= 8 * 1024 * 1024) {
+-      while (
+-        parsedStyleSources.size &&
+-        (parsedStyleSources.size >= 64 || parsedStyleSourceBytes + size > 8 * 1024 * 1024)
+-      ) {
+-        const oldest = parsedStyleSources.keys().next().value;
+-        parsedStyleSources.delete(oldest);
+-        parsedStyleSourceBytes -= oldest.length * 2;
+-      }
+-      parsedStyleSources.set(text, rules);
+-      parsedStyleSourceBytes += size;
+-    }
+-    return rules;
+-  };
+   // Cache only the ordered rule program. Revalidate canonical owner sheets on
+   // every read; computed matches and element state never survive the read.
+   const orderedStyleRules = new WeakMap();
+@@ -1504,19 +1453,17 @@
+         document,
+       cache = styleReadCache?.rules;
+     if (cache?.has(root)) return cache.get(root);
+-    const sources = constructedStyleSheets.sources(root),
+-      prior = orderedStyleRules.get(root);
++    const prior = orderedStyleRules.get(root),
++      revision = constructedStyleSheets.revision(),
++      domRevision = host.domRevision();
+     let rules = prior?.rules;
+-    if (
+-      !prior ||
+-      sources.length !== prior.sources.length ||
+-      sources.some((text, index) => text !== prior.sources[index])
+-    ) {
+-      rules = [];
+-      let order = 0;
+-      for (const text of sources)
+-        for (const rule of parsedStyleRules(text)) rules.push({ ...rule, order: order++ });
+-      orderedStyleRules.set(root, { sources, rules });
++    if (!prior || prior.revision !== revision || prior.domRevision !== domRevision) {
++      rules = constructedStyleSheets.programs(root).map((rule, order) => ({ ...rule, order }));
++      orderedStyleRules.set(root, {
++        revision: constructedStyleSheets.revision(),
++        domRevision,
++        rules,
++      });
+     }
+     cache?.set(root, rules);
+     return rules;
+

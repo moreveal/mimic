@@ -1,0 +1,72 @@
+diff --git a/internal/browser/page.go b/internal/browser/page.go
+index 4e944dc..3f41ffe 100644
+--- a/internal/browser/page.go
++++ b/internal/browser/page.go
+@@ -5,6 +5,7 @@ import (
+ 	"fmt"
+ 	"net/http"
+ 	"net/url"
++	"os"
+ 	"strings"
+ 	"sync"
+ 	"sync/atomic"
+@@ -843,6 +844,11 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
+ 			// delivers it to observers again when loadEventEnd finalizes duration;
+ 			// resource-only notifications cannot represent that transition.
+ 			realm.notifyPerformanceObservers(taskContext)
++			if os.Getenv("MIMIC_DIAGNOSTIC_POST_DCL_QUARANTINE") == "1" {
++				realm.scheduler.SetTaskSuppressor(func(source scheduler.Source) bool {
++					return source == scheduler.DOM || source == scheduler.Timer
++				})
++			}
+ 		})
+ 		return nil
+ 	}
+diff --git a/internal/scheduler/scheduler.go b/internal/scheduler/scheduler.go
+index f73765d..b1783b8 100644
+--- a/internal/scheduler/scheduler.go
++++ b/internal/scheduler/scheduler.go
+@@ -100,6 +100,7 @@ type Scheduler struct {
+ 	wake               chan struct{}
+ 	executionScale     float64
+ 	sequenceSource     func() uint64
++	taskSuppressor     func(Source) bool
+ }
+ 
+ func New(start time.Time, checkpoint func(context.Context) error) *Scheduler {
+@@ -119,6 +120,15 @@ func (s *Scheduler) SetTaskObserver(f func(time.Time, time.Time)) {
+ 
+ func (s *Scheduler) SetTaskStarted(f func()) { s.mu.Lock(); s.taskStarted = f; s.mu.Unlock() }
+ 
++// SetTaskSuppressor is a diagnostic hook. Suppressed tasks retain queue
++// selection, transition accounting and the event-loop checkpoint, but their
++// callback body is skipped.
++func (s *Scheduler) SetTaskSuppressor(f func(Source) bool) {
++	s.mu.Lock()
++	s.taskSuppressor = f
++	s.mu.Unlock()
++}
++
+ // SetSequenceSource supplies an event-loop-local enqueue order shared by realm
+ // queues. Configure it before posting tasks; standalone/worker queues use IDs.
+ func (s *Scheduler) SetSequenceSource(next func() uint64) {
+@@ -422,6 +432,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
+ 			s.now = t.due
+ 		}
+ 		observer := s.observer
++		suppressor := s.taskSuppressor
+ 		s.mu.Unlock()
+ 		if t.cancelled {
+ 			continue
+@@ -430,7 +441,10 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
+ 			observer(Transition{"start", t.id, t.source, t.due})
+ 		}
+ 		s.beginTask(t)
+-		callbackErr := t.callback(ctx)
++		var callbackErr error
++		if suppressor == nil || !suppressor(t.source) {
++			callbackErr = t.callback(ctx)
++		}
+ 		if callbackErr != nil {
+ 			if observer != nil {
+ 				observer(Transition{"error", t.id, t.source, t.due})

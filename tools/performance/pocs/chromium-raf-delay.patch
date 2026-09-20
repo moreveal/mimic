@@ -1,0 +1,15 @@
+*** Begin Patch
+*** Update File: E:/GitHub/mimic/internal/browser/realm.go
+@@
+ 	"net/url"
++	"os"
+@@
+ 	host["queueIntersectionObserver"] = host["queuePerformanceObserver"]
++	host["diagnosticZeroFrameDelay"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
++		return r.val(os.Getenv("MIMIC_POC_ZERO_FRAME_DELAY") == "1"), nil
++	})
+*** Update File: E:/GitHub/mimic/internal/webapi/intersection_observer.js
+@@
+-    16,
++    pendingAnimationFrames.size > 0 && host.diagnosticZeroFrameDelay() ? 0 : 16,
+*** End Patch

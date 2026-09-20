@@ -1,0 +1,82 @@
+diff --git a/internal/webapi/cssom_compatibility.js b/internal/webapi/cssom_compatibility.js
+--- a/internal/webapi/cssom_compatibility.js
++++ b/internal/webapi/cssom_compatibility.js
+@@ -17,1 +17,2 @@
+   const sourceCache = new WeakMap();
++  const programCache = new WeakMap();
+@@ -574,1 +575,55 @@
++  // Diagnostic direct projection. Keep rule identities until CSSOM changes;
++  // DOM membership and media are still checked by programs() on every read.
++  const ruleProgram = (sheet) => {
++    const state = sheets.get(sheet);
++    if (state.disabled || (state.media && !cssMediaMatches(state.media))) return [];
++    const cached = programCache.get(sheet);
++    if (cached?.revision === revision) return cached.rules;
++    const result = [];
++    const walk = (rule, conditions = []) => {
++      const ruleState = rules.get(rule),
++        node = ruleState.node;
++      if (node.type === 'Atrule') {
++        if (['media', 'supports', 'layer'].includes(node.name) && node.block) {
++          const next =
++            node.name === 'layer'
++              ? conditions
++              : [...conditions, { type: node.name, value: generate(node.prelude) }];
++          for (const child of ruleState.children) walk(child, next);
++        }
++        return;
++      }
++      if (node.type !== 'Rule' || !node.block || node.prelude?.type !== 'SelectorList') return;
++      for (const selectorNode of node.prelude.children) {
++        const selector = generate(selectorNode),
++          specificity =
++            (selector.match(/#[\w-]+/g) || []).length * 100 +
++            (selector.match(/\.[\w-]+|\[[^\]]+\]|::?[\w-]+/g) || []).length * 10 +
++            (selector.match(/(^|[\s>+~])[a-zA-Z][\w-]*/g) || []).length,
++          pseudo = /::?(before|after)$/.exec(selector)?.[1] || '';
++        let matcher;
++        result.push({
++          selector,
++          declarations: () => entriesForBlock(node.block),
++          specificity,
++          pseudo,
++          matches: (element) =>
++            conditions.every((condition) =>
++              condition.type === 'media'
++                ? cssMediaMatches(condition.value)
++                : compatibilityCSSSupports.matches?.(condition.value) === true,
++            ) &&
++            (
++              matcher ||
++              (matcher = compatibilitySelectors.compileStyle(
++                pseudo ? selector.replace(/::?(before|after)$/, '') : selector,
++              ))
++            )(element),
++        });
++      }
++    };
++    for (const rule of state.rules) walk(rule);
++    programCache.set(sheet, { revision, rules: result });
++    return result;
++  };
+   function adoption(root) {
+@@ -638,1 +693,7 @@
++    programs(root) {
++      const result = [];
++      for (const sheet of Array.from(ownerCollection(root)).concat(adopted.get(root) || []))
++        result.push(...ruleProgram(sheet));
++      return result;
++    },
+     snapshot(root) {
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1531,1 +1531,1 @@
+-    const sources = constructedStyleSheets.sources(root),
++    const sources = constructedStyleSheets.programs(root),
+@@ -1541,4 +1541,3 @@
+       rules = [];
+       let order = 0;
+-      for (const text of sources)
+-        for (const rule of parsedStyleRules(text)) rules.push({ ...rule, order: order++ });
++      for (const rule of sources) rules.push({ ...rule, order: order++ });

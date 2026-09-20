@@ -45,6 +45,7 @@ func (d *Document) InsertAdjacentHTML(id int64, position, source string) (string
 	if context.Type != "element" || context.TagName == "HTML" {
 		context = &Node{TagName: "BODY", Namespace: "http://www.w3.org/1999/xhtml"}
 	}
+	d.markConnectedMutationLocked(parent.ID)
 	return "", d.insertHTMLLocked(parent, context, source, before, false)
 }
 
@@ -66,6 +67,7 @@ func (d *Document) SetOuterHTML(id int64, source string) (string, error) {
 	if context.Type != "element" {
 		context = &Node{TagName: "BODY", Namespace: "http://www.w3.org/1999/xhtml"}
 	}
+	d.markConnectedMutationLocked(parent.ID)
 	if err := d.insertHTMLLocked(parent, context, source, id, false); err != nil {
 		return "", err
 	}

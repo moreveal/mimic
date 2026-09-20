@@ -628,6 +628,14 @@ func taskBefore(left, right *task) bool {
 }
 
 func sourcePriority(source Source) int {
+	// A ready navigation replaces the current document. Let it overtake queued
+	// work from that document, as Chromium does, instead of forcing history and
+	// explicit navigations to drain stale DOM/observer turns first. This never
+	// interrupts the currently running turn and does not make a future
+	// navigation ready early.
+	if source == Navigation {
+		return -2
+	}
 	if source == ResourceScript {
 		return -1
 	}

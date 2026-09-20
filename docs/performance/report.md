@@ -2,6 +2,28 @@
 
 ## Playwright Wikipedia latency, current
 
+Latest user scope: **stop diagnosis and plan real fixes**, warm first,
+aspirational 2/2 s. The [implementation plan](wikipedia-production-plan.md)
+prioritizes cheaper initial style/geometry computation, shared observation
+results, then bounded dependency-correct reuse and secondary DOM read savings.
+No production fix is applied. The final destructive combination reached five-pair
+medians of 2251/2147 ms cold/warm against its paired destructive control
+2717/2664 ms. It additionally bypasses geometry/scroll/occlusion and memoizes
+Playwright queries; these results are not production performance or a guarantee
+of what correct fixes can achieve. Patches and receipts are retained separately.
+
+Earlier checkpoint:
+Three paired runs of combined author-script suppression and stylesheet-cascade
+suppression gave 4821/4383 ms cold/warm against 10138/6688 ms. Adding the previous
+split-derived-state freeze in a separate matched comparison gave 4608/4172 ms
+against 4790/4376 ms. All assertions passed, but these ablations deliberately
+break browser semantics; they are not shippable optimizations. Cold approaches
+warm, yet 2/2 remains unachieved. Bulk line shaping was flat warm; guarded
+Taffy-first showed no material one-pair screen gain. Production changes were
+removed and reproducible patches/receipts retained in `tools/performance/pocs`.
+These results do not establish a persistent dependency-aware layout tree as the
+single missing cause; first-build and repeated structural reads remain expensive.
+
 The canonical handoff is [wikipedia-e2e-current.md](wikipedia-e2e-current.md).
 It consolidates the September 15–19 investigation, including the ~10/6 s
 cold/warm production target, correlated Runtime/gov8/host profiling, rejected
@@ -10,6 +32,66 @@ and the latest matched E2E result. Local actionability improved substantially,
 but the complete Wikipedia workflow did not; future work must use the unchanged
 Wikipedia E2E as an early go/no-go gate rather than treating microbenchmark wins
 as completion.
+
+The September 19 causal follow-up established fresh five-pair medians of 10004 ms
+cold and 6547 ms warm and added a stage-attributed diagnostic twin with early
+realm-preserving stop. A subsequent attribution audit found that nested owner
+style/geometry execution lost the outer correlation ID and was absent from the
+original deep trace. Lightweight host accounting then measured 1441 ms inside
+two foreign owner observations in a 1530 ms warm callback. Five new paired E2E
+trials disabling author stylesheet cascade improved medians from 11094/7061 ms
+to 8196/5188 ms (-26.1%/-26.5%). This destructive experiment also changes layout,
+so it does not isolate selector-matching CPU. Output-checked matching replay,
+with zero verification mismatches, improved a separate five-pair control from
+10411/7077 ms to 9302/6221 ms (-10.7%/-12.1%). Declaration-output replay yielded
+10463/7038 ms to 9768/6388 ms (-6.6%/-9.2%), but carries larger tape/materialization
+overhead; these are interventions, not exclusive CPU-time bounds. Warm runs
+create new Pages, so first-use owner projection/layout construction remains
+relevant without requiring repeated mutation invalidation as the explanation.
+All experimental runtime edits were removed and saved as local reproducible
+patches. No production optimization is authorized or retained; scope is diagnosis
+and removable PoCs only. See the canonical handoff for raw tables and limitations.
+
+The final stage-complete diagnostic attributes 4073 ms of Mimic excess versus
+installed Chrome 153 to four stages: JavaScript first-visible (+1529 ms),
+click/navigation (+849 ms), ECMAScript first-visible (+844 ms) and back (+851
+ms). Repeated role resolution performs over 110k host crossings per operation,
+but a callback read snapshot improved paired warm E2E only 2.7%. Click profiling
+found redundant full hit/rect validation after Playwright had already established
+the target; two unsafe trust-hint PoCs reduced click-navigation 924 -> 450 ms and
+paired warm E2E 6940 -> 6577 ms (-5.2%). Exact replay of all 58 cross-realm owner
+projections improved one cold/warm pair 10637/6749 -> 8747/5697 ms but moved
+unprimed geometry into scrolling. Adaptive demand projection and Page-lifetime
+text shaping were screened and did not materially improve E2E. The evidence now
+supports a distributed cause: repeated first-use JavaScript style/cascade/layout/
+AX/hit-test construction across new documents, plus native-vs-JS navigation and
+bootstrap cost—not CDP transport, owner waiting, BFCache, or one cache miss.
+
+The whole-chain scheduler audit sharpened that conclusion. Cold versus warm
+diagnostic wall differed by 3716 ms; mutually exclusive scheduler intervals
+explained 3321 ms, while foreground Runtime callbacks explained only 183 ms.
+Nine cold IntersectionObserver-like DOM tasks spent 2778 ms repeatedly sampling
+style and nine tables. Parse-only author scripts removed 36.1% cold but only
+9.4% warm, proving author execution schedules the cold tail rather than paying
+it in top-level evaluation. Image-epoch suppression, first-sample-only IO and
+additive word shaping were low-single-digit or negative E2E results.
+
+A final split-cache upper bound kept canonical DOM reads fresh while freezing
+only post-load derived style/layout maps. It improved paired medians
+9743/6418 -> 7946/5900 ms (-18.4%/-8.1%). Combining that destructive freeze
+with exact matching replay reached 9746/6479 -> 7275/5258 ms
+(-25.4%/-18.8%). All workload assertions passed, while focused mutation/font/
+geometry tests correctly failed under the freeze. The result proves coarse
+invalidation is a major cold amplifier but not the sole warm cause; even this
+combined non-production upper bound misses the joint 20% gate. Production
+runtime code was restored unchanged.
+
+Pinned Chrome 152 back-navigation measurements also rejected BFCache as the
+missing mechanism: the realm marker was absent, `pageshow.persisted` was not
+true, and the navigation still reported `back_forward`. Mimic's fresh-realm
+behavior is therefore aligned, although its `reload` navigation type is a
+separate semantic defect. Completely deleting Mimic's back stage is only a 15%
+warm upper bound and cannot independently satisfy the gate.
 
 ## WebAPI realm memory, 2026-09-14
 
@@ -2538,19 +2620,116 @@ results (12.508 s), and always-on trace compaction (11.927 s without a clear
 gain over the best checkpoint). Earlier document-wide property batching stayed
 near 13 s, while per-element style projection was about 20.6 s. None is retained.
 
-The largest remaining architectural cost is the absence of a persistent,
-incrementally invalidated style/layout tree. Mimic caches boxes only for an
-exact canonical epoch; any connected mutation conservatively invalidates the
-whole retained graph because selector, ancestor, sibling and percentage-size
-dependencies are not represented. Consequently visibility, hit testing,
-`innerText`, role resolution and input dispatch repeatedly rebuild overlapping
-style and geometry. For example, `body.innerText` walks the rendered subtree
-and asks for computed style on each element, while Chrome reads its maintained
-layout tree. Closing the remaining multi-second differential requires explicit
-dependency-aware style/layout invalidation and separate lifetimes for intrinsic
-sizes, positions and text extraction, rather than another Playwright-specific
-property or selector shortcut.
+The remaining architectural cost is not simply the absence of a shared tree.
+Main-world observers and isolated Playwright reads already enter one canonical
+owner observation, but its initial JS style/geometry construction is expensive
+and coarse epochs discard useful pieces. Visibility, hit testing, `innerText`,
+role resolution and input dispatch therefore build or traverse overlapping
+derived state across each newly created document. Dependency-aware invalidation
+and separate intrinsic/placement lifetimes are necessary for reuse, but the
+split-freeze upper bound later showed they are insufficient alone: first-build
+cost must also fall. Another Playwright-specific property or selector shortcut
+will not close that combined gap.
+
+The follow-up causal pass also rejected three lower-level explanations. Shared
+geometry bindings and removal of element observation proxies were only low
+single-digit E2E effects. Replacing selector IDs plus lazy `nodeData` reads with
+one bulk array of complete node records regressed both cold and warm runs, so
+Go/V8 wrapper transport is not the hidden four-second cost. A callback-scoped
+demand style projection accelerated first-visible but displaced its work into
+later actionability/scroll stages and left warm E2E flat. These experiments
+were removed; only the diagnostic scenario and the attribution record remain.
+
+An exact Page-lifetime intrinsic-width cache was also rejected. Its key covered
+retained style identity, font epoch, direct text and recursively validated child
+identity/width. Correctness tests passed, but recursive validation regressed
+cold median (10300 -> 10681 ms) and left warm effectively flat (6988 -> 6957
+ms). Intrinsic/placement lifetime separation therefore needs O(1) canonical
+subtree dependency epochs; recomputing the dependency key in JavaScript is not
+a viable substitute.
 
 This is an intermediate checkpoint. No full suite, CI, reportable benchmark
 matrix or push was performed. Temporary CPU/wall profiling instrumentation and
 the modified diagnostic workload were removed before the checkpoint commit.
+
+## Controlled Wikipedia observation-chain comparison — 2026-09-20
+
+See [the detailed report](observation-chain-2026-09-20.md) for the new paired
+Chrome 152/Mimic local-DOM matrix and its connection to a fresh complete
+Wikipedia trace. All 48 controlled cases passed. Retained geometry is effective
+for unchanged direct reads; expensive first construction, over-broad mutation
+reconstruction, repeated property-specific document projections, and differing
+frame cadence are distinct contributors. The four small Chromium-inspired PoCs
+combined improved quiet Wikipedia only 10071/6062 -> 9632/5756 ms cold/warm;
+they were removed and do not meet the user's <=4 s goal. Original incoming source
+changes were preserved exactly; no production acceptance, full benchmark gate,
+race or memory result is claimed for these diagnostic experiments.
+
+## Connected observation revision — 2026-09-20
+
+Style and geometry projection epochs now follow a per-document connected-tree
+revision instead of every write to the shared node arena. Detached element and
+fragment construction, inert document parsing, and template-content mutation
+continue to advance the authoritative arena revision but do not invalidate the
+active document's retained style state. Connected insertion, removal,
+attributes, text, form/focus state, and conservative structural mutations do.
+Selector reuse has a separate bounded connected-attribute journal; structural
+or state changes leave an intentional gap and force a complete match.
+
+A three-pair same-binary screen compared the connected revision against an
+environment-controlled fallback to the old arena revision. Median complete E2E
+changed from **9254/5791 ms to 9052/5819 ms cold/warm**: cold -202 ms (-2.2%),
+warm +28 ms (+0.5%, effectively flat). Every unchanged workload assertion
+passed. This is retained as a cold-amplification reduction and prerequisite for
+later dependency-aware reuse, not as a solution to the remaining Chrome gap.
+Raw stages and hashes are in
+`tools/performance/pocs/results/connected-revision-paired-results.json`.
+
+## 2026-09-20 -- combined Wikipedia production checkpoint
+
+The connected observation revision, bounded selector mutation journal, ready
+navigation priority and observation-local Taffy-root memo were measured together
+against the pre-investigation control binary in three alternating cold/warm
+pairs. All unchanged Wikipedia assertions passed. Control medians were
+10075/6720 ms; the combined build measured **9500/5813 ms cold/warm**, a
+**5.7% cold** and **13.5% warm** reduction. Every warm pair improved by
+0.69--0.94 s. The result is material but remains above the <=4 s goal, and the
+3.69 s cold/warm differential remains unresolved.
+
+An exact-verification postorder Taffy PoC removed a measured 520 ms legacy
+prepass and matched all consumed heights and root origins. Its first complete
+cold candidate run nevertheless regressed by 805 ms because local measurement
+recomputed displaced work. It was kept isolated and is not production code.
+
+The combined production tree passes the full DOM and scheduler suites, focused
+browser style/geometry/navigation tests, DOM and scheduler race tests, and the
+fresh-build `tools/performance/fast_gate.py` semantic, warm, throughput and
+teardown gate. Raw combined Wikipedia data is
+`.build/combined-current-paired-results.json`; the fast gate is
+`.build/fast-gate-wikipedia-combined`.
+
+The first full browser-suite run exposed two synthetic-shadow invalidation
+regressions: shadow descendants are detached in the native arena, so attribute
+and inline-style writes did not advance the new connected revision. Those
+writes now explicitly advance the realm style epoch. Both failing frozen-Chrome
+tests pass for Goja and V8, and a fresh final-source fast gate passes at
+`.build/fast-gate-wikipedia-combined-shadowfix`. The complete 677-second suite
+was not rerun after this focused correction within the time-box.
+
+The exact combined source was then traced once cold and warm. Diagnostic wall
+was 10997/6970 ms. Scheduler intervals explain 3462 ms (86%) of the 4027 ms
+gap: DOM +2465, timer +799, navigation +162 and network +31 ms. Eight cold
+IntersectionObserver/table-geometry tasks total 2440 ms versus three warm tasks
+at 379 ms. Together with timer work this accounts for 2860 ms (71%) of the
+cold gap. This establishes the remaining cold target as cross-frame retained
+layout with dependency invalidation, not script execution time or CDP latency.
+
+Mutation-complete instrumentation of the eight heavy samples (1885.3 ms)
+further bounded that fix: 1045.9 ms is first-build work with no reusable prior
+state; 107.7 ms follows global html/body/head structural/state batches; 215.0 ms
+follows a remote later-sibling style plus layout-inert title mutation and is
+directly recoverable; 516.7 ms of class/state invalidation requires selector
+and pseudo-state dependency proof. The credible retained-layout upper bound is
+731.7 ms (38.8%). Both first-build optimization and dependency-aware retention
+are required to reduce cold materially; a coarse persistent cache cannot do it
+correctly.

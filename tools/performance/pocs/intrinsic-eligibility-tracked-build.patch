@@ -1,0 +1,1089 @@
+diff --git a/internal/browser/computed_style_geometry_test.go b/internal/browser/computed_style_geometry_test.go
+index b286758..e81156f 100644
+--- a/internal/browser/computed_style_geometry_test.go
++++ b/internal/browser/computed_style_geometry_test.go
+@@ -33,3 +33,32 @@ func TestComputedStyleDoesNotInvokeAuthorGeometryGetters(t *testing.T) {
+ 		t.Fatalf("computed style: %v %v", value, err)
+ 	}
+ }
++
++func TestScalarComputedValuesPreserveInheritanceAndMutation(t *testing.T) {
++	b, err := New(v8engine.Factory{}, chrome152.New())
++	if err != nil {
++		t.Fatal(err)
++	}
++	c := b.NewContext()
++	defer c.Close()
++	p, err := c.NewPage()
++	if err != nil {
++		t.Fatal(err)
++	}
++	value, err := p.Evaluate(context.Background(), `(()=>{
++ const root=document.createElement('div'),middle=document.createElement('div'),leaf=document.createElement('div');
++ root.style.cssText='color:rgb(1, 2, 3);cursor:crosshair;visibility:hidden;direction:rtl;pointer-events:none;white-space-collapse:preserve;text-wrap-mode:nowrap;line-height:1.5;caret-color:auto';
++ middle.style.cssText='cursor:inherit;visibility:unset;direction:inherit;pointer-events:inherit;white-space-collapse:inherit;text-wrap-mode:inherit;line-height:inherit;caret-color:inherit';
++ middle.append(leaf);root.append(middle);document.body.append(root);
++ const read=()=>{const s=getComputedStyle(leaf);return [s.cursor,s.visibility,s.direction,s.pointerEvents,s.whiteSpaceCollapse,s.textWrapMode,s.lineHeight,s.caretColor]};
++ const before=read();root.style.cssText='color:rgb(4, 5, 6);cursor:wait;visibility:visible;direction:ltr;pointer-events:auto;white-space-collapse:collapse;text-wrap-mode:wrap;line-height:2;caret-color:currentcolor';
++ const after=read();root.remove();return JSON.stringify([before,after]);
++ })()`)
++	if err != nil {
++		t.Fatal(err)
++	}
++	want := `[["crosshair","hidden","rtl","none","preserve","nowrap","24px","rgb(1, 2, 3)"],["wait","visible","ltr","auto","collapse","wrap","32px","rgb(4, 5, 6)"]]`
++	if value != want {
++		t.Fatalf("computed scalar inheritance: %v; want %s", value, want)
++	}
++}
+diff --git a/internal/browser/document_compatibility_test.go b/internal/browser/document_compatibility_test.go
+index f3c7023..a3692a1 100644
+--- a/internal/browser/document_compatibility_test.go
++++ b/internal/browser/document_compatibility_test.go
+@@ -42,6 +42,37 @@ func TestInertHTMLDocumentOwnershipChrome152(t *testing.T) {
+ 	}
+ }
+ 
++// Topology, ownership and attribute projections may share an internal pure-read
++// observation, but ordinary script can mutate between any two public getters.
++// Keep this as a single callback so a retained public snapshot cannot pass by
++// relying on the next protocol command to invalidate it.
++func TestDOMReadMutationReparentAndAdoption(t *testing.T) {
++	b, err := New(v8engine.Factory{}, chrome152.New())
++	if err != nil {
++		t.Fatal(err)
++	}
++	c := b.NewContext()
++	defer c.Close()
++	p, err := c.NewPage()
++	if err != nil {
++		t.Fatal(err)
++	}
++	value, err := p.Evaluate(context.Background(), `(()=>{
++ const first=document.createElement('section'),second=document.createElement('section'),node=document.createElement('span');
++ document.body.append(first,second);first.append(node);node.setAttribute('data-state','before');
++ const before=node.parentNode===first&&node.ownerDocument===document&&node.getAttribute('data-state')==='before';
++ second.append(node);node.setAttribute('data-state','after');
++ const moved=node.parentNode===second&&node.ownerDocument===document&&node.getAttribute('data-state')==='after';
++ const inert=document.implementation.createHTMLDocument('owner');inert.body.append(node);
++ const adopted=node.parentNode===inert.body&&node.ownerDocument===inert&&node.getAttribute('data-state')==='after';
++ document.body.append(node);
++ return before&&moved&&adopted&&node.parentNode===document.body&&node.ownerDocument===document;
++})()`)
++	if err != nil || value != true {
++		t.Fatalf("DOM read/mutate/read semantics: %v %v", value, err)
++	}
++}
++
+ func TestXMLDocumentFactoryChrome152(t *testing.T) {
+ 	b, err := New(v8engine.Factory{}, chrome152.New())
+ 	if err != nil {
+diff --git a/internal/browser/geometry_read_cache_test.go b/internal/browser/geometry_read_cache_test.go
+index 2641baf..8616228 100644
+--- a/internal/browser/geometry_read_cache_test.go
++++ b/internal/browser/geometry_read_cache_test.go
+@@ -31,6 +31,30 @@ func TestGeometryReadCachesObserveSameTaskMutations(t *testing.T) {
+ 	})
+ }
+ 
++// Flex/grid construction and the legacy containing-block path can recursively
++// request one another. A cycle fallback must not escape as ready geometry or be
++// reused after a synchronous style mutation.
++func TestGeometryComputationPlanDoesNotPublishCycleFallback(t *testing.T) {
++	historyTestPages(t, func(t *testing.T, p *Page) {
++		navigateCapabilityFixture(t, p)
++		value, err := p.Evaluate(context.Background(), `(()=>{
++ document.body.innerHTML='<div id="root" style="display:flex;width:240px"><div id="item" style="display:grid;width:50%;grid-template-columns:1fr"><div id="leaf" style="width:100%;height:12px"></div></div></div>';
++ const root=document.querySelector('#root'),item=document.querySelector('#item'),leaf=document.querySelector('#leaf');
++ const read=()=>{
++   const a=leaf.getBoundingClientRect(),b=item.getBoundingClientRect();
++   return [a.width,a.height,a.left,b.width,item.clientWidth,root.scrollWidth];
++ };
++ const first=read(),same=read();
++ root.style.width='320px';const changed=read(),again=read();
++ return JSON.stringify({first,same,changed,again,finite:[...first,...changed].every(Number.isFinite)});
++ })()`)
++		want := `{"first":[120,12,0,120,120,240],"same":[120,12,0,120,120,240],"changed":[160,12,0,160,160,320],"again":[160,12,0,160,160,320],"finite":true}`
++		if err != nil || value != want {
++			t.Fatalf("geometry computation cycle: %v %v", value, err)
++		}
++	})
++}
++
+ func TestStylesheetAttributeIndexPreservesFullMatching(t *testing.T) {
+ 	historyTestPages(t, func(t *testing.T, p *Page) {
+ 		navigateCapabilityFixture(t, p)
+diff --git a/internal/browser/isolated_style_owner_test.go b/internal/browser/isolated_style_owner_test.go
+index a9e8750..48c4255 100644
+--- a/internal/browser/isolated_style_owner_test.go
++++ b/internal/browser/isolated_style_owner_test.go
+@@ -151,6 +151,41 @@ func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
+ 	})
+ }
+ 
++func TestIsolatedStyleDocumentBatchAccumulatesProperties(t *testing.T) {
++	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
++	historyTestPages(t, func(t *testing.T, p *Page) {
++		d := NewDebugger(p)
++		defer d.Close()
++		debuggerEval(t, d, `document.body.innerHTML=Array.from({length:160},(_,i)=>'<div class="item">'+i+'</div>').join('')`, DebuggerOptions{})
++		world, err := p.IsolatedWorld(context.Background(), p.Top.ID, "style-columns")
++		if err != nil {
++			t.Fatal(err)
++		}
++		before := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree")
++		result, err := d.Evaluate(context.Background(), p.Top.ID, world, `(()=>{const e=document.querySelector('.item');return JSON.stringify([getComputedStyle(e).content,getComputedStyle(e).cursor,getComputedStyle(e).content])})()`, DebuggerOptions{ReturnByValue: true})
++		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != `["normal","auto","normal"]` {
++			t.Fatalf("alternating properties: %#v %v", result, err)
++		}
++		calls := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree") - before
++		if calls > 2 {
++			t.Fatalf("alternating properties used %d owner crossings, want at most 2 additive batches", calls)
++		}
++		// Engines without a separate isolated-world runtime can answer locally and
++		// therefore do not populate the cross-realm owner cache.
++		if calls == 0 {
++			return
++		}
++		contentKey := styleProjectionKey{node: p.Top.Realm.document.Root().ID, kind: "documentValues", property: `["content","display","visibility"]`}
++		cursorKey := styleProjectionKey{node: p.Top.Realm.document.Root().ID, kind: "documentValues", property: `["cursor"]`}
++		if _, ok := p.Top.Realm.styleProjections.values[contentKey]; !ok {
++			t.Fatal("initial document property projection was not retained")
++		}
++		if _, ok := p.Top.Realm.styleProjections.values[cursorKey]; !ok {
++			t.Fatal("incremental document property projection was not retained")
++		}
++	})
++}
++
+ func TestIsolatedInnerTextTracksOwnerMutations(t *testing.T) {
+ 	historyTestPages(t, func(t *testing.T, p *Page) {
+ 		d := NewDebugger(p)
+diff --git a/internal/browser/realm.go b/internal/browser/realm.go
+index 284b86f..3800a27 100644
+--- a/internal/browser/realm.go
++++ b/internal/browser/realm.go
+@@ -1467,6 +1467,13 @@ func (r *Realm) installBindingsOnOwner() error {
+ 	host["domRevision"] = r.packedFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+ 		return r.val(r.document.Revision()), nil
+ 	}, "")
++	host["mutationJournal"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
++		encoded, err := json.Marshal(r.document.MutationsSince(uint64(numarg(a, 0))))
++		if err != nil {
++			return nil, err
++		}
++		return r.val(string(encoded)), nil
++	}, "n")
+ 	host["matches"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+ 		return r.val(r.document.Matches(int64(numarg(a, 0)), strarg(a, 1))), nil
+ 	}, "ns")
+@@ -1476,6 +1483,9 @@ func (r *Realm) installBindingsOnOwner() error {
+ 	host["styleObservationState"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+ 		return r.val(r.document.StyleObservationState(int64(numarg(a, 0)))), nil
+ 	}, "n")
++	host["diagnosticIntrinsicGeneration"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
++		return r.val(r.document.DiagnosticIntrinsicGeneration(int64(numarg(a, 0)))), nil
++	}, "n")
+ 	host["nodeData"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+ 		n, ok := r.document.Get(int64(numarg(a, 0)))
+ 		if !ok {
+diff --git a/internal/dom/dom.go b/internal/dom/dom.go
+index cc93df7..e970522 100644
+--- a/internal/dom/dom.go
++++ b/internal/dom/dom.go
+@@ -52,11 +52,14 @@ func (m *arenaMutex) Unlock() {
+ }
+ 
+ type nodeArena struct {
+-	mu               arenaMutex
+-	next             int64
+-	nodes            map[int64]*Node
+-	hasFrameElements bool
+-	flatLayout       *layoutflat.State
++	mu                      arenaMutex
++	next                    int64
++	nodes                   map[int64]*Node
++	hasFrameElements        bool
++	flatLayout              *layoutflat.State
++	mutationJournal         []MutationRecord
++	intrinsicDiagnosticOnce sync.Once
++	intrinsicDiagnostic     *intrinsicDiagnosticState
+ }
+ 
+ type Document struct {
+@@ -260,7 +263,9 @@ func (d *Document) SetAttribute(id int64, name, value string) error {
+ 	if n.Attributes == nil {
+ 		n.Attributes = map[string]string{}
+ 	}
+-	n.setAttribute(n.attributeName(name), value)
++	name = n.attributeName(name)
++	n.setAttribute(name, value)
++	d.recordMutationLocked("attribute", id, name)
+ 	return nil
+ }
+ 
+@@ -305,6 +310,7 @@ func (d *Document) ToggleToken(id int64, attribute, token string, force int) (bo
+ 		n.Attributes = map[string]string{}
+ 	}
+ 	n.setAttribute(attribute, strings.Join(result, " "))
++	d.recordMutationLocked("attribute", id, attribute)
+ 	return add, nil
+ }
+ 
+@@ -324,6 +330,7 @@ func (d *Document) RemoveAttribute(id int64, name string) error {
+ 		return fmt.Errorf("element node %d does not exist", id)
+ 	}
+ 	name = n.attributeName(name)
++	d.recordMutationLocked("attribute", id, name)
+ 	if name == "style" {
+ 		n.StyleDeclarationsJSON = ""
+ 	}
+diff --git a/internal/dom/inline_style.go b/internal/dom/inline_style.go
+index 9ff3aa0..c0cef61 100644
+--- a/internal/dom/inline_style.go
++++ b/internal/dom/inline_style.go
+@@ -40,5 +40,6 @@ func (d *Document) SetInlineStyle(id int64, text, declarationsJSON string) (any,
+ 	}
+ 	n.setAttribute("style", text)
+ 	n.StyleDeclarationsJSON = declarationsJSON
++	d.recordMutationLocked("attribute", id, "style")
+ 	return old, nil
+ }
+diff --git a/internal/dom/namespaces.go b/internal/dom/namespaces.go
+index 13a5447..d9f02d1 100644
+--- a/internal/dom/namespaces.go
++++ b/internal/dom/namespaces.go
+@@ -83,6 +83,7 @@ func (d *Document) SetAttributeNS(id int64, namespace, name, value string) error
+ 			if namespace == "" && old == "nonce" {
+ 				n.Nonce = value
+ 			}
++			d.recordMutationLocked("attribute", id, old)
+ 			return nil
+ 		}
+ 	}
+@@ -96,5 +97,6 @@ func (d *Document) SetAttributeNS(id int64, namespace, name, value string) error
+ 		n.AttributeNamespaces[name] = namespace
+ 	}
+ 	n.setAttribute(name, value)
++	d.recordMutationLocked("attribute", id, name)
+ 	return nil
+ }
+diff --git a/internal/webapi/css_box_geometry.js b/internal/webapi/css_box_geometry.js
+index 1657e3c..bce99f4 100644
+--- a/internal/webapi/css_box_geometry.js
++++ b/internal/webapi/css_box_geometry.js
+@@ -4,6 +4,82 @@
+ const cssGeometryLength = (value) =>
+   Math.fround(Math.max(-(2 ** 31) / 64 + 2, Math.min(Math.trunc((2 ** 31 - 1) / 64) - 2, value)));
+ const cssBoxModel = (() => {
++  // Eligibility instrumentation only: all original computations still run.
++  let intrinsicHistory = { width: new WeakMap(), size: new WeakMap() },
++    intrinsicActive = { width: new WeakSet(), size: new WeakSet() },
++    intrinsicFrames = [],
++    intrinsicOverhead = 0,
++    eligibleDepth = 0;
++  bootstrapRestoreHooks.push(() => {
++    intrinsicHistory = { width: new WeakMap(), size: new WeakMap() };
++    intrinsicActive = { width: new WeakSet(), size: new WeakSet() };
++    intrinsicFrames = [];
++    intrinsicOverhead = eligibleDepth = 0;
++    globalThis.__intrinsicEligibility = undefined;
++  });
++  const measureIntrinsicEligibility = (kind, element, compute) => {
++    if (intrinsicActive[kind].has(element)) return compute(element);
++    intrinsicActive[kind].add(element);
++    const stats = (globalThis.__intrinsicEligibility ||= {
++      calls: 0,
++      hits: 0,
++      avoidedMs: 0,
++      selfMs: 0,
++      misses: {},
++      byKind: {},
++    });
++    const setupStart = host.performanceNow();
++    const generation = JSON.parse(host.diagnosticIntrinsicGeneration(elementSlot(element).nodeId));
++    const key = [
++      generation[0],
++      generation[1],
++      state(element),
++      host.fontCollectionVersion(),
++      styleReadCache.environmentVersion +
++        ':' +
++        constructedStyleSheets.revision() +
++        ':' +
++        compatibilityElementState.observationVersion(),
++      containingWidth(element),
++    ];
++    const prior = intrinsicHistory[kind].get(element);
++    const names = ['subtree', 'globalStyle', 'ownStyle', 'font', 'environment', 'containingWidth'];
++    const differences = prior
++      ? key.flatMap((value, i) => (value === prior[i] ? [] : [names[i]]))
++      : ['first'];
++    if (styleObservationDynamic) differences.push('dynamic');
++    const hit = differences.length === 0;
++    stats.calls++;
++    if (hit) stats.hits++;
++    for (const reason of differences) stats.misses[reason] = (stats.misses[reason] || 0) + 1;
++    const local = (stats.byKind[kind] ||= { calls: 0, hits: 0, selfMs: 0 });
++    local.calls++;
++    if (hit) local.hits++;
++    intrinsicOverhead += host.performanceNow() - setupStart;
++    const frame = { childMs: 0 },
++      beforeOverhead = intrinsicOverhead,
++      start = host.performanceNow(),
++      topEligible = hit && eligibleDepth === 0;
++    intrinsicFrames.push(frame);
++    if (hit) eligibleDepth++;
++    try {
++      return compute(element);
++    } finally {
++      const elapsed = Math.max(
++        0,
++        host.performanceNow() - start - (intrinsicOverhead - beforeOverhead),
++      );
++      intrinsicFrames.pop();
++      if (intrinsicFrames.length) intrinsicFrames[intrinsicFrames.length - 1].childMs += elapsed;
++      const self = Math.max(0, elapsed - frame.childMs);
++      stats.selfMs += self;
++      local.selfMs += self;
++      if (topEligible) stats.avoidedMs += elapsed;
++      if (hit) eligibleDepth--;
++      intrinsicHistory[kind].set(element, key);
++      intrinsicActive[kind].delete(element);
++    }
++  };
+   // Compact shaping results contain no element state. Retain a bounded JS
+   // projection across DOM epochs to avoid re-transferring and parsing the same
+   // native metrics. Font selection has its own authoritative realm revision.
+@@ -429,8 +505,16 @@ const cssBoxModel = (() => {
+     const cache =
+       styleReadCache.intrinsicWidths || (styleReadCache.intrinsicWidths = new WeakMap());
+     if (cache.has(element)) return cache.get(element);
++    const plans =
++        styleReadCache.intrinsicWidthPlans || (styleReadCache.intrinsicWidthPlans = new WeakMap()),
++      plan = plans.get(element);
++    // Cyclic min-content contributions use the legacy zero fallback, but it is
++    // deliberately not published as a completed measurement.
++    if (plan?.state === 'computing') return 0;
++    plans.set(element, { state: 'computing' });
+     const value = uncachedIntrinsic(element);
+     cache.set(element, value);
++    plans.set(element, { state: 'ready' });
+     return value;
+   };
+   const uncachedIntrinsic = (element) => {
+@@ -626,14 +710,22 @@ const cssBoxModel = (() => {
+       edges = state(parent).edges(width);
+     return Math.max(0, width - edges.pleft - edges.pright - edges.bleft - edges.bright);
+   };
+-  const width = (element) => {
++  const computeWidth = (element) => {
+     const known = styleReadCache.boxSizes?.get(element);
+     if (known) return known.width;
+     const cache = styleReadCache.widths;
+     if (cache.has(element)) return cache.get(element);
+-    cache.set(element, 0);
++    const plans = styleReadCache.widthPlans || (styleReadCache.widthPlans = new WeakMap());
++    // containingWidth() can re-enter through an ancestor formatting context.
++    // Keep the old cycle break explicit without making zero look cache-ready.
++    if (plans.get(element)?.state === 'computing') return 0;
++    plans.set(element, { state: 'computing' });
+     const s = state(element);
+-    if (s.display === 'none') return 0;
++    if (s.display === 'none') {
++      cache.set(element, 0);
++      plans.set(element, { state: 'ready' });
++      return 0;
++    }
+     const basis = containingWidth(element),
+       e = s.edges(basis),
+       extra = e.pleft + e.pright + e.bleft + e.bright;
+@@ -642,9 +734,12 @@ const cssBoxModel = (() => {
+     if (content === null) {
+       const attribute = host.getAttribute(elementSlot(element).nodeId, 'width');
+       if (attribute && /^\d+(?:\.\d+)?$/.test(attribute)) content = Number(attribute);
+-      else if (controlSize(element))
+-        return cache.set(element, controlSize(element).width).get(element);
+-      else if (s.display === 'table') {
++      else if (controlSize(element)) {
++        const value = controlSize(element).width;
++        cache.set(element, value);
++        plans.set(element, { state: 'ready' });
++        return value;
++      } else if (s.display === 'table') {
+         content = tableColumns(element).width - extra;
+       } else {
+         const parent = geometryParent(element),
+@@ -708,8 +803,13 @@ const cssBoxModel = (() => {
+     if (minimum !== null) value = Math.max(value, minimum + (borderBox ? 0 : extra));
+     if (maximum !== null) value = Math.min(value, maximum + (borderBox ? 0 : extra));
+     cache.set(element, value);
++    plans.set(element, { state: 'ready' });
+     return value;
+   };
++  const width = (element) =>
++    styleReadCache.widths.has(element) || styleReadCache.boxSizes?.has(element)
++      ? computeWidth(element)
++      : measureIntrinsicEligibility('width', element, computeWidth);
+   const fixedContainer = (element) => {
+     for (let p = geometryParent(element); p; p = geometryParent(p))
+       if (state(p).get('transform') && state(p).get('transform') !== 'none') return p;
+@@ -721,8 +821,11 @@ const cssBoxModel = (() => {
+       if (state(p).position !== 'static') return p;
+     return null;
+   };
+-  const size = (element) => {
+-    const cache = styleReadCache.boxSizes || (styleReadCache.boxSizes = new WeakMap());
++  const computeSize = (element) => {
++    const cache = styleReadCache.boxSizes || (styleReadCache.boxSizes = new WeakMap()),
++      plans = styleReadCache.sizePlans || (styleReadCache.sizePlans = new WeakMap()),
++      active = plans.get(element);
++    if (active?.state === 'computing') return active.value;
+     for (let parent = geometryParent(element); parent; parent = geometryParent(parent))
+       if (state(parent).display === 'table') {
+         if (!cache.has(parent)) size(parent);
+@@ -739,6 +842,9 @@ const cssBoxModel = (() => {
+         positions: new Map(),
+         contentHeight: 0,
+       };
++    // The provisional object is the defined fallback for cyclic percentage and
++    // containing-block dependencies. Only this recursive edge can observe it.
++    plans.set(element, { state: 'computing', value });
+     cache.set(element, value);
+     const parent = geometryParent(element),
+       parentDisplay = parent ? state(parent).display : '';
+@@ -759,9 +865,14 @@ const cssBoxModel = (() => {
+       !computedStyleAvailable(element)
+     ) {
+       value.width = 0;
++      plans.set(element, { state: 'ready', value });
++      return value;
++    }
++    if (s.display === 'table') {
++      tableSize(element, value);
++      plans.set(element, { state: 'ready', value });
+       return value;
+     }
+-    if (s.display === 'table') return tableSize(element, value);
+     const rawHeight = s.get('height');
+     let height =
+       rawHeight?.endsWith('%') && !definiteGeometryHeight(parent)
+@@ -1042,12 +1153,23 @@ const cssBoxModel = (() => {
+       max = s.length(s.get('max-height'));
+     if (min !== null) value.height = Math.max(value.height, min);
+     if (max !== null) value.height = Math.min(value.height, max);
++    plans.set(element, { state: 'ready', value });
+     return value;
+   };
++  const size = (element) =>
++    styleReadCache.boxSizes?.has(element)
++      ? computeSize(element)
++      : measureIntrinsicEligibility('size', element, computeSize);
+   const rect = (element) => {
+-    const cache = styleReadCache.rects;
++    const cache = styleReadCache.rects,
++      plans = styleReadCache.placementPlans || (styleReadCache.placementPlans = new WeakMap()),
++      active = plans.get(element);
++    if (active?.state === 'computing') return active.value;
+     if (cache.has(element)) return cache.get(element);
+     const value = { x: 0, y: 0, left: 0, top: 0, width: 0, height: 0 };
++    // Placement recursion consumes this provisional origin; other consumers
++    // only see the same object after it transitions to ready below.
++    plans.set(element, { state: 'computing', value });
+     cache.set(element, value);
+     if (
+       !rendered(element) ||
+@@ -1056,6 +1178,7 @@ const cssBoxModel = (() => {
+     ) {
+       value.width = value.height = 0;
+       value.right = value.bottom = 0;
++      plans.set(element, { state: 'ready', value });
+       return value;
+     }
+     const s = state(element),
+@@ -1135,6 +1258,7 @@ const cssBoxModel = (() => {
+     value.clientHeight = Math.max(0, value.height - box.edges.btop - box.edges.bbottom);
+     value.offsetLeft = value.x - (origin ? origin.x + oe.bleft : 0);
+     value.offsetTop = value.y - (origin ? origin.y + oe.btop : 0);
++    plans.set(element, { state: 'ready', value });
+     return value;
+   };
+   // Taffy owns flex/grid formatting-context geometry. Mimic supplies the
+@@ -1161,6 +1285,12 @@ const cssBoxModel = (() => {
+     if (!cache) cache = styleReadCache.taffyLayouts = new WeakMap();
+     let boxes = cache.get(root);
+     if (!boxes) {
++      const plans = styleReadCache.taffyPlans || (styleReadCache.taffyPlans = new WeakMap());
++      // Taffy input construction can re-enter through intrinsic measurement.
++      // The recursive edge stays on legacy geometry instead of observing a
++      // partially assembled node/box map.
++      if (plans.get(root)?.state === 'computing') return null;
++      plans.set(root, { state: 'computing' });
+       const rootLegacy = rect(root),
+         rootState = state(root),
+         rootBasis = containingWidth(root),
+@@ -1408,6 +1538,7 @@ const cssBoxModel = (() => {
+         }
+       }
+       cache.set(root, boxes);
++      plans.set(root, { state: 'ready' });
+     }
+     return boxes.get(elementSlot(element).nodeId) || null;
+   };
+diff --git a/internal/webapi/css_computed_values.js b/internal/webapi/css_computed_values.js
+index 02f2b92..53231e6 100644
+--- a/internal/webapi/css_computed_values.js
++++ b/internal/webapi/css_computed_values.js
+@@ -190,9 +190,19 @@ const cssComputedValue = (element, name) => {
+         (selectorTarget === 0 || cached.version === styleReadCache.version)
+       )
+         return cached.values.get(name);
+-      const properties = Array.from(new Set([name, 'display', 'visibility'])),
+-        documentBatch =
+-          selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128,
++      // A retained document projection is additive within one canonical epoch.
++      // Role, visibility, scrolling and input ask for overlapping property
++      // sets; replacing a row here made those consumers repeatedly transfer
++      // and parse the complete document merely because the last property name
++      // differed. Request only the missing columns and merge them below.
++      const required = Array.from(new Set([name, 'display', 'visibility'])),
++        properties = required.filter((property) => !cached?.values.has(property));
++      if (checkpointForeignDocumentBatchVersion !== stableEpoch) {
++        checkpointForeignDocumentBatchVersion = stableEpoch;
++        checkpointForeignDocumentBatch =
++          selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128;
++      }
++      const documentBatch = selectorTarget === 0 && checkpointForeignDocumentBatch,
+         foreign = foreignCSSObservation(
+           element,
+           documentBatch ? 'documentValues' : 'values',
+@@ -200,15 +210,22 @@ const cssComputedValue = (element, name) => {
+         );
+       if (foreign !== null) {
+         if (documentBatch) {
+-          for (const [nodeID, record, visibility] of JSON.parse(foreign))
+-            activeBatches.set(String(nodeID), {
++          for (const [nodeID, record, visibility] of JSON.parse(foreign)) {
++            const key = String(nodeID),
++              prior = activeBatches.get(key),
++              values = prior?.version === styleReadCache.version ? prior.values : new Map();
++            for (const [property, value] of Object.entries(record)) values.set(property, value);
++            activeBatches.set(key, {
+               version: styleReadCache.version,
+-              values: new Map(Object.entries(record)),
++              values,
+               visibility,
+             });
++          }
+           return activeBatches.get(nodeID)?.values.get(name) ?? '';
+         }
+-        const values = new Map(Object.entries(JSON.parse(foreign)));
++        const values = cached?.version === styleReadCache.version ? cached.values : new Map();
++        for (const [property, value] of Object.entries(JSON.parse(foreign)))
++          values.set(property, value);
+         activeBatches.set(nodeID, { version: styleReadCache.version, values });
+         return values.get(name) ?? '';
+       }
+@@ -249,6 +266,39 @@ const cssBatchedForeignVisibility = (element) => {
+   const cached = checkpointForeignComputedValues.get(String(elementSlot(element).nodeId));
+   return cached?.version === styleReadCache.version ? cached.visibility : undefined;
+ };
++// Remember only where inheritance found an explicit specified value. The
++// computed value is still resolved at the source element, preserving relative
++// units, currentcolor and animation sampling. This is observation-local path
++// compression: dynamic observations bypass it and mutation epochs receive a
++// fresh map from withStyleReadCache.
++const cssInheritedSource = (element, name) => {
++  const cache =
++      styleReadCache && !styleObservationDynamic
++        ? styleReadCache.inheritedSources || (styleReadCache.inheritedSources = new WeakMap())
++        : null,
++    visited = [];
++  let source = null;
++  for (let node = element; elementSlot(node)?.type === 'element'; node = cssFontParent(node)) {
++    const known = cache?.get(node);
++    if (known?.has(name)) {
++      source = known.get(name);
++      break;
++    }
++    if (cache) visited.push(node);
++    const value = computedCSSDeclarations(node).find((entry) => entry.name === name)?.value;
++    if (value != null && value !== 'inherit' && value !== 'unset') {
++      source = { element: node, value };
++      break;
++    }
++  }
++  if (cache && name.length <= 128)
++    for (const node of visited) {
++      let values = cache.get(node);
++      if (!values) cache.set(node, (values = new Map()));
++      if (values.size < 32) values.set(name, source);
++    }
++  return source;
++};
+ // Immutable scalar projections share the canonical observation epoch. Animation
+ // time is not a DOM mutation, so animated realms always resolve a fresh value.
+ const resolveCSSComputedValue = (element, name) => {
+@@ -265,17 +315,15 @@ const resolveCSSComputedValue = (element, name) => {
+     inherit = cssInheritedProperties.has(name);
+   if (value === 'inherit' || ((value == null || value === 'unset') && inherit)) {
+     value = undefined;
+-    for (let p = cssFontParent(element); elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
+-      const v = computedCSSDeclarations(p).find((e) => e.name === name)?.value;
+-      if (v != null && !['inherit', 'unset'].includes(v)) {
+-        value =
+-          v === 'currentcolor' ||
+-          (name === 'caret-color' && v === 'auto') ||
+-          (name === 'line-height' && cssNumberRegex.test(v))
+-            ? v
+-            : cssComputedValue(p, name);
+-        break;
+-      }
++    const source = cssInheritedSource(cssFontParent(element), name);
++    if (source) {
++      const v = source.value;
++      value =
++        v === 'currentcolor' ||
++        (name === 'caret-color' && v === 'auto') ||
++        (name === 'line-height' && cssNumberRegex.test(v))
++          ? v
++          : cssComputedValue(source.element, name);
+     }
+     if (value == null) value = initial;
+   }
+@@ -358,6 +406,18 @@ const resolveCSSComputedValue = (element, name) => {
+     )
+   )
+     return 'isolate';
++  // These scalar values have no logical-axis, length or box-dependent
++  // serialization. Cascade, inheritance, animation and special initial-value
++  // handling above are complete, so avoid constructing unrelated box state.
++  if (
++    name === 'cursor' ||
++    name === 'visibility' ||
++    name === 'direction' ||
++    name === 'pointer-events' ||
++    name === 'white-space-collapse' ||
++    name === 'text-wrap-mode'
++  )
++    return value;
+   const writing = (() => {
+       for (let p = element; elementSlot(p)?.type === 'element'; p = cssFontParent(p)) {
+         const v = computedCSSDeclarations(p).find((e) => e.name === 'writing-mode')?.value;
+diff --git a/internal/webapi/document_compatibility.js b/internal/webapi/document_compatibility.js
+index 5924090..feab819 100644
+--- a/internal/webapi/document_compatibility.js
++++ b/internal/webapi/document_compatibility.js
+@@ -90,10 +90,7 @@ function wrapDocumentNode(data) {
+   const ownerOf = (value) => {
+     if (value instanceof Document) return null;
+     const slot = elementSlot(value);
+-    if (slot) {
+-      const id = host.nodeOwnerDocument(slot.nodeId);
+-      return id ? wrap(id) : null;
+-    }
++    if (slot) return cachedDOMOwnerDocument(value);
+     return fragmentOwnerDocuments.get(value) || document;
+   };
+   accessor(Node.prototype, 'ownerDocument', function () {
+diff --git a/internal/webapi/scrolling.js b/internal/webapi/scrolling.js
+index e5e1a0a..1a47d35 100644
+--- a/internal/webapi/scrolling.js
++++ b/internal/webapi/scrolling.js
+@@ -46,6 +46,7 @@ compatibilityScrolling = (() => {
+     // The main world owns canonical scroll state, but the observation being
+     // consumed belongs to this isolated world. Invalidate both sides of that
+     // boundary before the inspector callback performs another geometry read.
++    invalidateRetainedViewportGeometry();
+     styleReadCache = null;
+     return result;
+   };
+diff --git a/internal/webapi/selectors_compatibility.js b/internal/webapi/selectors_compatibility.js
+index ed9d3d4..6f193a9 100644
+--- a/internal/webapi/selectors_compatibility.js
++++ b/internal/webapi/selectors_compatibility.js
+@@ -547,6 +547,28 @@ const compatibilitySelectors = (() => {
+     }
+     return key;
+   }
++  const localStyleSelectorDependencies = (rule) => {
++    let groups;
++    try {
++      groups = library.parse(
++        rule.pseudo ? rule.selector.replace(/::?(before|after)$/, '') : rule.selector,
++      );
++    } catch {
++      return null;
++    }
++    if (groups.length !== 1) return null;
++    const attributes = new Set();
++    for (const token of groups[0]) {
++      if (token.type === 'attribute' && token.namespace === null)
++        attributes.add(token.name.toLowerCase());
++      else if (!['tag', 'universal'].includes(token.type)) return null;
++    }
++    return attributes;
++  };
++  let retainedStyleMatches = new WeakMap();
++  bootstrapRestoreHooks.push(() => {
++    retainedStyleMatches = new WeakMap();
++  });
+   const matchingStyles = (node, rules, pseudo = '') =>
+     run(() => {
+       let retained;
+@@ -568,6 +590,8 @@ const compatibilitySelectors = (() => {
+       let index = styleIndexes.get(rules);
+       if (!index) {
+         index = new Map();
++        index.reusable = true;
++        index.attributes = new Set();
+         for (const rule of rules) {
+           const leaf = styleKey(rule),
+             key = rule.pseudo + '|' + leaf;
+@@ -582,10 +606,31 @@ const compatibilitySelectors = (() => {
+               ),
+             );
+           } catch {}
++          const local = stable && localStyleSelectorDependencies(rule);
++          if (!local) index.reusable = false;
++          else for (const attribute of local) index.attributes.add(attribute);
+           bucket.push({ rule, stable, ancestors: ancestorRequirements(rule) });
+         }
+         styleIndexes.set(rules, index);
+       }
++      let retainedAcrossRevision;
++      if (index.reusable && styleReadCache?.retainable) {
++        let byRules = retainedStyleMatches.get(node);
++        retainedAcrossRevision = byRules?.get(rules)?.get(pseudo);
++        if (retainedAcrossRevision) {
++          const journal = JSON.parse(host.mutationJournal(retainedAcrossRevision.revision)),
++            nodeID = elementSlot(node).nodeId,
++            safe =
++              !journal.overflow &&
++              journal.records.every(
++                (mutation) =>
++                  mutation.kind === 'attribute' &&
++                  (mutation.target !== nodeID ||
++                    !index.attributes.has(mutation.attribute.toLowerCase())),
++              );
++          if (safe) return retainedAcrossRevision.matches;
++        }
++      }
+       const keys = new Set(['*', 't:' + adapter.getName(node)]),
+         id = attribute(node, 'id'),
+         classes = attribute(node, 'class');
+@@ -618,7 +663,15 @@ const compatibilitySelectors = (() => {
+       // are retained as a program, never as a truth value, and are always matched
+       // anew. Exact context and environment changes replace the entire record.
+       if (retained) retained.pseudos.set(pseudo, { matches: staticMatches, dynamic });
+-      return matched.sort((a, b) => a.order - b.order);
++      const sorted = matched.sort((a, b) => a.order - b.order);
++      if (index.reusable && styleReadCache?.retainable) {
++        let byRules = retainedStyleMatches.get(node);
++        if (!byRules) retainedStyleMatches.set(node, (byRules = new WeakMap()));
++        let byPseudo = byRules.get(rules);
++        if (!byPseudo) byRules.set(rules, (byPseudo = new Map()));
++        byPseudo.set(pseudo, { revision: host.domRevision(), matches: sorted });
++      }
++      return sorted;
+     }, true);
+   function closest(node, selector) {
+     selector = String(selector);
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+index 5409cd0..d60266e 100644
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1128,14 +1128,19 @@
+   let checkpointObservations = null,
+     checkpointObservationVersion = '';
+   let checkpointForeignComputedValues = new Map(),
+-    checkpointForeignComputedValueVersion = '';
++    checkpointForeignComputedValueVersion = '',
++    checkpointForeignDocumentBatchVersion = '',
++    checkpointForeignDocumentBatch = false;
+   let retainedGeometryVersion = '',
+     retainedGeometryRevision = -1,
++    retainedGeometryCleanRevision = -1,
+     retainedGeometryGeneration = 0,
+     retainedGeometryDirty = new WeakMap(),
++    retainedStyleAttributeDependencies = new WeakMap(),
+     retainedGeometryWidths,
+     retainedGeometrySizes,
+-    retainedGeometryRects;
++    retainedGeometryRects,
++    retainedGeometryClientRects;
+   const retainedGeometryDirtyGeneration = (element) => {
+     const cached = styleReadCache.retainedGeometryDirtyVersions;
+     if (cached.has(element)) return cached.get(element);
+@@ -1153,7 +1158,9 @@
+         },
+         get(element) {
+           const record = values.get(element);
+-          return record && record.generation >= retainedGeometryDirtyGeneration(element)
++          return record &&
++            (retainedGeometryCleanRevision === retainedGeometryRevision ||
++              record.generation >= retainedGeometryDirtyGeneration(element))
+             ? record.value
+             : undefined;
+         },
+@@ -1167,16 +1174,31 @@
+   const resetRetainedGeometry = (version, revision) => {
+     retainedGeometryVersion = version;
+     retainedGeometryRevision = revision;
++    retainedGeometryCleanRevision = revision;
+     retainedGeometryGeneration = 0;
+     retainedGeometryDirty = new WeakMap();
+     retainedGeometryWidths = retainedGeometryCache();
+     retainedGeometrySizes = retainedGeometryCache();
+     retainedGeometryRects = retainedGeometryCache();
++    retainedGeometryClientRects = retainedGeometryCache();
++  };
++  const invalidateRetainedViewportGeometry = () => {
++    retainedGeometryClientRects = retainedGeometryCache();
++    // Isolated worlds do not own the main world's scroll revision. Discard
++    // their whole checkpoint after a bridged scroll so a second read in the
++    // same inspector callback cannot reuse viewport coordinates sampled before
++    // the owner realm mutation.
++    if (styleObservationIsolated) checkpointObservations = null;
++    else if (checkpointObservations)
++      checkpointObservations.clientRects = retainedGeometryClientRects;
++    if (styleReadCache) styleReadCache.clientRects = retainedGeometryClientRects;
+   };
+   resetRetainedGeometry('', -1);
+   const invalidateRetainedGeometry = (target) => {
+     const revision = host.domRevision();
+     if (!target) {
++      retainedStyleAttributeDependencies = new WeakMap();
++      retainedGeometryCleanRevision = -1;
+       retainedGeometryRevision = -1;
+       return;
+     }
+@@ -1184,15 +1206,44 @@
+       // A connected mutation can move following siblings and descendants that
+       // are not on the mutated node's ancestor chain. Retain the graph only
+       // across observation-only revisions and detached construction.
++      retainedStyleAttributeDependencies = new WeakMap();
++      retainedGeometryCleanRevision = -1;
+       retainedGeometryRevision = -1;
+       return;
+     }
+     retainedGeometryRevision = revision;
++    retainedGeometryCleanRevision = -1;
+     retainedGeometryGeneration++;
+     let element = elementSlot(target)?.type === 'element' ? target : target.parentElement;
+     for (; element; element = geometryParent(element))
+       retainedGeometryDirty.set(element, retainedGeometryGeneration);
+   };
++  const retainGeometryAcrossAttributeMutation = (element, name) => {
++    // Locating a containing shadow root itself walks canonical ancestry. Keep
++    // this fast path document-only; any live shadow tree uses the conservative
++    // path until dependencies are indexed per canonical tree root.
++    const dependencies = shadowHosts.size ? null : retainedStyleAttributeDependencies.get(document),
++      inline = String(elementSlot(element)?.attributes?.style || '').toLowerCase();
++    // This first dependency-aware slice is intentionally narrow. A data
++    // attribute cannot affect built-in box semantics, but it may participate
++    // in an author selector or attr(). Sources containing escapes are treated
++    // conservatively because the escaped identifier may name this attribute.
++    const irrelevant =
++      element.isConnected &&
++      name.startsWith('data-') &&
++      dependencies &&
++      !dependencies.unsafe &&
++      !dependencies.sources.some((source) => source.includes(name)) &&
++      !inline.includes(name) &&
++      !inline.includes('\\');
++    if (irrelevant) {
++      retainedGeometryRevision = host.domRevision();
++      retainedGeometryCleanRevision = retainedGeometryRevision;
++    } else invalidateRetainedGeometry(element);
++    // A mutation performed from inside an injected callback ends any active
++    // read snapshot even when its retained geometry remains valid.
++    styleReadCache = null;
++  };
+   let styleObservationIsolated = host.isIsolatedInputWorld();
+   bootstrapRestoreHooks.push(() => {
+     styleObservationIsolated = host.isIsolatedInputWorld();
+@@ -1200,6 +1251,9 @@
+     checkpointStyleRules = null;
+     checkpointForeignComputedValues = new Map();
+     checkpointForeignComputedValueVersion = '';
++    checkpointForeignDocumentBatchVersion = '';
++    checkpointForeignDocumentBatch = false;
++    retainedStyleAttributeDependencies = new WeakMap();
+     resetRetainedGeometry('', -1);
+   });
+   const withStyleReadCache = (callback) => {
+@@ -1266,6 +1320,7 @@
+       observation.widths = retainedGeometryWidths;
+       observation.boxSizes = retainedGeometrySizes;
+       observation.rects = retainedGeometryRects;
++      if (!styleObservationIsolated) observation.clientRects = retainedGeometryClientRects;
+     }
+     if (observation.geometryVersion !== canonicalBundle) {
+       observation.geometryVersion = canonicalBundle;
+@@ -1289,6 +1344,7 @@
+       // A failed observation may have published provisional recursive boxes.
+       // Do not retain that partial graph for a later command.
+       if (checkpointObservations === observation) checkpointObservations = null;
++      if (retain) resetRetainedGeometry('', -1);
+       throw error;
+     } finally {
+       styleReadCache = previous;
+@@ -1299,12 +1355,32 @@
+         checkpointObservations = null;
+     }
+   };
++  // Parentage, ownership and attributes are projections of the same canonical
++  // node. Keep their demand-loaded fields together only while the existing
++  // style/geometry observation owns a mutation-safe snapshot. Public getters
++  // outside that scope continue to cross the authoritative host on every read.
++  const domReadRecord = (node) => {
++    if (!styleReadCache) return null;
++    const records =
++      styleReadCache.domReadRecords || (styleReadCache.domReadRecords = new WeakMap());
++    let record = records.get(node);
++    if (!record) records.set(node, (record = {}));
++    return record;
++  };
+   const cachedDOMParent = (node) => {
+-    const slot = elementSlot(node);
+-    if (!styleReadCache) return wrap(host.parentNode(slot.nodeId));
+-    const cache = styleReadCache.domParents || (styleReadCache.domParents = new WeakMap());
+-    if (!cache.has(node)) cache.set(node, wrap(host.parentNode(slot.nodeId)));
+-    return cache.get(node);
++    const slot = elementSlot(node),
++      record = domReadRecord(node);
++    if (!record) return wrap(host.parentNode(slot.nodeId));
++    if (!Object.hasOwn(record, 'parent')) record.parent = wrap(host.parentNode(slot.nodeId));
++    return record.parent;
++  };
++  const cachedDOMOwnerDocument = (node) => {
++    const slot = elementSlot(node),
++      record = domReadRecord(node);
++    if (!record) return wrap(host.nodeOwnerDocument(slot.nodeId));
++    if (!Object.hasOwn(record, 'ownerDocument'))
++      record.ownerDocument = wrap(host.nodeOwnerDocument(slot.nodeId));
++    return record.ownerDocument;
+   };
+   const cachedDOMChildren = (node) => {
+     const slot = elementSlot(node);
+@@ -1314,27 +1390,32 @@
+     return cache.get(node);
+   };
+   const cachedDOMAttribute = (node, name) => {
++    const data = elementSlot(node);
++    if (
++      data.namespaceURI === 'http://www.w3.org/1999/xhtml' ||
++      (!data.namespaceURI && !data.qualifiedName)
++    )
++      name = name.toLowerCase();
+     if (!styleReadCache) return host.getAttribute(elementSlot(node).nodeId, name);
+-    const nodes = styleReadCache.domAttributes || (styleReadCache.domAttributes = new WeakMap());
+-    let cache = nodes.get(node);
+-    if (!cache) nodes.set(node, (cache = new Map()));
++    const record = domReadRecord(node);
++    let cache = record.attributes;
++    if (!cache) record.attributes = cache = new Map();
+     if (!cache.has(name)) cache.set(name, host.getAttribute(elementSlot(node).nodeId, name));
+     return cache.get(name);
+   };
+   const cachedDOMAttributeNames = (node) => {
+     if (!styleReadCache) return host.attributeNames(elementSlot(node).nodeId);
+-    const cache =
+-      styleReadCache.domAttributeNames || (styleReadCache.domAttributeNames = new WeakMap());
+-    if (!cache.has(node)) cache.set(node, host.attributeNames(elementSlot(node).nodeId));
+-    return cache.get(node);
++    const record = domReadRecord(node);
++    if (!Object.hasOwn(record, 'attributeNames'))
++      record.attributeNames = host.attributeNames(elementSlot(node).nodeId);
++    return record.attributeNames;
+   };
+   // All geometry projections consult the same canonical parent/child snapshot.
+   // Keep native membership separate from flat-tree projection (slot/host links)
+   // and invalidate both through the same canonical observation epoch.
+   const cssObservationNodeState = (node) => {
+-    const cache =
+-      styleReadCache && (styleReadCache.nodeStates || (styleReadCache.nodeStates = new WeakMap()));
+-    if (cache?.has(node)) return cache.get(node);
++    const record = domReadRecord(node);
++    if (record?.observationState) return record.observationState;
+     const encoded = host.styleObservationState(
+         node === document ? realmDocumentRootID : elementSlot(node).nodeId,
+       ),
+@@ -1349,7 +1430,12 @@
+       (data?.tagName || '') +
+       ':' +
+       JSON.stringify(value.attributes);
+-    cache?.set(node, value);
++    if (record) {
++      record.observationState = value;
++      record.parent = wrap(value.parent);
++      record.attributeNames = Object.keys(value.attributes);
++      record.attributes = new Map(Object.entries(value.attributes));
++    }
+     return value;
+   };
+   const cssObservationAttribute = (node, name) => {
+@@ -1506,6 +1592,17 @@
+     if (cache?.has(root)) return cache.get(root);
+     const sources = constructedStyleSheets.sources(root),
+       prior = orderedStyleRules.get(root);
++    if (root === document) {
++      const dependencyBytes = sources.reduce((size, source) => size + source.length * 2, 0),
++        unsafe =
++          dependencyBytes > 8 * 1024 * 1024 || sources.some((source) => source.includes('\\'));
++      retainedStyleAttributeDependencies.set(root, {
++        unsafe,
++        // Bound the auxiliary lowercase projection independently of the rule
++        // cache. Oversized programs simply retain the old invalidation path.
++        sources: unsafe ? [] : sources.map((source) => source.toLowerCase()),
++      });
++    }
+     let rules = prior?.rules;
+     if (
+       !prior ||
+@@ -2416,12 +2513,14 @@
+       v = trustedAttributeValue(this, n, v, '', "Failed to execute 'setAttribute' on 'Element': ");
+       elementSlot(this).attributes[n] = v;
+       host.setAttribute(elementSlot(this).nodeId, n, v);
++      retainGeometryAcrossAttributeMutation(this, n);
+     }
+     removeAttribute(n) {
+       n =
+         this.namespaceURI === 'http://www.w3.org/1999/xhtml' ? String(n).toLowerCase() : String(n);
+       delete elementSlot(this).attributes[n];
+       host.removeAttribute(elementSlot(this).nodeId, n);
++      retainGeometryAcrossAttributeMutation(this, n);
+     }
+     toggleAttribute(n, force) {
+       n = String(n);
+@@ -2918,7 +3017,7 @@
+   // epoch boundary for every candidate is unnecessary: these helpers read
+   // private canonical state and do not invoke author conversion callbacks.
+   let compatibilityScrolling = null;
+-  const clientRectInObservation = (element) => {
++  const uncachedClientRectInObservation = (element) => {
+     const foreign = foreignCSSObservation(element, 'rect');
+     if (foreign !== null) return foreign;
+     const box = layoutRectInObservation(element),
+@@ -3003,6 +3102,20 @@
+       height,
+     };
+   };
++  const clientRectInObservation = (element) => {
++    const cache =
++      styleReadCache &&
++      (styleReadCache.clientRects || (styleReadCache.clientRects = new WeakMap()));
++    const scrollRevision = compatibilityScrolling?.revision() || 0,
++      cached = cache?.get(element);
++    if (cached?.scrollRevision === scrollRevision) return cached.value;
++    const value = uncachedClientRectInObservation(element);
++    // This projection includes transforms and every current scroll offset.
++    // scrolling.js ends the observation after an effective scroll, while DOM,
++    // style, viewport, and pseudo-state changes advance its canonical epoch.
++    cache?.set(element, { scrollRevision, value });
++    return value;
++  };
+   const clientRectFor = (element) => withStyleReadCache(() => clientRectInObservation(element));
+   const frameViewportSizes = new WeakMap();
+   const readFrameViewport = (nodeID) =>
+

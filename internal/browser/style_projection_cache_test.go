@@ -102,3 +102,48 @@ func TestStyleProjectionEpochIgnoresImageOnlyCompletion(t *testing.T) {
 		t.Fatal("stylesheet completion did not invalidate scalar style projections")
 	}
 }
+
+func TestStyleProjectionEpochTracksOnlyConnectedDOMAcrossRealms(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		d := NewDebugger(p)
+		defer d.Close()
+		r := p.Top.Realm
+		before := r.styleProjectionEpoch("value")
+		debuggerEval(t, d, `globalThis.detachedProbe=document.createElement('div');detachedProbe.className='before';detachedProbe.textContent='detached'`, DebuggerOptions{})
+		if got := r.styleProjectionEpoch("value"); got != before {
+			t.Fatalf("detached construction invalidated style projection: %#v -> %#v", before, got)
+		}
+		debuggerEval(t, d, `document.body.append(detachedProbe)`, DebuggerOptions{})
+		connected := r.styleProjectionEpoch("value")
+		if connected == before {
+			t.Fatal("connected insertion did not invalidate style projection")
+		}
+		world, err := p.IsolatedWorld(context.Background(), p.Top.ID, "observation-revision")
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := d.Evaluate(context.Background(), p.Top.ID, world, `document.querySelector('div').setAttribute('data-cross-realm','yes')`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || result["exceptionDetails"] != nil {
+			t.Fatalf("isolated mutation: %#v %v", result, err)
+		}
+		if got := r.styleProjectionEpoch("value"); got == connected {
+			t.Fatal("cross-realm connected mutation did not invalidate style projection")
+		}
+	})
+}
+
+func TestDetachedStyleReadsRevalidateWithoutConnectedEpoch(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		historyEval(t, p, `(()=>{
+const element=document.createElement('div');
+element.style.width='10px';
+const before=getComputedStyle(element).width;
+element.style.width='20px';
+const after=getComputedStyle(element).width;
+const first=element.getBoundingClientRect();
+element.textContent='changed';
+const second=element.getBoundingClientRect();
+return [before,after,first.width,second.width].join(',');
+})()`, ",,0,0")
+	})
+}

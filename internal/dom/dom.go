@@ -52,11 +52,15 @@ func (m *arenaMutex) Unlock() {
 }
 
 type nodeArena struct {
-	mu               arenaMutex
-	next             int64
-	nodes            map[int64]*Node
-	hasFrameElements bool
-	flatLayout       *layoutflat.State
+	mu                     arenaMutex
+	next                   int64
+	nodes                  map[int64]*Node
+	hasFrameElements       bool
+	flatLayout             *layoutflat.State
+	mutationJournal        []MutationRecord
+	observationRevisions   map[int64]uint64
+	observationJournals    map[int64][]MutationRecord
+	activeObservationRoots map[int64]bool
 }
 
 type Document struct {
@@ -79,10 +83,80 @@ func (d *Document) Revision() uint64 {
 	return d.mu.revision
 }
 
+// ObservationRevision advances only when state observable from the active,
+// connected document changes. The arena revision remains the canonical epoch
+// for identity/storage consumers, including detached and inert documents.
+func (d *Document) ObservationRevision() uint64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	return d.observationRevisions[d.root]
+}
+
+func (d *Document) observationRootLocked(id int64) int64 {
+	for id != 0 {
+		node := d.nodes[id]
+		if node == nil {
+			return 0
+		}
+		if node.Parent == 0 {
+			if node.Type == "document" && d.activeObservationRoots[id] {
+				return id
+			}
+			return 0
+		}
+		id = node.Parent
+	}
+	return 0
+}
+
+func (d *Document) markConnectedMutationLocked(ids ...int64) {
+	seen := make(map[int64]bool, len(ids))
+	for _, id := range ids {
+		root := d.observationRootLocked(id)
+		if root == 0 || seen[root] {
+			continue
+		}
+		seen[root] = true
+		if d.observationRevisions == nil {
+			d.observationRevisions = make(map[int64]uint64)
+		}
+		d.observationRevisions[root]++
+	}
+}
+
+func (d *Document) recordConnectedMutationLocked(kind string, target int64, attribute string) {
+	root := d.observationRootLocked(target)
+	if root == 0 {
+		return
+	}
+	if d.observationRevisions == nil {
+		d.observationRevisions = make(map[int64]uint64)
+	}
+	d.observationRevisions[root]++
+	record := MutationRecord{Revision: d.observationRevisions[root], Kind: kind, Target: target, Attribute: attribute}
+	if d.observationJournals == nil {
+		d.observationJournals = make(map[int64][]MutationRecord)
+	}
+	journal := d.observationJournals[root]
+	if len(journal) == mutationJournalLimit {
+		copy(journal, journal[1:])
+		journal[len(journal)-1] = record
+	} else {
+		journal = append(journal, record)
+	}
+	d.observationJournals[root] = journal
+}
+
 // InvalidateObservations accounts for non-attribute state (form values/focus)
 // that affects CSS selectors over this shared node arena.
 func (d *Document) InvalidateObservations() {
 	d.mu.Lock()
+	if d.activeObservationRoots[d.root] {
+		if d.observationRevisions == nil {
+			d.observationRevisions = make(map[int64]uint64)
+		}
+		d.observationRevisions[d.root]++
+	}
 	d.mu.Unlock()
 }
 
@@ -161,6 +235,7 @@ func Parse(source string) (*Document, error) {
 		}
 	}
 	walk(root, 0)
+	d.activeObservationRoots = map[int64]bool{d.root: true}
 	return d, nil
 }
 func (d *Document) Title() string     { d.mu.RLock(); defer d.mu.RUnlock(); return d.title }
@@ -260,7 +335,10 @@ func (d *Document) SetAttribute(id int64, name, value string) error {
 	if n.Attributes == nil {
 		n.Attributes = map[string]string{}
 	}
-	n.setAttribute(n.attributeName(name), value)
+	name = n.attributeName(name)
+	n.setAttribute(name, value)
+	d.recordMutationLocked("attribute", id, name)
+	d.recordConnectedMutationLocked("attribute", id, name)
 	return nil
 }
 
@@ -305,6 +383,8 @@ func (d *Document) ToggleToken(id int64, attribute, token string, force int) (bo
 		n.Attributes = map[string]string{}
 	}
 	n.setAttribute(attribute, strings.Join(result, " "))
+	d.recordMutationLocked("attribute", id, attribute)
+	d.recordConnectedMutationLocked("attribute", id, attribute)
 	return add, nil
 }
 
@@ -324,6 +404,8 @@ func (d *Document) RemoveAttribute(id int64, name string) error {
 		return fmt.Errorf("element node %d does not exist", id)
 	}
 	name = n.attributeName(name)
+	d.recordMutationLocked("attribute", id, name)
+	d.recordConnectedMutationLocked("attribute", id, name)
 	if name == "style" {
 		n.StyleDeclarationsJSON = ""
 	}
@@ -559,6 +641,7 @@ func (d *Document) AppendElement(parent int64, tag string, attrs map[string]stri
 	d.nodes[n.ID] = n
 	d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 	d.nodes[parent].Children = append(d.nodes[parent].Children, n.ID)
+	d.markConnectedMutationLocked(parent)
 	return *n, nil
 }
 func (d *Document) CreateElement(tag string) Node {
@@ -618,6 +701,7 @@ func (d *Document) InsertNode(parent, child, before int64) error {
 	if child == before {
 		return nil
 	}
+	d.markConnectedMutationLocked(parent, child)
 	if c.Parent != 0 {
 		if old := d.nodes[c.Parent]; old != nil {
 			old.Children = removeID(old.Children, child)
@@ -768,6 +852,7 @@ func (d *Document) RemoveNode(parent, child int64) error {
 		return fmt.Errorf("node %d is not a child of %d", child, parent)
 	}
 	p.Children = removeID(p.Children, child)
+	d.markConnectedMutationLocked(child)
 	c.Parent = 0
 	return nil
 }
@@ -831,6 +916,7 @@ func (d *Document) InsertPlainFragment(parent, fragment, before int64) (bool, er
 	if len(children) == 0 {
 		return true, nil
 	}
+	d.markConnectedMutationLocked(parent)
 	index := len(p.Children)
 	if before != 0 {
 		for i, id := range p.Children {
@@ -886,10 +972,12 @@ func (d *Document) SetTextContent(id int64, value string) error {
 		return fmt.Errorf("node %d does not exist", id)
 	}
 	if n.Type == "text" || n.Type == "comment" {
+		d.markConnectedMutationLocked(id)
 		n.Text = value
 		n.TextJSON = ""
 		return nil
 	}
+	d.markConnectedMutationLocked(id)
 	for _, child := range n.Children {
 		if detached := d.nodes[child]; detached != nil {
 			detached.Parent = 0
@@ -989,6 +1077,7 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 	if parent.TemplateContent != 0 {
 		parent = d.nodes[parent.TemplateContent]
 	}
+	d.markConnectedMutationLocked(parent.ID)
 	return d.insertHTMLLocked(parent, contextNode, source, 0, true)
 }
 

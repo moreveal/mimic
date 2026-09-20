@@ -19,6 +19,7 @@ func (d *Document) SetCharacterDataJSON(id int64, data string) error {
 	if n == nil || (n.Type != "text" && n.Type != "comment") {
 		return fmt.Errorf("not character data: %d", id)
 	}
+	d.markConnectedMutationLocked(id)
 	n.Text, n.TextJSON = scalar, data
 	return nil
 }

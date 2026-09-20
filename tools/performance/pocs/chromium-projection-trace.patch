@@ -1,0 +1,22 @@
+*** Begin Patch
+*** Update File: E:/GitHub/mimic/internal/browser/document_compatibility.go
+@@
+ 	"fmt"
++	"os"
+@@
+ func (r *Realm) installDocumentCompatibility(host map[string]any) {
++	chainTrace := os.Getenv("MIMIC_CHAIN_TRACE") == "1"
+@@
+ 		if cacheable {
+ 			if value, ok := owner.styleProjections.get(epoch, key); ok {
++				if chainTrace {
++					fmt.Fprintf(os.Stderr, "CHAIN_PROJECTION kind=%q property=%q node=%d key_node=%d epoch=%+v cache=hit\n", kind, property, id, keyNode, epoch)
++				}
+ 				return r.val(value), nil
+ 			}
+ 		}
++		if chainTrace {
++			fmt.Fprintf(os.Stderr, "CHAIN_PROJECTION kind=%q property=%q node=%d key_node=%d epoch=%+v cache=miss cacheable=%t\n", kind, property, id, keyNode, epoch, cacheable)
++		}
+ 		run := func(ctx context.Context) error {
+*** End Patch

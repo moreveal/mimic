@@ -90,10 +90,7 @@ function wrapDocumentNode(data) {
   const ownerOf = (value) => {
     if (value instanceof Document) return null;
     const slot = elementSlot(value);
-    if (slot) {
-      const id = host.nodeOwnerDocument(slot.nodeId);
-      return id ? wrap(id) : null;
-    }
+    if (slot) return cachedDOMOwnerDocument(value);
     return fragmentOwnerDocuments.get(value) || document;
   };
   accessor(Node.prototype, 'ownerDocument', function () {

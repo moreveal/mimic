@@ -1116,8 +1116,11 @@ func (r *Realm) installBindingsOnOwner() error {
 		// Style inputs and geometry resources have different lifetimes. Return
 		// both in one crossing so JS can retain selector/cascade work across
 		// image-only completions while invalidating boxes and used values.
-		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%t|%d", r.document.Revision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
+		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%t|%d", r.styleDocumentRevision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
 	})
+	host["observationRevision"] = r.packedFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+		return r.val(r.styleDocumentRevision()), nil
+	}, "")
 	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
 		host["detachArrayBuffer"] = r.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 			if len(args) != 1 {
@@ -1467,6 +1470,20 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["domRevision"] = r.packedFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Revision()), nil
 	}, "")
+	host["mutationJournal"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		encoded, err := json.Marshal(r.document.MutationsSince(uint64(numarg(a, 0))))
+		if err != nil {
+			return nil, err
+		}
+		return r.val(string(encoded)), nil
+	}, "n")
+	host["observationMutationJournal"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		encoded, err := json.Marshal(r.document.ObservationMutationsSince(uint64(numarg(a, 0))))
+		if err != nil {
+			return nil, err
+		}
+		return r.val(string(encoded)), nil
+	}, "n")
 	host["matches"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Matches(int64(numarg(a, 0)), strarg(a, 1))), nil
 	}, "ns")

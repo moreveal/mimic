@@ -151,6 +151,41 @@ func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
 	})
 }
 
+func TestIsolatedStyleDocumentBatchAccumulatesProperties(t *testing.T) {
+	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		d := NewDebugger(p)
+		defer d.Close()
+		debuggerEval(t, d, `document.body.innerHTML=Array.from({length:160},(_,i)=>'<div class="item">'+i+'</div>').join('')`, DebuggerOptions{})
+		world, err := p.IsolatedWorld(context.Background(), p.Top.ID, "style-columns")
+		if err != nil {
+			t.Fatal(err)
+		}
+		before := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree")
+		result, err := d.Evaluate(context.Background(), p.Top.ID, world, `(()=>{const e=document.querySelector('.item');return JSON.stringify([getComputedStyle(e).content,getComputedStyle(e).cursor,getComputedStyle(e).content])})()`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != `["normal","auto","normal"]` {
+			t.Fatalf("alternating properties: %#v %v", result, err)
+		}
+		calls := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree") - before
+		if calls > 2 {
+			t.Fatalf("alternating properties used %d owner crossings, want at most 2 additive batches", calls)
+		}
+		// Engines without a separate isolated-world runtime can answer locally and
+		// therefore do not populate the cross-realm owner cache.
+		if calls == 0 {
+			return
+		}
+		contentKey := styleProjectionKey{node: p.Top.Realm.document.Root().ID, kind: "documentValues", property: `["content","display","visibility"]`}
+		cursorKey := styleProjectionKey{node: p.Top.Realm.document.Root().ID, kind: "documentValues", property: `["cursor"]`}
+		if _, ok := p.Top.Realm.styleProjections.values[contentKey]; !ok {
+			t.Fatal("initial document property projection was not retained")
+		}
+		if _, ok := p.Top.Realm.styleProjections.values[cursorKey]; !ok {
+			t.Fatal("incremental document property projection was not retained")
+		}
+	})
+}
+
 func TestIsolatedInnerTextTracksOwnerMutations(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)

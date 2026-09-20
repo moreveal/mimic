@@ -1,0 +1,55 @@
+*** Begin Patch
+*** Update File: E:/GitHub/mimic/internal/webapi/surface.js
+@@
+   const uncachedCSSDeclarations = (element, pseudo = '') => {
+-    const matched = compatibilitySelectors.matchingStyles(
+-      element,
+-      styleSheetRules(element),
+-      pseudo,
+-    );
++    const rules = styleSheetRules(element);
++    const matched = compatibilitySelectors.matchingStyles(element, rules, pseudo);
+@@
+       return previous.entries;
++    // Diagnostic PoC: equivalent specified cascades share immutable entries.
++    // Computed values (including inheritance) remain element-specific. The
++    // observation lifetime prevents carrying results across environment writes.
++    const shared = styleReadCache
++      ? (styleReadCache.sharedSpecifiedCascades ||= { programs: new WeakMap(), entries: 0 })
++      : null;
++    let program = shared?.programs.get(rules);
++    const sharedKey = shared
++      ? JSON.stringify([
++          pseudo,
++          inline,
++          dialog,
++          !pseudo && elementSlot(element)?.tagName === 'IFRAME',
++          matched.map((rule) => rule.order),
++        ])
++      : null;
++    const sharedEntries = program?.get(sharedKey);
++    if (sharedEntries) {
++      if (styleReadCache?.retainable) {
++        if (!records) styleCascades.set(element, (records = new Map()));
++        records.set(pseudo, { matched, inline, dialog, entries: sharedEntries });
++      }
++      return sharedEntries;
++    }
+     const winners = new Map();
+@@
+       return entry;
+     });
++    // Bound retained declarations, not just the number of cache keys. Pending
++    // system fonts are excluded because their platform environment is external
++    // to this declaration key.
++    if (
++      shared &&
++      shared.entries + entries.length + 1 <= 16384 &&
++      !Array.from(winners.values()).some((value) => value.entry.pending?.systemFont)
++    ) {
++      if (!program) shared.programs.set(rules, (program = new Map()));
++      program.set(sharedKey, entries);
++      shared.entries += entries.length + 1;
++    }
+     if (styleReadCache?.retainable) {
+*** End Patch

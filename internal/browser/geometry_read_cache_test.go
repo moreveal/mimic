@@ -31,6 +31,30 @@ func TestGeometryReadCachesObserveSameTaskMutations(t *testing.T) {
 	})
 }
 
+// Flex/grid construction and the legacy containing-block path can recursively
+// request one another. A cycle fallback must not escape as ready geometry or be
+// reused after a synchronous style mutation.
+func TestGeometryComputationPlanDoesNotPublishCycleFallback(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		navigateCapabilityFixture(t, p)
+		value, err := p.Evaluate(context.Background(), `(()=>{
+ document.body.innerHTML='<div id="root" style="display:flex;width:240px"><div id="item" style="display:grid;width:50%;grid-template-columns:1fr"><div id="leaf" style="width:100%;height:12px"></div></div></div>';
+ const root=document.querySelector('#root'),item=document.querySelector('#item'),leaf=document.querySelector('#leaf');
+ const read=()=>{
+   const a=leaf.getBoundingClientRect(),b=item.getBoundingClientRect();
+   return [a.width,a.height,a.left,b.width,item.clientWidth,root.scrollWidth];
+ };
+ const first=read(),same=read();
+ root.style.width='320px';const changed=read(),again=read();
+ return JSON.stringify({first,same,changed,again,finite:[...first,...changed].every(Number.isFinite)});
+ })()`)
+		want := `{"first":[120,12,0,120,120,240],"same":[120,12,0,120,120,240],"changed":[160,12,0,160,160,320],"again":[160,12,0,160,160,320],"finite":true}`
+		if err != nil || value != want {
+			t.Fatalf("geometry computation cycle: %v %v", value, err)
+		}
+	})
+}
+
 func TestStylesheetAttributeIndexPreservesFullMatching(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
