@@ -11,6 +11,9 @@ import (
 // Shadow roots and external resources require additional input adapters before
 // this initializer can be used by the browser's default producer.
 func FromSnapshot(snapshot dom.DerivedSnapshot, width, height uint32) (*Owner, error) {
+	return FromSnapshotAtURL(snapshot, width, height, "about:blank")
+}
+func FromSnapshotAtURL(snapshot dom.DerivedSnapshot, width, height uint32, baseURL string) (*Owner, error) {
 	owner, err := New(uint64(snapshot.Root), width, height)
 	if err != nil {
 		return nil, err
@@ -21,6 +24,9 @@ func FromSnapshot(snapshot dom.DerivedSnapshot, width, height uint32) (*Owner, e
 			owner.Close()
 		}
 	}()
+	if err := owner.BaseURL(baseURL); err != nil {
+		return nil, err
+	}
 	for _, node := range snapshot.Nodes {
 		if node.ID == snapshot.Root {
 			continue
@@ -44,6 +50,12 @@ func FromSnapshot(snapshot dom.DerivedSnapshot, width, height uint32) (*Owner, e
 				return nil, fmt.Errorf("blitz: UTF-16 code-unit text adapter required for node %d", node.ID)
 			}
 			if err := owner.Text(uint64(node.ID), node.Text, true); err != nil {
+				return nil, err
+			}
+		case "comment", "doctype":
+			// Doctype participates in canonical identity but has no layout box.
+			// Document quirks mode is a separate producer input.
+			if err := owner.Comment(uint64(node.ID), node.Text); err != nil {
 				return nil, err
 			}
 		default:

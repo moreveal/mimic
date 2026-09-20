@@ -4,8 +4,12 @@ use blitz_dom::{BaseDocument, DocumentConfig, NodeId, StyleThreading};
 use blitz_traits::shell::{ColorScheme, Viewport};
 use markup5ever::{LocalName, Namespace, QualName};
 use std::collections::HashMap;
+use style_dom::ElementState;
 
 mod ffi;
+mod fonts;
+mod images;
+mod style_batch;
 
 // Export the legacy fallback through the same archive so the executable has
 // one Rust runtime during migration.
@@ -16,6 +20,7 @@ pub struct Owner {
     nodes: HashMap<u64, NodeId>,
     dirty: bool,
     pub generation: u64,
+    color_scheme: ColorScheme,
 }
 
 #[derive(Debug, PartialEq)]
@@ -23,15 +28,21 @@ pub enum Error {
     UnknownNode(u64),
     DuplicateNode(u64),
     DirtyRead,
+    InvalidTopology,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 #[repr(C)]
 pub struct Rect {
     pub x: f32,
     pub y: f32,
     pub width: f32,
     pub height: f32,
+    pub client_width: f32,
+    pub client_height: f32,
+    pub content_width: f32,
+    pub content_height: f32,
+    pub flags: u32,
 }
 
 impl Owner {
@@ -47,6 +58,7 @@ impl Owner {
             nodes: HashMap::from([(root, root_node)]),
             dirty: true,
             generation: 0,
+            color_scheme: ColorScheme::Light,
         }
     }
 
@@ -78,6 +90,13 @@ impl Owner {
     pub fn append(&mut self, parent: u64, child: u64) -> Result<(), Error> {
         let parent = self.node(parent)?;
         let child = self.node(child)?;
+        let mut ancestor = Some(parent);
+        while let Some(id) = ancestor {
+            if id == child {
+                return Err(Error::InvalidTopology);
+            }
+            ancestor = self.document.get_node(id).and_then(|node| node.parent);
+        }
         self.document.mutate().append_children(parent, &[child]);
         self.dirty = true;
         Ok(())
@@ -104,6 +123,102 @@ impl Owner {
         Ok(())
     }
 
+    pub fn comment(&mut self, id: u64, value: &str) -> Result<(), Error> {
+        if self.nodes.contains_key(&id) {
+            return Err(Error::DuplicateNode(id));
+        }
+        let node = self.document.mutate().create_comment_node(value);
+        self.nodes.insert(id, node);
+        self.dirty = true;
+        Ok(())
+    }
+
+    pub fn detach(&mut self, id: u64) -> Result<(), Error> {
+        let node = self.node(id)?;
+        self.document.mutate().remove_node(node);
+        self.dirty = true;
+        Ok(())
+    }
+
+    pub fn clear_attribute(&mut self, id: u64, ns: &str, name: &str) -> Result<(), Error> {
+        let node = self.node(id)?;
+        self.document.mutate().clear_attribute(
+            node,
+            QualName::new(None, Namespace::from(ns), LocalName::from(name)),
+        );
+        self.dirty = true;
+        Ok(())
+    }
+
+    pub fn stylesheet(&mut self, id: u64, css: &str) -> Result<(), Error> {
+        let node = self.node(id)?;
+        let sheet = self
+            .document
+            .make_stylesheet(css, style::stylesheets::Origin::Author);
+        self.document.add_stylesheet_for_node(sheet, node);
+        self.dirty = true;
+        Ok(())
+    }
+
+    pub fn viewport(&mut self, width: u32, height: u32) {
+        self.document
+            .set_viewport(Viewport::new(width, height, 1.0, self.color_scheme));
+        self.dirty = true;
+    }
+
+    pub fn color_scheme(&mut self, dark: bool) {
+        let scheme = if dark {
+            ColorScheme::Dark
+        } else {
+            ColorScheme::Light
+        };
+        if self.color_scheme != scheme {
+            self.color_scheme = scheme;
+            let mut viewport = self.document.viewport().clone();
+            viewport.color_scheme = scheme;
+            self.document.set_viewport(viewport);
+            self.dirty = true;
+        }
+    }
+
+    /// These bits are supplied by the existing canonical input state owner,
+    /// never synthesized by rewriting DOM attributes.
+    pub fn state(&mut self, id: u64, mask: u32, flags: u32) -> Result<(), Error> {
+        let node = self.node(id)?;
+        let states = [
+            ElementState::CHECKED,
+            ElementState::FOCUS,
+            ElementState::FOCUSRING,
+            ElementState::FOCUS_WITHIN,
+            ElementState::URLTARGET,
+        ];
+        let mut affected = ElementState::empty();
+        let mut value = ElementState::empty();
+        for (index, state) in states.into_iter().enumerate() {
+            if mask & (1 << index) != 0 {
+                affected |= state;
+            }
+            if flags & (1 << index) != 0 {
+                value |= state;
+            }
+        }
+        let old = *self.document.get_node(node).unwrap().element_state();
+        let next = (old - affected) | (value & affected);
+        if old != next {
+            self.document.snapshot_node_and(node, affected, |node| {
+                *node.element_state_mut() = next;
+                node.mark_ancestors_dirty();
+            });
+            self.dirty = true;
+        }
+        Ok(())
+    }
+
+    pub fn base_url(&mut self, url: &str) {
+        self.document.set_base_url(url);
+        self.dirty = true;
+    }
+
     /// Resolve once per dirty transaction. Clean observations never traverse DOM.
     /// Animated documents must explicitly request a new lifecycle update.
     pub fn resolve(&mut self, time: f64) -> bool {
@@ -120,14 +235,46 @@ impl Owner {
         if self.dirty {
             return Err(Error::DirtyRead);
         }
-        let node = self.document.get_node(self.node(id)?).unwrap();
-        let position = node.absolute_position(0.0, 0.0);
-        let layout = node.final_layout();
+        let node = self.node(id)?;
+        if !self.document.get_node(node).unwrap().has_boxes() {
+            return Ok(Rect::default());
+        }
+        let mut ancestor = self.document.get_node(node).unwrap().parent;
+        while let Some(parent) = ancestor {
+            let parent_node = self.document.get_node(parent).unwrap();
+            if parent_node
+                .primary_styles()
+                .is_some_and(|style| style.clone_display().is_none())
+            {
+                return Ok(Rect::default());
+            }
+            ancestor = parent_node.parent;
+        }
+        let Some(rect) = self.document.get_client_bounding_rect(node) else {
+            return Ok(Rect {
+                x: 0.0,
+                y: 0.0,
+                width: 0.0,
+                height: 0.0,
+                client_width: 0.0,
+                client_height: 0.0,
+                content_width: 0.0,
+                content_height: 0.0,
+                flags: 0,
+            });
+        };
+        let flags = u32::from(self.document.is_in_skipped_content(node));
+        let node = self.document.get_node(node).unwrap();
         Ok(Rect {
-            x: position.x,
-            y: position.y,
-            width: layout.size.width,
-            height: layout.size.height,
+            x: rect.x as f32,
+            y: rect.y as f32,
+            width: rect.width as f32,
+            height: rect.height as f32,
+            client_width: node.client_width(),
+            client_height: node.client_height(),
+            content_width: node.scroll_width(),
+            content_height: node.scroll_height(),
+            flags,
         })
     }
 
@@ -136,6 +283,15 @@ impl Owner {
             return Err(Error::DirtyRead);
         }
         Ok(self.document.resolved_style_value(self.node(id)?, property))
+    }
+
+    pub fn style_batch(&self, id: u64, properties: &[&str]) -> Result<Vec<String>, Error> {
+        if self.dirty {
+            return Err(Error::DirtyRead);
+        }
+        Ok(self
+            .document
+            .resolved_style_values(self.node(id)?, properties))
     }
 }
 
