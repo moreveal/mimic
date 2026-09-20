@@ -11,9 +11,9 @@ func TestWebAnimationReturnsCoherentPlaybackControls(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		value, err := page.Evaluate(context.Background(), `(()=>{
 const element=document.createElement('div');document.body.append(element);
-element.style.opacity='.2';const effectConstructed=new KeyframeEffect(element,{opacity:[0,1]},{duration:50,fill:'both'}),idle=new Animation(effectConstructed,document.timeline),animation=element.animate({opacity:[0,1]},{duration:50,fill:'both'});let finishes=0;animation.addEventListener('finish',()=>finishes++);
+element.style.opacity='.2';const effectConstructed=new KeyframeEffect(element,{opacity:[0,1]},{duration:500,fill:'both'}),idle=new Animation(effectConstructed,document.timeline),animation=element.animate({opacity:[0,1]},{duration:500,fill:'both'});let finishes=0;animation.addEventListener('finish',()=>finishes++);
 const effect=animation.effect,initial={animation:animation instanceof Animation,effect:effect instanceof KeyframeEffect,state:animation.playState,pending:animation.pending,current:animation.currentTime,timing:effect.getTiming(),frames:effect.getKeyframes(),elementAnimations:element.getAnimations()[0]===animation,documentAnimations:document.getAnimations()[0]===animation};
-animation.startTime=performance.now()-25;const running={pending:animation.pending,start:typeof animation.startTime,current:animation.currentTime,computed:effect.getComputedTiming(),opacity:getComputedStyle(element).opacity,inline:element.style.opacity};animation.finish();const finished={state:animation.playState,current:animation.currentTime,opacity:getComputedStyle(element).opacity};animation.cancel();return{constructors:[Animation.length,KeyframeEffect.length,Element.prototype.animate.length,idle.playState,idle.currentTime,document.timeline instanceof DocumentTimeline],initial,running,finished,finishes,canceled:{state:animation.playState,current:animation.currentTime,count:document.getAnimations().length}};
+animation.startTime=performance.now()-250;const running={pending:animation.pending,start:typeof animation.startTime,current:animation.currentTime,computed:effect.getComputedTiming(),opacity:getComputedStyle(element).opacity,inline:element.style.opacity};animation.finish();const finished={state:animation.playState,current:animation.currentTime,opacity:getComputedStyle(element).opacity};animation.cancel();return{constructors:[Animation.length,KeyframeEffect.length,Element.prototype.animate.length,idle.playState,idle.currentTime,document.timeline instanceof DocumentTimeline],initial,running,finished,finishes,canceled:{state:animation.playState,current:animation.currentTime,count:document.getAnimations().length}};
 })()`)
 		if err != nil {
 			t.Fatal(err)
@@ -31,7 +31,7 @@ animation.startTime=performance.now()-25;const running={pending:animation.pendin
 		timing := initial["timing"].(map[string]any)
 		duration, durationOK := numberParameter(timing["duration"])
 		iterations, iterationsOK := numberParameter(timing["iterations"])
-		if !durationOK || duration != 50 || timing["fill"] != "both" || !iterationsOK || iterations != 1 {
+		if !durationOK || duration != 500 || timing["fill"] != "both" || !iterationsOK || iterations != 1 {
 			t.Fatalf("animation timing: %#v", timing)
 		}
 		running := got["running"].(map[string]any)
@@ -51,7 +51,7 @@ animation.startTime=performance.now()-25;const running={pending:animation.pendin
 		}
 		finished := got["finished"].(map[string]any)
 		finishedCurrent, finishedCurrentOK := numberParameter(finished["current"])
-		if finished["state"] != "finished" || !finishedCurrentOK || finishedCurrent != 50 {
+		if finished["state"] != "finished" || !finishedCurrentOK || finishedCurrent != 500 {
 			t.Fatalf("finished animation: %#v", finished)
 		}
 		canceled := got["canceled"].(map[string]any)

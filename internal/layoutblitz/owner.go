@@ -4,7 +4,7 @@ package layoutblitz
 
 /*
 #cgo windows,amd64 LDFLAGS: ${SRCDIR}/native/target/x86_64-pc-windows-gnu/release/libmimic_layout_blitz.a -lws2_32 -luserenv -lbcrypt -lntdll
-#cgo linux,amd64 LDFLAGS: ${SRCDIR}/native/target/x86_64-unknown-linux-gnu/release/libmimic_layout_blitz.a -ldl -lpthread -lm
+#cgo linux,amd64 LDFLAGS: ${SRCDIR}/native/target/x86_64-unknown-linux-gnu/release/libmimic_layout_blitz.a -lfontconfig -ldl -lpthread -lm
 #include <stdint.h>
 #include <stddef.h>
 typedef struct MimicBlitzHandle MimicBlitzHandle;
