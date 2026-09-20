@@ -1,4 +1,4 @@
-# Windows / Linux validation вЂ” September 13, 2026
+# Windows / Linux validation — September 13, 2026
 
 ## Supported build targets
 
@@ -80,7 +80,7 @@ V8/QuickJS executable scenarios on Linux.
 
 Initial GitHub-hosted Windows runs built the executable but exceeded Go's default
 10-minute aggregate browser-package test budget. The timeout stacks showed
-different recently started tests (0вЂ“2 seconds), including stylesheet and graphics
+different recently started tests (0–2 seconds), including stylesheet and graphics
 oracles, rather than a single test blocked for ten minutes. The workflow now
 discovers every browser root test and divides them into two disjoint Windows
 shards, in batches of at most 100 root tests. Every selected root runs all of its
