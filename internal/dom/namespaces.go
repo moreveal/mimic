@@ -34,6 +34,12 @@ func (n *Node) setParsedAttribute(a html.Attribute) {
 	if a.Namespace != "" {
 		name = a.Namespace + ":" + name
 	}
+	// The HTML tokenizer can preserve duplicate source attributes. The tree
+	// builder keeps the first attribute and ignores later duplicates; replacing
+	// it here changes ID lookup and other observable DOM state.
+	if _, exists := n.Attributes[name]; exists {
+		return
+	}
 	n.setAttribute(name, a.Val)
 	if namespace != "" {
 		if n.AttributeNamespaces == nil {
