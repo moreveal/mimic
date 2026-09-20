@@ -20,19 +20,22 @@ func (r *Realm) installImageResources(host map[string]any) {
 		if present && src != "" && state != nil {
 			complete = state.complete
 			current = state.currentSrc
-			if state.decoded != nil {
-				width = state.decoded.Width
-				height = state.decoded.Height
+			if state.resource != nil {
+				metadata, _ := state.resource.RequireMetadata()
+				width, height = metadata.Width, metadata.Height
 			}
 		}
-		return r.val(map[string]any{"decoded": state != nil && state.decoded != nil && present && src != "", "complete": complete, "width": width, "height": height, "currentSrc": current}), nil
+		return r.val(map[string]any{"decoded": state != nil && state.resource != nil && present && src != "", "complete": complete, "width": width, "height": height, "currentSrc": current}), nil
 	})
 	host["imagePixels"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		state := r.imageLoads[int64(numarg(args, 0))]
-		if state == nil || state.decoded == nil {
+		if state == nil || state.resource == nil {
 			return nil, nil
 		}
-		decoded := state.decoded
+		decoded, err := state.resource.RequireDecodedImage()
+		if err != nil {
+			return nil, err
+		}
 		return r.val(map[string]any{"width": decoded.Width, "height": decoded.Height, "vector": decoded.Vector, "unavailable": decoded.PixelsUnavailable, "originClean": state.originClean, "pixels": base64.StdEncoding.EncodeToString(decoded.Pixels)}), nil
 	})
 }

@@ -12,8 +12,9 @@ func (r *Realm) blitzImageInputs() []layoutblitz.ImageIntrinsic {
 		image := layoutblitz.ImageIntrinsic{ID: uint64(node.ID), Complete: true}
 		if load := r.imageLoads[node.ID]; load != nil {
 			image.Complete = load.complete
-			if load.decoded != nil {
-				image.Width, image.Height = uint32(load.decoded.Width), uint32(load.decoded.Height)
+			if load.resource != nil {
+				metadata, _ := load.resource.RequireMetadata()
+				image.Width, image.Height = uint32(metadata.Width), uint32(metadata.Height)
 			}
 		}
 		images = append(images, image)

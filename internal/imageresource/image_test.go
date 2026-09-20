@@ -46,3 +46,28 @@ func TestResourceDecodeBoundsAndPixels(t *testing.T) {
 		}
 	}
 }
+
+func TestResourceDefersPixelsAndSharesMaterialization(t *testing.T) {
+	data, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAADklEQVR4nGP4z8DwHwQBEPgD/U6VwW8AAAAASUVORK5CYII=")
+	resource := New(data, "image/png")
+	data[0] = 0 // Resource owns immutable compressed bytes.
+	before := resource.RetainedBytes()
+	metadata, err := resource.RequireValidatedImage()
+	if err != nil || metadata.Width != 2 || metadata.Height != 1 {
+		t.Fatalf("validation: %+v %v", metadata, err)
+	}
+	if got := resource.RetainedBytes(); got != before {
+		t.Fatalf("validation retained a bitmap: before=%d after=%d", before, got)
+	}
+	first, err := resource.RequireDecodedImage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := resource.RequireDecodedImage()
+	if err != nil || first != second {
+		t.Fatal("decoded image was not materialized exactly once")
+	}
+	if resource.RetainedBytes() != before+cap(first.Pixels) {
+		t.Fatal("decoded pixels not accounted")
+	}
+}

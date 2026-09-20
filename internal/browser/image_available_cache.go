@@ -40,7 +40,7 @@ func (c *availableImageCache) remove(element *list.Element) {
 }
 
 func (c *availableImageCache) put(key preloadKey, image availableImage) {
-	if image.decoded == nil {
+	if image.resource == nil {
 		return
 	}
 	if old := c.entries[key]; old != nil {
@@ -49,7 +49,7 @@ func (c *availableImageCache) put(key preloadKey, image availableImage) {
 	// Count backing capacity, not just the exposed pixel length. Overhead covers
 	// the decoded image, map/list entry and key; aliased images are conservatively
 	// counted once per entry so sharing can never bypass the resource limit.
-	cost := cap(image.decoded.Pixels) + len(key.url) + len(key.destination) + len(key.mode) + len(key.credentials) + 256
+	cost := image.resource.RetainedBytes() + len(key.url) + len(key.destination) + len(key.mode) + len(key.credentials) + 256
 	if cost > availableImageCacheBytes {
 		return
 	}

@@ -22,8 +22,99 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 )
 
+type Metadata struct {
+	Width, Height     int
+	Vector            bool
+	PixelsUnavailable bool
+}
+
+type DecodedImage struct {
+	Metadata
+	Pixels []byte
+}
+
+// Resource is the single immutable backing for every WebAPI view of an image.
+// Metadata, validation and pixels are monotonic capabilities; consumers cannot
+// observe or retain a partially materialized bitmap.
+type Resource struct {
+	compressedBytes   []byte
+	contentType       string
+	metadataOnce      sync.Once
+	metadata          Metadata
+	metadataFormat    string
+	metadataErr       error
+	validationOnce    sync.Once
+	validationErr     error
+	pixelsUnavailable bool
+	decodeOnce        sync.Once
+	decoded           *DecodedImage
+	decodeErr         error
+}
+
+func New(data []byte, contentType string) *Resource {
+	owned := make([]byte, len(data))
+	copy(owned, data)
+	return &Resource{compressedBytes: owned, contentType: contentType}
+}
+
+func (r *Resource) RequireMetadata() (Metadata, error) {
+	r.metadataOnce.Do(func() { r.metadata, r.metadataFormat, r.metadataErr = decodeMetadata(r.compressedBytes, r.contentType) })
+	return r.metadata, r.metadataErr
+}
+
+func (r *Resource) RequireValidatedImage() (Metadata, error) {
+	metadata, err := r.RequireMetadata()
+	if err != nil {
+		return Metadata{}, err
+	}
+	r.validationOnce.Do(func() {
+		if metadata.Vector {
+			return
+		}
+		_, unavailable, err := decodeRaster(r.compressedBytes, r.metadataFormat)
+		r.pixelsUnavailable, r.validationErr = unavailable, err
+	})
+	metadata.PixelsUnavailable = r.pixelsUnavailable
+	return metadata, r.validationErr
+}
+
+func (r *Resource) RequireDecodedImage() (*DecodedImage, error) {
+	metadata, err := r.RequireValidatedImage()
+	if err != nil {
+		return nil, err
+	}
+	r.decodeOnce.Do(func() {
+		result := &DecodedImage{Metadata: metadata}
+		if metadata.Vector || metadata.PixelsUnavailable {
+			r.decoded = result
+			return
+		}
+		decoded, _, decodeErr := decodeRaster(r.compressedBytes, r.metadataFormat)
+		if decodeErr != nil {
+			r.decodeErr = decodeErr
+			return
+		}
+		width, height := decoded.Bounds().Dx(), decoded.Bounds().Dy()
+		pixels := image.NewRGBA(image.Rect(0, 0, width, height))
+		draw.Draw(pixels, pixels.Bounds(), decoded, decoded.Bounds().Min, draw.Src)
+		result.Width, result.Height, result.Pixels = width, height, pixels.Pix
+		r.decoded = result
+	})
+	return r.decoded, r.decodeErr
+}
+
+func (r *Resource) RetainedBytes() int {
+	n := cap(r.compressedBytes)
+	if r.decoded != nil {
+		n += cap(r.decoded.Pixels)
+	}
+	return n
+}
+
+// Image is retained as the eager compatibility result for package callers.
 type Image struct {
 	Width, Height int
 	Pixels        []byte
@@ -34,22 +125,30 @@ type Image struct {
 }
 
 func Decode(data []byte, contentType string) (*Image, error) {
+	decoded, err := New(data, contentType).RequireDecodedImage()
+	if err != nil {
+		return nil, err
+	}
+	return &Image{Width: decoded.Width, Height: decoded.Height, Pixels: decoded.Pixels, Vector: decoded.Vector, PixelsUnavailable: decoded.PixelsUnavailable}, nil
+}
+
+func decodeMetadata(data []byte, contentType string) (Metadata, string, error) {
 	if len(data) > 32<<20 {
-		return nil, fmt.Errorf("image byte limit")
+		return Metadata{}, "", fmt.Errorf("image byte limit")
 	}
 	if strings.Contains(strings.ToLower(contentType), "svg") || bytes.Contains(data[:min(len(data), 512)], []byte("<svg")) {
 		decoder := xml.NewDecoder(bytes.NewReader(data))
 		for {
 			token, err := decoder.Token()
 			if err != nil {
-				return nil, err
+				return Metadata{}, "", err
 			}
 			start, ok := token.(xml.StartElement)
 			if !ok {
 				continue
 			}
 			if start.Name.Local != "svg" || start.Name.Space != "http://www.w3.org/2000/svg" {
-				return nil, fmt.Errorf("invalid SVG image root")
+				return Metadata{}, "", fmt.Errorf("invalid SVG image root")
 			}
 			attrs := map[string]string{}
 			for _, a := range start.Attr {
@@ -86,11 +185,11 @@ func Decode(data []byte, contentType string) (*Image, error) {
 				}
 			}
 			if width > 16384 || height > 16384 {
-				return nil, fmt.Errorf("image dimension limit")
+				return Metadata{}, "", fmt.Errorf("image dimension limit")
 			}
 			w, h := int(math.Round(width)), int(math.Round(height))
 			if w > 16384 || h > 16384 {
-				return nil, fmt.Errorf("image dimension limit")
+				return Metadata{}, "", fmt.Errorf("image dimension limit")
 			}
 			for {
 				_, err = decoder.Token()
@@ -98,20 +197,25 @@ func Decode(data []byte, contentType string) (*Image, error) {
 					break
 				}
 				if err != nil {
-					return nil, err
+					return Metadata{}, "", err
 				}
 			}
-			return &Image{Width: w, Height: h, Vector: true}, nil
+			return Metadata{Width: w, Height: h, Vector: true}, "svg", nil
 		}
 	}
 	config, format, err := image.DecodeConfig(bytes.NewReader(data))
 	if err != nil {
-		return nil, err
+		return Metadata{}, "", err
 	}
 	if config.Width <= 0 || config.Height <= 0 || int64(config.Width)*int64(config.Height) > 16777216 {
-		return nil, fmt.Errorf("image dimension limit")
+		return Metadata{}, "", fmt.Errorf("image dimension limit")
 	}
+	return Metadata{Width: config.Width, Height: config.Height}, format, nil
+}
+
+func decodeRaster(data []byte, format string) (image.Image, bool, error) {
 	var decoded image.Image
+	var err error
 	if format == "avif" {
 		// Decode into the same intrinsic pixel state used by images and Canvas.
 		// No renderer, GPU or native graphics library is involved. Bound codec
@@ -125,19 +229,17 @@ func Decode(data []byte, contentType string) (*Image, error) {
 			decoded, _, err = image.Decode(bytes.NewReader(repaired))
 		}
 		if err != nil {
-			return &Image{Width: config.Width, Height: config.Height, PixelsUnavailable: true}, nil
+			return nil, true, nil
 		}
 	}
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	width, height := decoded.Bounds().Dx(), decoded.Bounds().Dy()
 	if width <= 0 || height <= 0 || int64(width)*int64(height) > 16777216 {
-		return nil, fmt.Errorf("image dimension limit")
+		return nil, false, fmt.Errorf("image dimension limit")
 	}
-	pixels := image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.Draw(pixels, pixels.Bounds(), decoded, decoded.Bounds().Min, draw.Src)
-	return &Image{Width: width, Height: height, Pixels: pixels.Pix}, nil
+	return decoded, false, nil
 }
 
 // Chrome accepts a PNG's complete decompressed stream despite an invalid Adler

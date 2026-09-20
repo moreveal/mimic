@@ -13,7 +13,7 @@ import (
 type imageLoad struct {
 	complete    bool
 	currentSrc  string
-	decoded     *imageresource.Image
+	resource    *imageresource.Resource
 	originClean bool
 	queued      bool
 	waiting     bool
@@ -25,7 +25,7 @@ type imageLoad struct {
 // reuses a successfully decoded image for another element even with no-store.
 // Only successful results are retained, with CORS mode/credentials in the key.
 type availableImage struct {
-	decoded     *imageresource.Image
+	resource    *imageresource.Resource
 	originClean bool
 }
 
@@ -57,7 +57,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 	// lifecycle continue independently.
 	current := &imageLoad{originClean: true, queued: true, blocks: !lazy && r.beginLoadBlocker(reason)}
 	if previous != nil {
-		current.decoded = previous.decoded
+		current.resource = previous.resource
 		current.currentSrc = previous.currentSrc
 		current.originClean = previous.originClean
 	}
@@ -73,7 +73,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		current.complete = true
 		r.resourceRevision.Add(1)
 		if kind != "load" {
-			current.decoded = nil
+			current.resource = nil
 		}
 		defer func() {
 			if current.blocks {
@@ -109,7 +109,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		key := preloadRequestKey(request)
 		if available, ok := r.availableImages.get(key); ok {
 			current.currentSrc = u.String()
-			current.decoded = available.decoded
+			current.resource = available.resource
 			current.originClean = available.originClean
 			return finish(ctx, "load")
 		}
@@ -133,7 +133,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			if resourceContext.Err() != nil {
 				return
 			}
-			var decoded *imageresource.Image
+			var resource *imageresource.Resource
 			kind := "load"
 			originClean, corsErr := resourceResponseOrigin(request, response)
 			if err == nil {
@@ -144,9 +144,11 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			if err != nil {
 				kind = "error"
 			} else {
-				decoded, err = imageresource.Decode(response.Body, response.Headers.Get("Content-Type"))
+				resource = imageresource.New(response.Body, response.Headers.Get("Content-Type"))
+				_, err = resource.RequireValidatedImage()
 				if err != nil {
 					kind = "error"
+					resource = nil
 					r.agent.Page().trace.Add(trace.Error, "imageDecode", map[string]any{"url": u.String(), "error": err.Error(), "realm": r.ID})
 				}
 			}
@@ -155,13 +157,13 @@ func (r *Realm) updateImage(id int64, changed bool) {
 					return nil
 				}
 				current.currentSrc = u.String()
-				current.decoded = decoded
+				current.resource = resource
 				current.originClean = originClean
-				if decoded != nil {
+				if resource != nil {
 					if r.availableImages == nil {
 						r.availableImages = &availableImageCache{}
 					}
-					r.availableImages.put(key, availableImage{decoded, originClean})
+					r.availableImages.put(key, availableImage{resource, originClean})
 				}
 				r.notifyPerformanceObservers(ctx)
 				return finish(ctx, kind)

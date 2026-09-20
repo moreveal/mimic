@@ -32,29 +32,29 @@ func TestAvailableImageCacheBoundsAndReplacement(t *testing.T) {
 	parallelBrowserTest(t)
 	cache := &availableImageCache{}
 	key := preloadKey{url: "image", destination: "image", mode: "cors", credentials: "include"}
-	first := availableImage{decoded: &imageresource.Image{Pixels: make([]byte, 1, 1024)}, originClean: false}
+	first := availableImage{resource: imageresource.New(make([]byte, 1024), ""), originClean: false}
 	cache.put(key, first)
 	if cache.bytes != 1024+len(key.url)+len(key.destination)+len(key.mode)+len(key.credentials)+256 {
 		t.Fatal("pixel capacity/key bytes not accounted")
 	}
 	for i := 0; i < availableImageCacheEntries+5; i++ {
-		cache.put(key, availableImage{decoded: &imageresource.Image{Width: i}, originClean: true})
+		cache.put(key, availableImage{resource: imageresource.New([]byte(fmt.Sprint(i)), ""), originClean: true})
 		assertAvailableImageAccounting(t, cache)
 	}
 	if len(cache.entries) != 1 || cache.order.Len() != 1 {
 		t.Fatal("replacement retained historical entries")
 	}
-	if image, ok := cache.get(key); !ok || !image.originClean || image.decoded.Width != availableImageCacheEntries+4 {
+	if image, ok := cache.get(key); !ok || !image.originClean || image.resource == nil {
 		t.Fatal("replacement lost latest decoded state")
 	}
 	for i := 0; i < availableImageCacheEntries; i++ {
-		cache.put(preloadKey{url: fmt.Sprint(i)}, availableImage{decoded: &imageresource.Image{Vector: true}})
+		cache.put(preloadKey{url: fmt.Sprint(i)}, availableImage{resource: imageresource.New(nil, "image/svg+xml")})
 		assertAvailableImageAccounting(t, cache)
 	}
 	if _, ok := cache.get(key); ok {
 		t.Fatal("oldest entry survived count limit")
 	}
-	if first.decoded.Pixels == nil || cap(first.decoded.Pixels) != 1024 {
+	if first.resource.RetainedBytes() != 1024 {
 		t.Fatal("eviction mutated separately owned image")
 	}
 }
@@ -65,17 +65,17 @@ func TestAvailableImageCachePixelBudgetAndOversizedAdmission(t *testing.T) {
 	keyA, keyB := preloadKey{url: "a"}, preloadKey{url: "b"}
 	// Sharing the backing pixels must not undercount retained entries. Capacity
 	// exceeds the exposed length, as can happen with a sliced decoded buffer.
-	image := availableImage{decoded: &imageresource.Image{Pixels: make([]byte, 1, availableImageCacheBytes/2)}}
+	image := availableImage{resource: imageresource.New(make([]byte, availableImageCacheBytes/2), "")}
 	cache.put(keyA, image)
 	cache.put(keyB, image)
 	assertAvailableImageAccounting(t, cache)
 	if _, ok := cache.get(keyA); ok {
 		t.Fatal("pixel budget did not evict oldest image")
 	}
-	if got, ok := cache.get(keyB); !ok || got.decoded != image.decoded {
+	if got, ok := cache.get(keyB); !ok || got.resource != image.resource {
 		t.Fatal("new image was not retained")
 	}
-	oversized := availableImage{decoded: &imageresource.Image{Pixels: make([]byte, 1, availableImageCacheBytes)}}
+	oversized := availableImage{resource: imageresource.New(make([]byte, availableImageCacheBytes), "")}
 	cache.put(keyB, oversized)
 	assertAvailableImageAccounting(t, cache)
 	if _, ok := cache.get(keyB); ok || cache.bytes != 0 {
@@ -118,7 +118,7 @@ func TestAvailableImageEvictionPreservesActiveImageAndLazyReload(t *testing.T) {
 		t.Fatal("initial successful image unavailable")
 	}
 	for i := 0; i < availableImageCacheEntries; i++ {
-		cache.put(preloadKey{url: fmt.Sprintf("filler:%d", i)}, availableImage{decoded: &imageresource.Image{Vector: true}})
+		cache.put(preloadKey{url: fmt.Sprintf("filler:%d", i)}, availableImage{resource: imageresource.New(nil, "image/svg+xml")})
 	}
 	assertAvailableImageAccounting(t, cache)
 	value, err = p.Evaluate(ctx, `(async()=>{

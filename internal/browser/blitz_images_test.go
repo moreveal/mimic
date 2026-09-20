@@ -13,12 +13,13 @@ func TestBlitzCanonicalImageInputLifecycle(t *testing.T) {
 		t.Fatal(err)
 	}
 	id := document.FindAllByTagName("img")[0].ID
-	realm := &Realm{document: document, imageLoads: map[int64]*imageLoad{id: {decoded: &imageresource.Image{Width: 80, Height: 40}, complete: false}}}
+	resource := imageresource.New([]byte(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="40"/>`), "image/svg+xml")
+	realm := &Realm{document: document, imageLoads: map[int64]*imageLoad{id: {resource: resource, complete: false}}}
 	inputs := realm.blitzImageInputs()
 	if len(inputs) != 1 || inputs[0].Width != 80 || inputs[0].Height != 40 || inputs[0].Complete {
 		t.Fatalf("pending replacement must retain previous image: %+v", inputs)
 	}
-	realm.imageLoads[id].decoded = nil
+	realm.imageLoads[id].resource = nil
 	realm.imageLoads[id].complete = true
 	inputs = realm.blitzImageInputs()
 	if inputs[0].Width != 0 || inputs[0].Height != 0 || !inputs[0].Complete {
