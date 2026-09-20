@@ -2828,3 +2828,19 @@ specialized work they replaced. Part B therefore remains an upper bound on all
 producer work, not a removable-duplication estimate. The rejected code was not
 merged into production. Full evidence and counters are in
 [the experiment record](wikipedia-full-producer-replacement-no-go-2026-09-20.md).
+
+## Compact canonical producer vertical — 2026-09-20
+
+An isolated vertical replaced JavaScript object/Map publication with a
+Document-owned compact Go arena and one binary snapshot per observation. The
+same product served computed style, geometry, visibility, IO, scroll, hit test
+and input. It reduced approximately 113k host crossings to 17, retained 47,655
+of 68,863 aggregate rules after safe closure filtering, and recorded zero
+legacy/hard fallback for migrated consumers.
+
+The full E2E rejected whole-arena production: clean/candidate was 8843/11005 ms
+cold and 5517/6494 ms warm. Six first builds plus ten complete rebuilds produced
+90,275 records and consumed 1564.6 ms. Compact publication is a viable boundary,
+but it must be paired with mutation-derived incremental/subtree production;
+rebuilding the complete arena cannot realize the Part B replay upper bound. See
+[the full vertical record](wikipedia-compact-canonical-vertical-2026-09-20.md).

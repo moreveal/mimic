@@ -769,6 +769,12 @@ not improve.
   walks and duplicate traversals but regressed five-pair medians by 9.8% cold
   and 4.8% warm. See
   [the full producer replacement no-go](wikipedia-full-producer-replacement-no-go-2026-09-20.md).
+- Publishing required consumer state as a compact canonical binary arena while
+  rebuilding the whole arena for each relevant observation. Crossings fell
+  from about 113k to 17 and migrated-consumer fallback was zero, but unchanged
+  Wikipedia regressed 17.7% warm because six first builds and ten full rebuilds
+  still cost 1.565 s. See
+  [the compact canonical vertical](wikipedia-compact-canonical-vertical-2026-09-20.md).
 
 ## Rules for the next E2E investigation
 
