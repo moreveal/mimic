@@ -25,6 +25,7 @@ int32_t mimic_blitz_viewport(MimicBlitzHandle*, uint32_t, uint32_t);
 int32_t mimic_blitz_base_url(MimicBlitzHandle*, const char*, size_t);
 int32_t mimic_blitz_clear_attribute(MimicBlitzHandle*, uint64_t, const char*, size_t, const char*, size_t);
 int32_t mimic_blitz_stylesheet(MimicBlitzHandle*, uint64_t, const char*, size_t);
+int32_t mimic_blitz_stylesheet_url(MimicBlitzHandle*, uint64_t, const char*, size_t, const char*, size_t);
 int32_t mimic_blitz_style(MimicBlitzHandle*, uint64_t, const char*, size_t, char*, size_t, size_t*);
 */
 import "C"
@@ -137,6 +138,13 @@ func (o *Owner) ClearAttribute(id uint64, namespace, name string) error {
 func (o *Owner) Stylesheet(id uint64, css string) error {
 	status := C.mimic_blitz_stylesheet(o.handle, C.uint64_t(id), chars(css), C.size_t(len(css)))
 	runtime.KeepAlive(css)
+	return check(status)
+}
+
+func (o *Owner) StylesheetAtURL(id uint64, css, baseURL string) error {
+	status := C.mimic_blitz_stylesheet_url(o.handle, C.uint64_t(id), chars(css), C.size_t(len(css)), chars(baseURL), C.size_t(len(baseURL)))
+	runtime.KeepAlive(css)
+	runtime.KeepAlive(baseURL)
 	return check(status)
 }
 func (o *Owner) Style(id uint64, name string) (string, error) {

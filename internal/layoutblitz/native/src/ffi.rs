@@ -193,6 +193,25 @@ pub unsafe extern "C" fn mimic_blitz_stylesheet(
     })
 }
 
+/// CSS and URL bytes are borrowed only for this parse transaction.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn mimic_blitz_stylesheet_url(
+    handle: *mut Handle,
+    id: u64,
+    value: *const u8,
+    len: usize,
+    url: *const u8,
+    url_len: usize,
+) -> i32 {
+    call(handle, |owner| {
+        owner
+            .stylesheet_at_url(id, unsafe { text(value, len)? }, unsafe {
+                text(url, url_len)?
+            })
+            .map_err(|_| ())
+    })
+}
+
 /// Output bytes are copied into caller-owned storage. -3 asks for a larger
 /// buffer without poisoning the owner; no native allocation crosses the ABI.
 #[unsafe(no_mangle)]

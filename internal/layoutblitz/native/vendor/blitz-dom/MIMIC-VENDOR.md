@@ -29,6 +29,10 @@ Local compatibility changes:
 - Author stylesheets are inserted by connected DOM tree order instead of
   node allocation order. The owner integration must re-register sheets when
   their tree order changes, even if source text is unchanged.
+- `make_stylesheet_with_url` takes an independent validated stylesheet URL
+  context. External relative URLs and CSSOM edits resolve against the canonical
+  sheet URL rather than the document's current history/base URL. It does not
+  temporarily mutate document URL state.
 - Native layout records actual out-of-flow containing-block ownership and
   propagates inline candidates without changing canonical DOM ancestry.
 - Closed details groups non-summary content in a retained anonymous skipped

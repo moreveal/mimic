@@ -1155,9 +1155,21 @@ impl BaseDocument {
     }
 
     pub fn make_stylesheet(&self, css: impl AsRef<str>, origin: Origin) -> DocumentStyleSheet {
+        self.make_stylesheet_with_url_data(css, origin, self.url.url_extra_data())
+    }
+
+    /// Parse a canonical stylesheet in its own URL context. The document URL
+    /// is not temporarily changed: already parsed declarations and other sheets
+    /// must retain their independent contexts across history/base transitions.
+    pub fn make_stylesheet_with_url(&self, css: impl AsRef<str>, origin: Origin, url: &str) -> Result<DocumentStyleSheet, url::ParseError> {
+        let url = Url::parse(url)?;
+        Ok(self.make_stylesheet_with_url_data(css, origin, style::stylesheets::UrlExtraData(ServoArc::new(url))))
+    }
+
+    fn make_stylesheet_with_url_data(&self, css: impl AsRef<str>, origin: Origin, url: style::stylesheets::UrlExtraData) -> DocumentStyleSheet {
         let data = Stylesheet::from_str(
             css.as_ref(),
-            self.url.url_extra_data(),
+            url,
             origin,
             ServoArc::new(self.guard.wrap(MediaList::empty())),
             self.guard.clone(),

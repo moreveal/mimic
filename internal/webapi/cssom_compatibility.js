@@ -492,6 +492,9 @@ const constructedStyleSheets = (() => {
       const s = sheets.get(sheet);
       s.owner = owner;
       s.href = resource?.url || null;
+      // A sheet's URL context is captured when the sheet is created, not
+      // recomputed from the current history entry for later CSSOM edits.
+      s.baseURL = resource?.url || host.documentBaseURI();
       s.crossOrigin = !!resource?.crossOrigin;
       s.rules.push(...parsedRules(source, sheet));
       owners.set(owner, { key, sheet });
@@ -646,6 +649,7 @@ const constructedStyleSheets = (() => {
         sheets: collection.map((sheet) => ({
           id: elementSlot(requireSheet(sheet).owner).nodeId,
           text: sourceText(sheet),
+          baseURL: requireSheet(sheet).baseURL,
         })),
       };
     },

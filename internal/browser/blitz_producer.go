@@ -19,7 +19,7 @@ type blitzDocument struct {
 	document         layoutblitz.Document
 	key              string
 	fallback         string
-	sheets           map[uint64]string
+	sheets           map[uint64]blitzStylesheetInput
 	states           map[uint64]blitzElementState
 	sheetOrder       []uint64
 	fontRevision     uint64
@@ -31,6 +31,12 @@ type blitzElementState struct {
 	ID    uint64 `json:"id"`
 	Mask  uint32 `json:"mask"`
 	Flags uint32 `json:"flags"`
+}
+
+type blitzStylesheetInput struct {
+	ID      uint64 `json:"id"`
+	Text    string `json:"text"`
+	BaseURL string `json:"baseURL"`
 }
 
 type blitzCallStat struct {
@@ -200,12 +206,9 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 	}
 	accounting.mark("keyValidation")
 	var inputs struct {
-		Unsupported string              `json:"unsupported"`
-		States      []blitzElementState `json:"states"`
-		Sheets      []struct {
-			ID   uint64 `json:"id"`
-			Text string `json:"text"`
-		} `json:"sheets"`
+		Unsupported string                 `json:"unsupported"`
+		States      []blitzElementState    `json:"states"`
+		Sheets      []blitzStylesheetInput `json:"sheets"`
 	}
 	if r.blitzInputs == nil {
 		return fmt.Errorf("blitz: owner input adapter not initialized")
@@ -248,7 +251,7 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 	accounting.mark("canonicalSync")
 	if previousBuilds != state.document.Builds || state.sheets == nil {
 		state.snapshot = nil
-		state.sheets = make(map[uint64]string)
+		state.sheets = make(map[uint64]blitzStylesheetInput)
 		state.states = nil
 		state.sheetOrder = nil
 		state.fontsInitialized = false
@@ -288,13 +291,13 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 	}
 	orderChanged := !slices.Equal(order, state.sheetOrder)
 	for _, sheet := range inputs.Sheets {
-		if old, ok := state.sheets[sheet.ID]; ok && old == sheet.Text && !orderChanged {
+		if old, ok := state.sheets[sheet.ID]; ok && old == sheet && !orderChanged {
 			continue
 		}
-		if err := state.document.Owner.Stylesheet(sheet.ID, sheet.Text); err != nil {
+		if err := state.document.Owner.StylesheetAtURL(sheet.ID, sheet.Text, sheet.BaseURL); err != nil {
 			return err
 		}
-		state.sheets[sheet.ID] = sheet.Text
+		state.sheets[sheet.ID] = sheet
 	}
 	state.sheetOrder = order
 	activeSheets := make(map[uint64]bool, len(inputs.Sheets))

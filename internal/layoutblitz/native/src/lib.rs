@@ -29,6 +29,7 @@ pub enum Error {
     DuplicateNode(u64),
     DirtyRead,
     InvalidTopology,
+    InvalidStylesheetURL,
 }
 
 #[derive(Debug, Copy, Clone, Default)]
@@ -155,6 +156,17 @@ impl Owner {
         let sheet = self
             .document
             .make_stylesheet(css, style::stylesheets::Origin::Author);
+        self.document.add_stylesheet_for_node(sheet, node);
+        self.dirty = true;
+        Ok(())
+    }
+
+    pub fn stylesheet_at_url(&mut self, id: u64, css: &str, url: &str) -> Result<(), Error> {
+        let node = self.node(id)?;
+        let sheet = self
+            .document
+            .make_stylesheet_with_url(css, style::stylesheets::Origin::Author, url)
+            .map_err(|_| Error::InvalidStylesheetURL)?;
         self.document.add_stylesheet_for_node(sheet, node);
         self.dirty = true;
         Ok(())

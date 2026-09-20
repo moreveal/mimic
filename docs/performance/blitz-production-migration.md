@@ -51,7 +51,10 @@ native dependency graph. Capture/reconciliation cost must stay in accounting.
 Further inputs come from existing owners:
 
 - CSSOM supplies connected owner stylesheet text and order, with canonical
-  node IDs. Source changes/removal and reordered sheets update native Stylo.
+  node IDs and a stable per-sheet URL context captured on sheet creation.
+  External sheets use their canonical resource URL, including for later CSSOM
+  edits. Source/base changes, removal and reordered sheets update native Stylo;
+  a document history transition does not rebase an existing sheet.
 - Private control/focus slots supply checked/focus/focus-visible/focus-within
   state without calling overridden author getters; URL target is a state bit.
 - The existing font loader exports admitted/normalized resource bytes. Active
