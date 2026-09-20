@@ -2733,3 +2733,98 @@ and pseudo-state dependency proof. The credible retained-layout upper bound is
 731.7 ms (38.8%). Both first-build optimization and dependency-aware retention
 are required to reduce cold materially; a coarse persistent cache cannot do it
 correctly.
+
+## Retained producer implementation gate — 2026-09-20
+
+The first proposed production slice attempted to rebase the complete existing
+owner observation across a contiguous journal containing only stylesheet-proven
+irrelevant `data-*` mutations. It reused the current declaration, computed-value
+and geometry products rather than adding a parallel cache. Three alternating
+unchanged Wikipedia pairs measured control 10050/5867, 10479/6095 and
+10669/5882 ms versus candidate 9579/5771, 9764/6091 and 10069/6232 ms
+cold/warm. Warm median regressed from 5882 to 6091 ms. The narrow transition is
+therefore not present often enough in this workload and the slice was removed.
+
+A bounded two-variant extension then retained exact observation epochs for
+focus/selector-state returns. The unchanged E2E failed: the ECMAScript role
+remained unsuitable for `scrollIntoViewIfNeeded` until the 15 s timeout. Exact
+top-level epoch equality is consequently insufficient for retaining the full
+product graph; viewport/observer/input dependencies are not all represented by
+that key. This extension was also removed.
+
+After removing the diagnostic product-tape path, a clean fresh build passed the
+unchanged workload at 9491/6156 ms against 10254/6419 ms for the prior
+instrumented binary in one pair. This is not an architectural acceptance result:
+the small delta includes removed diagnostic overhead. No retained-producer
+implementation is claimed. The result rejects whole-observation rebasing as the
+next production mechanism; subsequent work must either build product-level
+dependency edges (including viewport/observer/input consumers) or attack the
+measured first-build matching/cascade path directly.
+
+## First-build producer attribution and leaf-selector gate — 2026-09-20
+
+Environment-gated producer counters separated new-Document construction from
+later rebuilds without changing the frozen workload. One cold diagnostic E2E
+created approximately 63k declaration/style-context products, 112k computed
+products, 41k size products, 37k intrinsic products and 26k Taffy input nodes.
+It considered 2.30m indexed selector candidates and invoked the generic matcher
+1.13m times for only 65k matches. Per new top-level Document, the first
+`documentValues` observation alone processed 2.4k--6.6k elements, 158k--421k
+selector candidates and 7.2k--19.7k computed properties, costing approximately
+0.36--0.83 s before the later geometry build.
+
+The candidate made an indexed leaf bucket conclusive for single tag, universal,
+id, class and attribute-existence selectors while continuing to evaluate media
+and supports conditions. Focused selector/style/geometry/visibility/observer/
+input tests passed. It removed about 75k generic matcher calls, only 6.5% of the
+1.15m calls in the candidate profile; compound, ancestor and stateful selectors
+dominated the remainder.
+
+Five alternating fresh-process unchanged Wikipedia pairs rejected the change:
+
+| mode | control samples | candidate samples | median delta |
+| --- | --- | --- | ---: |
+| cold | 9684, 9142, 9420, 9504, 9922 ms | 10497, 9862, 9721, 9800, 9496 ms | 9504 -> 9800 ms (+3.1%) |
+| warm | 6537, 6126, 6299, 6232, 6362 ms | 6434, 6246, 6157, 6384, 6331 ms | 6299 -> 6331 ms (+0.5%) |
+
+Warm stage medians were flat: JavaScript heading visibility 1339 -> 1340 ms,
+scroll 409 -> 411 ms, innerText 188 -> 191 ms and href 175 -> 172 ms. Click was
+52 ms faster while the later heading was 30 ms slower, consistent with run
+variance rather than displaced multiple-second work. Cold navigation stages
+regressed. The candidate was removed and no memory/race shipping gate was run
+for rejected code. This rules out polishing isolated simple-selector calls as
+the next E2E mechanism. A large first-build reduction must change the compound/
+ancestor/stateful matching and document-scale style/layout construction model,
+not add neighboring leaf fast paths.
+
+### Wikipedia product-consumption audit: incomplete attribution (2026-09-20)
+
+See [the audit record](wikipedia-product-consumption-audit-2026-09-20.md).
+Unchanged cold/warm E2E passed with temporary diagnostic instrumentation.
+Recorded warm production included 51,098 computed values and 19,777 cascades.
+Of 12,637 batch cursor values, 12,595 had no recorded non-batch read. Omitting
+other nodes' cursor values reduced total computed-value events to 38,466 but
+left warm cascade, size/flow and intrinsic counts unchanged. Cold counts increased;
+one heavily instrumented pair cannot establish the cause. Diagnostic E2E slowed
+to 24.9 / 17.2 seconds, so these timings are not baseline opportunity estimates.
+Full semantic closure, observer/input root coverage and baseline X/Y/Z seconds
+remain unresolved. No <1 s feasibility or bulk/native necessity conclusion is
+supported. Diagnostic source changes were removed; artifacts were retained.
+
+## Full style/geometry producer replacement gate — 2026-09-20
+
+A production-shaped replacement was implemented in an isolated worktree after
+Part B. It covered the complete proposed boundary rather than another selector
+leaf: compiled canonical-DOM matching and cascade products, indexed per-node
+style records, exact selector-context sharing, dependency-ordered Flow products,
+and compact shared Flow/Taffy formatting ranges with retained boundary stubs.
+The final profile reported zero Taffy canonical fallback walks.
+
+Five alternating fresh-process unchanged Wikipedia pairs rejected it. Cold
+median regressed 9573 -> 10507 ms (+9.8%); warm median regressed 6249 -> 6552 ms
+(+4.8%). Native matching and duplicate traversal decreased, but building the
+semantically complete shared records and solver projections cost more than the
+specialized work they replaced. Part B therefore remains an upper bound on all
+producer work, not a removable-duplication estimate. The rejected code was not
+merged into production. Full evidence and counters are in
+[the experiment record](wikipedia-full-producer-replacement-no-go-2026-09-20.md).

@@ -5,6 +5,35 @@ This is the canonical handoff for performance work on
 changing runtime, DOM, style, geometry, scheduler, CDP, or Playwright-facing
 code for this workload.
 
+## Causal Chrome/Mimic result (2026-09-20)
+
+Product-consumption follow-up: the
+[partial audit](wikipedia-product-consumption-audit-2026-09-20.md) records cold/warm
+production counts and a cursor-materialization counterfactual. It does **not**
+establish a semantic dependency closure or an X/Y/Z split of baseline seconds.
+Heavy instrumentation perturbed E2E; equal outputs are not proven avoidable work.
+No production optimization remains from that audit. Independent source edits
+appeared during cleanup, so further comparisons require a fixed source snapshot.
+
+A synchronized Chrome Timeline and temporarily labelled Mimic trace now identify
+the primary architectural difference. Playwright isolated-world reads in Mimic
+invoke the main-world owner and reconstruct/serialize document-scale
+style/visibility state; 24 warm projection misses occupied 3474 ms. Mimic also
+executes IntersectionObserver sampling over its JavaScript geometry model: 16
+warm deliveries occupied 679 ms and 59 cold deliveries occupied 3281 ms. Chrome
+performed 219 native intersection computations in 1.3 ms total and its complete
+journey used 273 ms inclusive in `UpdateStyleAndLayout`; post-navigation heading
+visibility required no style or layout update. See
+[the causal root-cause report](wikipedia-causal-root-cause-2026-09-20.md).
+
+The concrete cause is not missing API coverage or CDP/network latency. Chrome's
+realms, rendering lifecycle, observers and input consume one retained,
+incrementally invalidated Blink style/layout graph. Mimic repeatedly builds
+derived state in an owner realm, transfers document projections to an isolated
+realm, and separately rebuilds geometry for observer and input consumers. The
+remaining gap includes high-volume Playwright DOM/role traversal over Mimic's
+JavaScript wrappers and Go-owned canonical DOM.
+
 ## Current direction: controlled whole-chain comparison (2026-09-20)
 
 This section supersedes the historical decisions below. The user requests
@@ -735,6 +764,11 @@ not improve.
   the work required to build the initial state; the tested version did not
   improve the target workload.
 - Moving the same CPU work into navigation/prewarm and calling it a speedup.
+- Rebuilding the current style/geometry semantics as a native matcher plus a
+  shared Flow/Taffy record graph. The complete experiment removed fallback DOM
+  walks and duplicate traversals but regressed five-pair medians by 9.8% cold
+  and 4.8% warm. See
+  [the full producer replacement no-go](wikipedia-full-producer-replacement-no-go-2026-09-20.md).
 
 ## Rules for the next E2E investigation
 
