@@ -2780,3 +2780,29 @@ The dominant cost is therefore the retained constructor/prototype/closure graph,
 not eagerly retained compiled machine code. Achieving the remaining memory goal
 requires virtualized observable descriptors with value materialization, rather
 than merely changing snapshot code retention.
+
+## 2026-09-21 -- persistent bootstrap and deferred image backing
+
+The browser now prepares its default bootstrap artifact before opening the CDP
+listener and persists the immutable V8 blob in the user cache. The disk key
+combines the complete Context profile/object-graph key, cache schema and both
+the linked and runtime V8 identities. Files carry a length and SHA-256 checksum,
+are published by same-directory atomic rename, and corrupt entries are removed
+before an ordinary rebuild. Mimic-owned artifacts unused for 30 days are
+removed and the directory retains at most eight current profiles.
+
+Image resources now retain one immutable compressed backing plus cached
+metadata and validation results. Image loading still performs full stream
+validation to preserve `load`/`error` behavior, but it no longer retains or
+copies an RGBA bitmap. Layout and `<img>` observations use the metadata barrier;
+Canvas and `createImageBitmap` synchronously materialize and share the bitmap
+through the decode barrier on first use.
+
+Fresh-build fast gate `235f843` passed all six semantic workloads. Median warm
+completion was 393.12 ms DOM, 42.41 ms static and 120.61 ms React. Later static
+waves reached 52.81-54.84 sessions/s. Ten-Page marginal private memory was
+41.98 MiB/Page static and 44.33 MiB/Page React; recovered process private memory
+was 203.33 and 207.30 MiB respectively. These workloads contain no meaningful
+image payload, so they validate non-regression but do not quantify the deferred
+bitmap saving; that saving is approximately the avoided decoded raster area
+(`width * height * 4`) per loaded-but-unobserved image, less compressed bytes.
