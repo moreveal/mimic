@@ -61,10 +61,10 @@ jobs:
         run: go run ./tools/buildnative
       - name: Build Linux executable
         if: runner.os == 'Linux'
-        run: go build -o .build/mimic ./cmd/mimic-runtime
+        run: go build -o .build/mimic ./cmd/mimic
       - name: Build Windows executable
         if: runner.os == 'Windows'
-        run: go build -o .build/mimic.exe ./cmd/mimic-runtime
+        run: go build -o .build/mimic.exe ./cmd/mimic
       - name: Test Windows reference behavior
         if: runner.os == 'Windows'
         run: python tools/ci/windows_tests.py --shard ${{ matrix.shard }} --count 4
