@@ -42,6 +42,7 @@ dependencies = [
 [[package]]
 name = "blitz-dom"
 version = "0.3.0-beta.2"
+source = "git+https://github.com/moreveal/blitz.git?rev=19a72d4a4163038d748603fbcf709d38bfa6a998#19a72d4a4163038d748603fbcf709d38bfa6a998"
 dependencies = [
  "app_units",
  "atomic_refcell",
@@ -81,7 +82,7 @@ dependencies = [
 [[package]]
 name = "blitz-traits"
 version = "0.3.0-beta.2"
-source = "git+https://github.com/DioxusLabs/blitz.git?rev=e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09#e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09"
+source = "git+https://github.com/moreveal/blitz.git?rev=19a72d4a4163038d748603fbcf709d38bfa6a998#19a72d4a4163038d748603fbcf709d38bfa6a998"
 dependencies = [
  "atomic_refcell",
  "bitflags",
@@ -273,7 +274,7 @@ dependencies = [
 [[package]]
 name = "debug_timer"
 version = "0.1.3"
-source = "git+https://github.com/DioxusLabs/blitz.git?rev=e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09#e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09"
+source = "git+https://github.com/moreveal/blitz.git?rev=19a72d4a4163038d748603fbcf709d38bfa6a998#19a72d4a4163038d748603fbcf709d38bfa6a998"
 
 [[package]]
 name = "derive_more"
@@ -1539,6 +1540,7 @@ dependencies = [
 [[package]]
 name = "stylo_taffy"
 version = "0.3.0-beta.2"
+source = "git+https://github.com/moreveal/blitz.git?rev=19a72d4a4163038d748603fbcf709d38bfa6a998#19a72d4a4163038d748603fbcf709d38bfa6a998"
 dependencies = [
  "bitflags",
  "stylo",

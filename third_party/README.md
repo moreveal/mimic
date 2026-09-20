@@ -1,5 +1,11 @@
 # Local dependencies
 
+Mimic's style/layout engine is maintained as the
+[`moreveal/blitz`](https://github.com/moreveal/blitz) fork of
+[`DioxusLabs/blitz`](https://github.com/DioxusLabs/blitz). It is an exact Cargo
+Git dependency rather than a submodule; see the
+[`internal/layoutblitz/native` integration notes](../internal/layoutblitz/native/README.md).
+
 `tls-client/` is the retained source of `github.com/bogdanfinn/tls-client v1.16.0`,
 selected by the root go.mod replace directive. Preserve its LICENSE and upstream
 attribution. It is a nested Go module; root `go test ./...` does not test it.

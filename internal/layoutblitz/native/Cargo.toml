@@ -8,8 +8,11 @@ crate-type = ["rlib", "staticlib", "cdylib"]
 
 [dependencies]
 mimic-taffy-layout = { path = "../../layouttaffy/native" }
-blitz-dom = { path = "vendor/blitz-dom", default-features = false, features = ["system-fonts"] }
+blitz-dom = { git = "https://github.com/moreveal/blitz.git", rev = "19a72d4a4163038d748603fbcf709d38bfa6a998", default-features = false, features = ["system-fonts"] }
 style = { package = "stylo", version = "0.21" }
 style_dom = { package = "stylo_dom", version = "0.21" }
-blitz-traits = { git = "https://github.com/DioxusLabs/blitz.git", rev = "e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09" }
+blitz-traits = { git = "https://github.com/moreveal/blitz.git", rev = "19a72d4a4163038d748603fbcf709d38bfa6a998" }
 markup5ever = "0.39"
+
+[patch.crates-io]
+parley = { path = "vendor/parley" }
