@@ -49,20 +49,25 @@ jobs:
         if: runner.os == 'Windows'
         shell: msys2 {0}
         run: echo "$(cygpath -w /ucrt64/bin)" >> "$GITHUB_PATH"
-      - name: Build native Taffy layout library
-        run: python tools/build_native_layout.py
+      - name: Cache native style and layout build
+        uses: actions/cache@v4
+        with:
+          path: internal/layoutblitz/native/target
+          key: native-layout-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('internal/layoutblitz/native/**', 'internal/layouttaffy/native/**') }}
+      - name: Build native style and layout library if changed
+        run: go run ./tools/buildnative
       - name: Build Linux executable
         if: runner.os == 'Linux'
-        run: go build -o .build/mimic ./cmd/mimic
+        run: go build -o .build/mimic ./cmd/mimic-runtime
       - name: Build Windows executable
         if: runner.os == 'Windows'
-        run: go build -o .build/mimic.exe ./cmd/mimic
+        run: go build -o .build/mimic.exe ./cmd/mimic-runtime
       - name: Test Windows reference behavior
         if: runner.os == 'Windows'
         run: python tools/ci/windows_tests.py --shard ${{ matrix.shard }} --count 4
       - name: Test release and CI gates
         run: |
-          python -m unittest discover -s tools/ci -p test_windows_tests.py
+          python -m unittest discover -s tools/ci -p "test_*.py"
           python -m unittest discover -s tools/release -p test_release.py
       - name: Compile all Linux tests
         if: runner.os == 'Linux'
