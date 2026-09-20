@@ -1,5 +1,18 @@
 # Wikipedia Playwright E2E performance — current state (2026-09-20)
 
+## Latest migration checkpoint: native Blitz producer
+
+The [archived production-migration checkpoint](blitz-production-checkpoint-2026-09-20.md)
+supersedes the old producer-optimization direction below. Five alternating
+fresh-process pairs measured full Wikipedia cold **9387 → 6010 ms**, warm
+**6202 → 4430 ms**, after native computation AND batched cross-world publication.
+The earlier unbatched integration did not win; both matrices and controlled
+chains are archived under `data/blitz-production-2026-09-20/`.
+These exact measurements precede subsequent compatibility fixes. Migration is
+still opt-in on `migration/blitz-producer`; this is not default-on approval.
+The legacy producer is the correctness oracle/fallback, not a performance target.
+
+
 This is the canonical handoff for performance work on
 `tools/runtimecheck/playwright_wikipedia_local.js`. Read this file before
 changing runtime, DOM, style, geometry, scheduler, CDP, or Playwright-facing

@@ -1,5 +1,17 @@
 # Performance architecture pass
 
+## 2026-09-20: Blitz production migration checkpoint
+
+[Detailed evidence](blitz-production-checkpoint-2026-09-20.md): full unchanged
+Wikipedia, five alternating fresh-process cold/warm pairs, native batched
+publication cold **9387 → 6010 ms (−36.0%)**, warm **6202 → 4430 ms (−28.6%)**.
+The report preserves the failed unbatched matrix, stage displacement, memory,
+binary hashes, controlled chains and the compatibility caveat. Native source
+is on `migration/blitz-producer` (core `824cf0c`, browser integration `0e8bc43`);
+later compatibility changes require a new measured binary. Old producer
+performance work is stopped; legacy remains oracle and migration fallback.
+
+
 ## Playwright Wikipedia latency, current
 
 Latest user scope: **stop diagnosis and plan real fixes**, warm first,

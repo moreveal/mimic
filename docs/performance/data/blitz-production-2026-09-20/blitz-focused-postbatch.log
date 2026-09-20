@@ -1,0 +1,283 @@
+--- FAIL: TestCSSComputedCatalogMatchesFrozenChrome (0.00s)
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_geometry_integration (0.46s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_geometry_integration/goja (0.33s)
+            css_box_geometry_test.go:327: offsettrue: got [36 40 80 20 25 29 20]; want [24 28 80 20 13 17 20]
+            css_box_geometry_test.go:327: inlineFrame: got [1 1 1]; want [18 18 1]
+            css_box_geometry_test.go:327: offsetfalse: got [36 40 80 20 36 40 20]; want [13 17 80 20 13 17 20]
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_geometry_integration/v8 (0.13s)
+            css_box_geometry_test.go:327: offsettrue: got [36 40 80 20 25 29 20]; want [24 28 80 20 13 17 20]
+            css_box_geometry_test.go:327: inlineFrame: got [1 1 1]; want [18 18 1]
+            css_box_geometry_test.go:327: offsetfalse: got [36 40 80 20 36 40 20]; want [13 17 80 20 13 17 20]
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_wrapper_flow (0.88s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_wrapper_flow/goja (0.65s)
+            css_box_geometry_test.go:327: rects: got [[100 10 200 82] [120 12 160 60] [120 72 160 0] [120 72 76.875 20] [120 92 160 0]]; want [[100 10 200 62] [120 12 160 60] [120 72 160 0] [0 0 0 0] [120 72 160 0]]
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_wrapper_flow/v8 (0.23s)
+            css_box_geometry_test.go:327: rects: got [[100 10 200 82] [120 12 160 60] [120 72 160 0] [120 72 76.875 20] [120 92 160 0]]; want [[100 10 200 62] [120 12 160 60] [120 72 160 0] [0 0 0 0] [120 72 160 0]]
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_line_rounding (1.36s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_line_rounding/goja (0.35s)
+            css_box_geometry_test.go:312: got [map[family:Arial height:27.90625 size:13 text:vvvv sssss ttttt tttt width:114.75] map[family:Arial height:27.90625 size:13 text:alpha beta gamma delta width:152.390625] map[family:Arial height:27.90625 size:13 text:The quick brown fox width:129.25] map[family:Arial height:28.90625 size:14 text:vvvv sssss ttttt tttt width:122.578125] map[family:Arial height:28.90625 size:14 text:alpha beta gamma delta width:163.125] map[family:Arial height:28.90625 size:14 text:The quick brown fox width:138.1875] map[family:Arial height:32.90625 size:17 text:vvvv sssss ttttt tttt width:146.09375] map[family:Arial height:32.90625 size:17 text:alpha beta gamma delta width:195.3125] map[family:Arial height:32.90625 size:17 text:The quick brown fox width:165.03125] map[family:Times New Roman height:28.90625 size:13 text:vvvv sssss ttttt tttt width:106.453125] map[family:Times New Roman height:28.90625 size:13 text:alpha beta gamma delta width:135.984375] map[family:Times New Roman height:28.90625 size:13 text:The quick brown fox width:122.296875] map[family:Times New Roman height:28.90625 size:14 text:vvvv sssss ttttt tttt width:113.65625] map[family:Times New Roman height:28.90625 size:14 text:alpha beta gamma delta width:145.453125] map[family:Times New Roman height:28.90625 size:14 text:The quick brown fox width:130.71875] map[family:Times New Roman height:32.90625 size:17 text:vvvv sssss ttttt tttt width:135.25] map[family:Times New Roman height:32.90625 size:17 text:alpha beta gamma delta width:173.859375] map[family:Times New Roman height:32.90625 size:17 text:The quick brown fox width:155.953125]]; want [map[family:Arial height:27.90625 size:13 text:vvvv sssss ttttt tttt width:114.75] map[family:Arial height:27.90625 size:13 text:alpha beta gamma delta width:152.390625] map[family:Arial height:27.90625 size:13 text:The quick brown fox width:129.25] map[family:Arial height:28.90625 size:14 text:vvvv sssss ttttt tttt width:122.59375] map[family:Arial height:28.90625 size:14 text:alpha beta gamma delta width:163.125] map[family:Arial height:28.90625 size:14 text:The quick brown fox width:138.203125] map[family:Arial height:32.90625 size:17 text:vvvv sssss ttttt tttt width:146.09375] map[family:Arial height:32.90625 size:17 text:alpha beta gamma delta width:195.3125] map[family:Arial height:32.90625 size:17 text:The quick brown fox width:165.046875] map[family:Times New Roman height:28.90625 size:13 text:vvvv sssss ttttt tttt width:106.46875] map[family:Times New Roman height:28.90625 size:13 text:alpha beta gamma delta width:136] map[family:Times New Roman height:28.90625 size:13 text:The quick brown fox width:122.296875] map[family:Times New Roman height:28.90625 size:14 text:vvvv sssss ttttt tttt width:113.65625] map[family:Times New Roman height:28.90625 size:14 text:alpha beta gamma delta width:145.46875] map[family:Times New Roman height:28.90625 size:14 text:The quick brown fox width:130.71875] map[family:Times New Roman height:32.90625 size:17 text:vvvv sssss ttttt tttt width:135.25] map[family:Times New Roman height:32.90625 size:17 text:alpha beta gamma delta width:173.859375] map[family:Times New Roman height:32.90625 size:17 text:The quick brown fox width:155.96875]]
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_line_rounding/v8 (0.14s)
+            css_box_geometry_test.go:312: got [map[family:Arial height:27.90625 size:13 text:vvvv sssss ttttt tttt width:114.75] map[family:Arial height:27.90625 size:13 text:alpha beta gamma delta width:152.390625] map[family:Arial height:27.90625 size:13 text:The quick brown fox width:129.25] map[family:Arial height:28.90625 size:14 text:vvvv sssss ttttt tttt width:122.578125] map[family:Arial height:28.90625 size:14 text:alpha beta gamma delta width:163.125] map[family:Arial height:28.90625 size:14 text:The quick brown fox width:138.1875] map[family:Arial height:32.90625 size:17 text:vvvv sssss ttttt tttt width:146.09375] map[family:Arial height:32.90625 size:17 text:alpha beta gamma delta width:195.3125] map[family:Arial height:32.90625 size:17 text:The quick brown fox width:165.03125] map[family:Times New Roman height:28.90625 size:13 text:vvvv sssss ttttt tttt width:106.453125] map[family:Times New Roman height:28.90625 size:13 text:alpha beta gamma delta width:135.984375] map[family:Times New Roman height:28.90625 size:13 text:The quick brown fox width:122.296875] map[family:Times New Roman height:28.90625 size:14 text:vvvv sssss ttttt tttt width:113.65625] map[family:Times New Roman height:28.90625 size:14 text:alpha beta gamma delta width:145.453125] map[family:Times New Roman height:28.90625 size:14 text:The quick brown fox width:130.71875] map[family:Times New Roman height:32.90625 size:17 text:vvvv sssss ttttt tttt width:135.25] map[family:Times New Roman height:32.90625 size:17 text:alpha beta gamma delta width:173.859375] map[family:Times New Roman height:32.90625 size:17 text:The quick brown fox width:155.953125]]; want [map[family:Arial height:27.90625 size:13 text:vvvv sssss ttttt tttt width:114.75] map[family:Arial height:27.90625 size:13 text:alpha beta gamma delta width:152.390625] map[family:Arial height:27.90625 size:13 text:The quick brown fox width:129.25] map[family:Arial height:28.90625 size:14 text:vvvv sssss ttttt tttt width:122.59375] map[family:Arial height:28.90625 size:14 text:alpha beta gamma delta width:163.125] map[family:Arial height:28.90625 size:14 text:The quick brown fox width:138.203125] map[family:Arial height:32.90625 size:17 text:vvvv sssss ttttt tttt width:146.09375] map[family:Arial height:32.90625 size:17 text:alpha beta gamma delta width:195.3125] map[family:Arial height:32.90625 size:17 text:The quick brown fox width:165.046875] map[family:Times New Roman height:28.90625 size:13 text:vvvv sssss ttttt tttt width:106.46875] map[family:Times New Roman height:28.90625 size:13 text:alpha beta gamma delta width:136] map[family:Times New Roman height:28.90625 size:13 text:The quick brown fox width:122.296875] map[family:Times New Roman height:28.90625 size:14 text:vvvv sssss ttttt tttt width:113.65625] map[family:Times New Roman height:28.90625 size:14 text:alpha beta gamma delta width:145.46875] map[family:Times New Roman height:28.90625 size:14 text:The quick brown fox width:130.71875] map[family:Times New Roman height:32.90625 size:17 text:vvvv sssss ttttt tttt width:135.25] map[family:Times New Roman height:32.90625 size:17 text:alpha beta gamma delta width:173.859375] map[family:Times New Roman height:32.90625 size:17 text:The quick brown fox width:155.96875]]
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_details_query (1.98s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_details_query/goja (0.31s)
+            css_box_geometry_test.go:327: false: got [[0 200 18 1] [0 200 18 1] [0 0 0 0] [0 0 0 0] [18 300 5 1]]; want [[0 200 18 1] [0 200 18 1] [18 20 10 1] [28 30 12 1] [18 300 5 1]]
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_details_query/v8 (0.12s)
+            css_box_geometry_test.go:327: false: got [[0 200 18 1] [0 200 18 1] [0 0 0 0] [0 0 0 0] [18 300 5 1]]; want [[0 200 18 1] [0 200 18 1] [18 20 10 1] [28 30 12 1] [18 300 5 1]]
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_dynamic (2.44s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_dynamic/goja (0.33s)
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-inline-start: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-block-end: got 3px; want 4px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-inline-start: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-inline-end: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-block-start: got 5px; want 6px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-inline-end: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-block-start: got 1px; want 2px
+            css_box_geometry_test.go:323: vertical-rlrtl.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-rlrtl.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-block-end: got 7px; want 8px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-block-start: got 1px; want 4px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-block-end: got 3px; want 2px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-inline-start: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-inline-end: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-lrltr.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-lrltr.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-inline-start: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-inline-end: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-block-start: got 5px; want 8px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-block-end: got 7px; want 6px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-block-start: got 1px; want 4px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-block-end: got 3px; want 2px
+            css_box_geometry_test.go:323: vertical-lrrtl.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-lrrtl.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-inline-start: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-inline-end: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-inline-start: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-inline-end: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-block-start: got 5px; want 8px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-block-end: got 7px; want 6px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-inline-start: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-inline-end: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-block-end: got 7px; want 8px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-inline-start: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-inline-end: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-block-start: got 1px; want 2px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-block-end: got 3px; want 4px
+            css_box_geometry_test.go:323: vertical-rlltr.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-rlltr.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-block-start: got 5px; want 6px
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_dynamic/v8 (0.13s)
+            css_box_geometry_test.go:323: vertical-rlltr.padding-inline-end: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-block-start: got 1px; want 2px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-block-end: got 3px; want 4px
+            css_box_geometry_test.go:323: vertical-rlltr.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-rlltr.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-block-start: got 5px; want 6px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-inline-start: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-inline-end: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-rlltr.margin-block-end: got 7px; want 8px
+            css_box_geometry_test.go:323: vertical-rlltr.padding-inline-start: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-rlrtl.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-rlrtl.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-block-end: got 7px; want 8px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-inline-start: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-block-end: got 3px; want 4px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-inline-start: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-inline-end: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-rlrtl.margin-block-start: got 5px; want 6px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-inline-end: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-rlrtl.padding-block-start: got 1px; want 2px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-inline-end: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-block-start: got 5px; want 8px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-block-end: got 7px; want 6px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-block-start: got 1px; want 4px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-block-end: got 3px; want 2px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-inline-start: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-lrltr.padding-inline-end: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-lrltr.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-lrltr.block-size: got 60px; want 120px
+            css_box_geometry_test.go:323: vertical-lrltr.margin-inline-start: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-inline-start: got 2px; want 3px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-inline-end: got 4px; want 1px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-inline-start: got 6px; want 7px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-inline-end: got 8px; want 5px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-block-start: got 5px; want 8px
+            css_box_geometry_test.go:323: vertical-lrrtl.margin-block-end: got 7px; want 6px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-block-start: got 1px; want 4px
+            css_box_geometry_test.go:323: vertical-lrrtl.padding-block-end: got 3px; want 2px
+            css_box_geometry_test.go:323: vertical-lrrtl.inline-size: got 120px; want 60px
+            css_box_geometry_test.go:323: vertical-lrrtl.block-size: got 60px; want 120px
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_geometry_audit (4.13s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_geometry_audit/v8 (0.67s)
+            css_box_geometry_test.go:327: light/table: got [map[foreign:[[0 0 85.125 28]] own:[[0 0 85.125 28]] realm:true tag:TABLE] map[foreign:[[0 0 0 0]] own:[[0 0 0 0]] realm:true tag:CAPTION] map[foreign:[[4 4 77.125 20]] own:[[4 4 77.125 20]] realm:true tag:TBODY] map[foreign:[[4 4 77.125 20]] own:[[4 4 77.125 20]] realm:true tag:TR] map[foreign:[[4 4 43.796875 20]] own:[[4 4 43.796875 20]] realm:true tag:TH] map[foreign:[[49.796875 4 31.328125 20]] own:[[49.796875 4 31.328125 20]] realm:true tag:TD]]; want [map[foreign:[[0 0 85.125 78]] own:[[0 0 85.125 78]] realm:true tag:TABLE] map[foreign:[[0 0 85.125 50]] own:[[0 0 85.125 50]] realm:true tag:CAPTION] map[foreign:[[4 54 77.125 20]] own:[[4 54 77.125 20]] realm:true tag:TBODY] map[foreign:[[4 54 77.125 20]] own:[[4 54 77.125 20]] realm:true tag:TR] map[foreign:[[4 54 43.796875 20]] own:[[4 54 43.796875 20]] realm:true tag:TH] map[foreign:[[49.796875 54 31.328125 20]] own:[[49.796875 54 31.328125 20]] realm:true tag:TD]]
+            css_box_geometry_test.go:327: light/controls: got [map[foreign:[[0 0 300 10]] own:[[0 0 300 10]] realm:true tag:DIV] map[foreign:[[2 2 16 6]] own:[[2 2 16 6]] realm:true tag:BUTTON] map[foreign:[[0 10 300 4]] own:[[0 10 300 4]] realm:true tag:DIV] map[foreign:[[0 0 0 0]] own:[[0 0 0 0]] realm:true tag:PROGRESS]]; want [map[foreign:[[0 0 300 22]] own:[[0 0 300 22]] realm:true tag:DIV] map[foreign:[[2 13 16 6]] own:[[2 13 16 6]] realm:true tag:BUTTON] map[foreign:[[0 22 300 22]] own:[[0 22 300 22]] realm:true tag:DIV] map[foreign:[[2 25.1875 160 16]] own:[[2 25.1875 160 16]] realm:true tag:PROGRESS]]
+            css_box_geometry_test.go:327: light/closedDetails: got [map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:DETAILS] map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:SUMMARY] map[foreign:[] own:[] realm:true tag:DIV]]; want [map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:DETAILS] map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:SUMMARY] map[foreign:[[0 18 10 10]] own:[[0 18 10 10]] realm:true tag:DIV]]
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_geometry_audit/goja (1.02s)
+            css_box_geometry_test.go:327: light/closedDetails: got [map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:DETAILS] map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:SUMMARY] map[foreign:[] own:[] realm:true tag:DIV]]; want [map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:DETAILS] map[foreign:[[0 0 300 18]] own:[[0 0 300 18]] realm:true tag:SUMMARY] map[foreign:[[0 18 10 10]] own:[[0 18 10 10]] realm:true tag:DIV]]
+            css_box_geometry_test.go:327: light/table: got [map[foreign:[[0 0 85.125 28]] own:[[0 0 85.125 28]] realm:true tag:TABLE] map[foreign:[[0 0 0 0]] own:[[0 0 0 0]] realm:true tag:CAPTION] map[foreign:[[4 4 77.125 20]] own:[[4 4 77.125 20]] realm:true tag:TBODY] map[foreign:[[4 4 77.125 20]] own:[[4 4 77.125 20]] realm:true tag:TR] map[foreign:[[4 4 43.796875 20]] own:[[4 4 43.796875 20]] realm:true tag:TH] map[foreign:[[49.796875 4 31.328125 20]] own:[[49.796875 4 31.328125 20]] realm:true tag:TD]]; want [map[foreign:[[0 0 85.125 78]] own:[[0 0 85.125 78]] realm:true tag:TABLE] map[foreign:[[0 0 85.125 50]] own:[[0 0 85.125 50]] realm:true tag:CAPTION] map[foreign:[[4 54 77.125 20]] own:[[4 54 77.125 20]] realm:true tag:TBODY] map[foreign:[[4 54 77.125 20]] own:[[4 54 77.125 20]] realm:true tag:TR] map[foreign:[[4 54 43.796875 20]] own:[[4 54 43.796875 20]] realm:true tag:TH] map[foreign:[[49.796875 54 31.328125 20]] own:[[49.796875 54 31.328125 20]] realm:true tag:TD]]
+            css_box_geometry_test.go:327: light/controls: got [map[foreign:[[0 0 300 10]] own:[[0 0 300 10]] realm:true tag:DIV] map[foreign:[[2 2 16 6]] own:[[2 2 16 6]] realm:true tag:BUTTON] map[foreign:[[0 10 300 4]] own:[[0 10 300 4]] realm:true tag:DIV] map[foreign:[[0 0 0 0]] own:[[0 0 0 0]] realm:true tag:PROGRESS]]; want [map[foreign:[[0 0 300 22]] own:[[0 0 300 22]] realm:true tag:DIV] map[foreign:[[2 13 16 6]] own:[[2 13 16 6]] realm:true tag:BUTTON] map[foreign:[[0 22 300 22]] own:[[0 22 300 22]] realm:true tag:DIV] map[foreign:[[2 25.1875 160 16]] own:[[2 25.1875 160 16]] realm:true tag:PROGRESS]]
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_catalog (5.33s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_catalog/goja (1.99s)
+            css_box_geometry_test.go:323: reset.borderRight: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderBottom: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.listStyle: got outside; want outside none disc
+            css_box_geometry_test.go:323: reset.borderBlock: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.background: got none; want rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            css_box_geometry_test.go:323: reset.borderInlineEnd: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderAfter: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.grid: got none; want none / none / none / row / auto / auto
+            css_box_geometry_test.go:323: reset.contentVisibility: got ; want visible
+            css_box_geometry_test.go:323: reset.borderBlockEnd: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderBlockStart: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitFlexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: reset.outline: got rgb(3, 4, 5) 3px; want rgb(3, 4, 5) none 3px
+            css_box_geometry_test.go:323: reset.placeItems: got normal legacy; want normal
+            css_box_geometry_test.go:323: reset.transformOrigin: got 50% 50% 0px; want 0px 0px
+            css_box_geometry_test.go:323: reset.fontFamily: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: reset.borderInline: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderLeft: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderBefore: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.perspectiveOrigin: got 50% 50%; want 0px 0px
+            css_box_geometry_test.go:323: reset.border: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderInlineStart: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.alignmentBaseline: got baseline; want auto
+            css_box_geometry_test.go:323: reset.borderTop: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderEnd: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderStart: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitTransformOrigin: got 50% 50% 0px; want 0px 0px
+            css_box_geometry_test.go:323: reset.textDecoration: got rgb(3, 4, 5); want none
+            css_box_geometry_test.go:323: reset.font: got 16px serif; want 16px "Times New Roman"
+            css_box_geometry_test.go:323: reset.webkitPerspectiveOrigin: got 50% 50%; want 0px 0px
+            css_box_geometry_test.go:323: reset.flexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: values.contentVisibility: got ; want visible
+            css_box_geometry_test.go:323: values.listStyle: got outside; want outside none disc
+            css_box_geometry_test.go:323: values.grid: got none; want none / none / none / row / auto / auto
+            css_box_geometry_test.go:323: values.placeItems: got normal legacy; want normal
+            css_box_geometry_test.go:323: values.alignmentBaseline: got baseline; want auto
+            css_box_geometry_test.go:323: values.webkitPerspectiveOrigin: got 50% 50%; want 66px 21px
+            css_box_geometry_test.go:323: values.fontFamily: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: values.transformOrigin: got 50% 50% 0px; want 66px 21px
+            css_box_geometry_test.go:323: values.perspectiveOrigin: got 50% 50%; want 66px 21px
+            css_box_geometry_test.go:323: values.webkitFlexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: values.background: got none; want rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            css_box_geometry_test.go:323: values.outline: got rgb(13, 29, 41) 3px; want rgb(13, 29, 41) none 3px
+            css_box_geometry_test.go:323: values.textDecoration: got rgb(13, 29, 41); want none
+            css_box_geometry_test.go:323: values.webkitTransformOrigin: got 50% 50% 0px; want 66px 21px
+            css_box_geometry_test.go:323: values.flexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: values.font: got 24px serif; want 24px "Times New Roman"
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_catalog/v8 (0.56s)
+            css_box_geometry_test.go:323: reset.webkitPerspectiveOrigin: got 50% 50%; want 0px 0px
+            css_box_geometry_test.go:323: reset.flexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: reset.borderRight: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderBottom: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.listStyle: got outside; want outside none disc
+            css_box_geometry_test.go:323: reset.borderBlock: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.background: got none; want rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            css_box_geometry_test.go:323: reset.borderInlineEnd: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderAfter: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.grid: got none; want none / none / none / row / auto / auto
+            css_box_geometry_test.go:323: reset.contentVisibility: got ; want visible
+            css_box_geometry_test.go:323: reset.borderBlockEnd: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderBlockStart: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitFlexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: reset.outline: got rgb(3, 4, 5) 3px; want rgb(3, 4, 5) none 3px
+            css_box_geometry_test.go:323: reset.placeItems: got normal legacy; want normal
+            css_box_geometry_test.go:323: reset.transformOrigin: got 50% 50% 0px; want 0px 0px
+            css_box_geometry_test.go:323: reset.fontFamily: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: reset.borderInline: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderLeft: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderBefore: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.perspectiveOrigin: got 50% 50%; want 0px 0px
+            css_box_geometry_test.go:323: reset.border: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.borderInlineStart: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.alignmentBaseline: got baseline; want auto
+            css_box_geometry_test.go:323: reset.borderTop: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderEnd: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitBorderStart: got 0px rgb(3, 4, 5); want 0px none rgb(3, 4, 5)
+            css_box_geometry_test.go:323: reset.webkitTransformOrigin: got 50% 50% 0px; want 0px 0px
+            css_box_geometry_test.go:323: reset.textDecoration: got rgb(3, 4, 5); want none
+            css_box_geometry_test.go:323: reset.font: got 16px serif; want 16px "Times New Roman"
+            css_box_geometry_test.go:323: values.webkitFlexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: values.background: got none; want rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            css_box_geometry_test.go:323: values.outline: got rgb(13, 29, 41) 3px; want rgb(13, 29, 41) none 3px
+            css_box_geometry_test.go:323: values.textDecoration: got rgb(13, 29, 41); want none
+            css_box_geometry_test.go:323: values.webkitTransformOrigin: got 50% 50% 0px; want 66px 21px
+            css_box_geometry_test.go:323: values.flexFlow: got row; want row nowrap
+            css_box_geometry_test.go:323: values.font: got 24px serif; want 24px "Times New Roman"
+            css_box_geometry_test.go:323: values.contentVisibility: got ; want visible
+            css_box_geometry_test.go:323: values.listStyle: got outside; want outside none disc
+            css_box_geometry_test.go:323: values.grid: got none; want none / none / none / row / auto / auto
+            css_box_geometry_test.go:323: values.placeItems: got normal legacy; want normal
+            css_box_geometry_test.go:323: values.alignmentBaseline: got baseline; want auto
+            css_box_geometry_test.go:323: values.webkitPerspectiveOrigin: got 50% 50%; want 66px 21px
+            css_box_geometry_test.go:323: values.fontFamily: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: values.transformOrigin: got 50% 50% 0px; want 66px 21px
+            css_box_geometry_test.go:323: values.perspectiveOrigin: got 50% 50%; want 66px 21px
+    --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_initial (6.64s)
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_initial/goja (1.95s)
+            css_box_geometry_test.go:323: initial.top: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.alignment-baseline: got baseline; want auto
+            css_box_geometry_test.go:323: initial.text-decoration: got rgb(0, 0, 0); want none
+            css_box_geometry_test.go:323: initial.inset-inline-end: got 1056px; want 1064px
+            css_box_geometry_test.go:323: initial.left: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.perspective-origin: got 50% 50%; want 100px 40px
+            css_box_geometry_test.go:323: initial.transform-origin: got 50% 50% 0px; want 100px 40px
+            css_box_geometry_test.go:323: initial.inset-block-end: got -80px; want 565px
+            css_box_geometry_test.go:323: initial.content-visibility: got ; want visible
+            css_box_geometry_test.go:323: initial.bottom: got -80px; want 565px
+            css_box_geometry_test.go:323: initial.inset-inline-start: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.font-family: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: initial.inset-block-start: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.right: got 1056px; want 1064px
+            css_box_geometry_test.go:323: changed.inset-inline-end: got 856px; want 864px
+            css_box_geometry_test.go:323: changed.right: got 856px; want 864px
+            css_box_geometry_test.go:323: changed.perspective-origin: got 50% 50%; want 200px 80px
+            css_box_geometry_test.go:323: changed.content-visibility: got ; want visible
+            css_box_geometry_test.go:323: changed.transform-origin: got 50% 50% 0px; want 200px 80px
+            css_box_geometry_test.go:323: changed.text-decoration: got rgb(17, 34, 51); want none
+            css_box_geometry_test.go:323: changed.inset-block-end: got -160px; want 485px
+            css_box_geometry_test.go:323: changed.top: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.alignment-baseline: got baseline; want auto
+            css_box_geometry_test.go:323: changed.inset-inline-start: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.inset-block-start: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.left: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.bottom: got -160px; want 485px
+            css_box_geometry_test.go:323: changed.font-family: got serif; want "Times New Roman"
+        --- FAIL: TestCSSComputedCatalogMatchesFrozenChrome/css_computed_initial/v8 (0.55s)
+            css_box_geometry_test.go:323: initial.alignment-baseline: got baseline; want auto
+            css_box_geometry_test.go:323: initial.text-decoration: got rgb(0, 0, 0); want none
+            css_box_geometry_test.go:323: initial.inset-inline-end: got 1056px; want 1064px
+            css_box_geometry_test.go:323: initial.left: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.perspective-origin: got 50% 50%; want 100px 40px
+            css_box_geometry_test.go:323: initial.transform-origin: got 50% 50% 0px; want 100px 40px
+            css_box_geometry_test.go:323: initial.inset-block-end: got -80px; want 565px
+            css_box_geometry_test.go:323: initial.content-visibility: got ; want visible
+            css_box_geometry_test.go:323: initial.bottom: got -80px; want 565px
+            css_box_geometry_test.go:323: initial.inset-inline-start: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.font-family: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: initial.inset-block-start: got 0px; want 8px
+            css_box_geometry_test.go:323: initial.right: got 1056px; want 1064px
+            css_box_geometry_test.go:323: initial.top: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.right: got 856px; want 864px
+            css_box_geometry_test.go:323: changed.perspective-origin: got 50% 50%; want 200px 80px
+            css_box_geometry_test.go:323: changed.content-visibility: got ; want visible
+            css_box_geometry_test.go:323: changed.transform-origin: got 50% 50% 0px; want 200px 80px
+            css_box_geometry_test.go:323: changed.text-decoration: got rgb(17, 34, 51); want none
+            css_box_geometry_test.go:323: changed.inset-block-end: got -160px; want 485px
+            css_box_geometry_test.go:323: changed.top: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.alignment-baseline: got baseline; want auto
+            css_box_geometry_test.go:323: changed.inset-inline-start: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.inset-block-start: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.left: got 0px; want 8px
+            css_box_geometry_test.go:323: changed.bottom: got -160px; want 485px
+            css_box_geometry_test.go:323: changed.font-family: got serif; want "Times New Roman"
+            css_box_geometry_test.go:323: changed.inset-inline-end: got 856px; want 864px
+--- FAIL: TestIrrelevantDataAttributeRetainsGeometryDependencies (0.50s)
+    dependency_invalidation_test.go:93: navigation retained stale attribute dependencies: 3 -> 6
+--- FAIL: TestGeometryComputationPlanDoesNotPublishCycleFallback (0.46s)
+    --- FAIL: TestGeometryComputationPlanDoesNotPublishCycleFallback/goja (0.33s)
+        geometry_read_cache_test.go:53: geometry computation cycle: {"first":[120,12,8,120,120,240],"same":[120,12,8,120,120,240],"changed":[160,12,8,160,160,320],"again":[160,12,8,160,160,320],"finite":true} <nil>
+    --- FAIL: TestGeometryComputationPlanDoesNotPublishCycleFallback/v8 (0.13s)
+        geometry_read_cache_test.go:53: geometry computation cycle: {"first":[120,12,8,120,120,240],"same":[120,12,8,120,120,240],"changed":[160,12,8,160,160,320],"again":[160,12,8,160,160,320],"finite":true} <nil>
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	51.916s
+FAIL
