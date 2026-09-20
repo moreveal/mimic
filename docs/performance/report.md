@@ -2756,3 +2756,27 @@ and pseudo-state dependency proof. The credible retained-layout upper bound is
 731.7 ms (38.8%). Both first-build optimization and dependency-aware retention
 are required to reduce cold materially; a coarse persistent cache cannot do it
 correctly.
+
+## 2026-09-21 -- browser-owned immutable bootstrap
+
+Bootstrap snapshots are now owned by `Browser`, keyed by the complete observable
+environment and shared across sequential `BrowserContext` lifetimes. Browser
+shutdown closes all contexts, joins builders and releases the bounded 32 MiB
+artifact cache. Context-local cookies, storage, networking, permissions, DOM and
+realm state remain independent.
+
+The official 100-run Lightpanda Campfire workload was measured with standalone
+compiled executables. Against commit `35667ce`, commit `5dfea5a` changed Mimic
+from **37236 ms / 372 ms per page / 456.56 MiB peak** to
+**14631 ms / 146 ms per page / 429.92 MiB peak**. Chrome in the candidate run
+measured 22959 ms and 992.59 MiB; Lightpanda measured 2165 ms and 26.62 MiB.
+The timing improvement is 60.7% and peak-memory improvement is 5.8%. This makes
+the official fresh-Context workload faster than Chrome but does not satisfy the
+separate 30% lazy-surface memory target.
+
+V8 `FunctionCodeClear` was also tested and rejected: ten-Page private memory was
+effectively unchanged (static 505.2 -> 505.0 MiB, React 566.1 -> 564.3 MiB).
+The dominant cost is therefore the retained constructor/prototype/closure graph,
+not eagerly retained compiled machine code. Achieving the remaining memory goal
+requires virtualized observable descriptors with value materialization, rather
+than merely changing snapshot code retention.
