@@ -1,5 +1,16 @@
 # Performance architecture pass
 
+## 2026-09-20: final Blitz production result
+
+The [final production checkpoint](blitz-production-final-2026-09-20.md)
+supersedes the checkpoint below. Blitz is unconditional for admitted Documents;
+there is no engine environment switch. Five alternating unchanged Wikipedia
+pairs measured **9648 → 6144 ms cold** and **5879 → 3977 ms warm**, paired
+median reductions of **3489 ms (36.2%)** and **1854 ms (31.7%)**. Full browser,
+race, controlled-chain, memory and zero-Wikipedia-document-fallback evidence is
+archived with the report. Production code remains on `migration/blitz-producer`;
+this main commit archives reports and receipts only.
+
 ## 2026-09-20: Blitz production migration checkpoint
 
 [Detailed evidence](blitz-production-checkpoint-2026-09-20.md): full unchanged

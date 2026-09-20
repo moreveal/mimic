@@ -1,5 +1,16 @@
 # Wikipedia Playwright E2E performance — current state (2026-09-20)
 
+## Final production native producer result
+
+The current result is the
+[final Blitz checkpoint](blitz-production-final-2026-09-20.md). Five alternating
+fresh-process pairs on the unchanged workload measured **6144/3977 ms**
+cold/warm versus **9648/5879 ms** baseline: paired median improvements of
+**3489 ms (36.2%) cold** and **1854 ms (31.7%) warm**. Wikipedia recorded no
+whole-document fallback. The old JS producer is only explicit semantic
+fallback/oracle and cannot be selected by environment. Read the final report
+and raw receipts before using the historical checkpoint below.
+
 ## Latest migration checkpoint: native Blitz producer
 
 The [archived production-migration checkpoint](blitz-production-checkpoint-2026-09-20.md)

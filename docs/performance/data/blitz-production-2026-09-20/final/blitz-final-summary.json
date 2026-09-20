@@ -1,0 +1,1837 @@
+{
+  "matrix": {
+    "groups": {
+      "baseline": {
+        "cold": {
+          "wallMS": {
+            "count": 5,
+            "median": 9648,
+            "min": 9275,
+            "max": 10054,
+            "sum": 48206
+          },
+          "stagesMS": {
+            "ECMAScript click + navigation": {
+              "count": 5,
+              "median": 1255.27,
+              "min": 1231.02,
+              "max": 1317.23,
+              "sum": 6310.869999999999
+            },
+            "ECMAScript getAttribute href": {
+              "count": 5,
+              "median": 413.58,
+              "min": 385.23,
+              "max": 417.97,
+              "sum": 2040.52
+            },
+            "ECMAScript heading innerText": {
+              "count": 5,
+              "median": 11,
+              "min": 9.15,
+              "max": 11.62,
+              "sum": 53.379999999999995
+            },
+            "ECMAScript heading visible": {
+              "count": 5,
+              "median": 782.3,
+              "min": 758.27,
+              "max": 793.76,
+              "sum": 3898.7700000000004
+            },
+            "ECMAScript innerText": {
+              "count": 5,
+              "median": 582.44,
+              "min": 577.83,
+              "max": 606.3,
+              "sum": 2944.99
+            },
+            "ECMAScript page.title": {
+              "count": 5,
+              "median": 4.2,
+              "min": 2.42,
+              "max": 4.87,
+              "sum": 19.11
+            },
+            "ECMAScript scrollIntoViewIfNeeded": {
+              "count": 5,
+              "median": 496.86,
+              "min": 407.04,
+              "max": 520.44,
+              "sum": 2349.3999999999996
+            },
+            "JavaScript heading visible": {
+              "count": 5,
+              "median": 1874.68,
+              "min": 1861.68,
+              "max": 1918.63,
+              "sum": 9436.26
+            },
+            "Search fill": {
+              "count": 5,
+              "median": 334.63,
+              "min": 331.37,
+              "max": 494.2,
+              "sum": 1980.3500000000001
+            },
+            "Search inputValue": {
+              "count": 5,
+              "median": 14.67,
+              "min": 6.55,
+              "max": 50.77,
+              "sum": 130.17000000000002
+            },
+            "Search press + navigation": {
+              "count": 5,
+              "median": 967.32,
+              "min": 834.87,
+              "max": 1055.2,
+              "sum": 4688.780000000001
+            }
+          },
+          "unassignedEnvelopeMS": {
+            "count": 5,
+            "median": 2953.539999999999,
+            "min": 2621.5099999999993,
+            "max": 3043.05,
+            "sum": 14353.399999999998
+          },
+          "postPageCloseMiB": {
+            "PeakWorkingSet64": {
+              "count": 5,
+              "median": 925.41015625,
+              "min": 917.2578125,
+              "max": 937.25390625,
+              "sum": 4631.84375
+            },
+            "PrivateMemorySize64": {
+              "count": 5,
+              "median": 569.86328125,
+              "min": 568.25,
+              "max": 573.515625,
+              "sum": 2853.3671875
+            },
+            "WorkingSet64": {
+              "count": 5,
+              "median": 534.703125,
+              "min": 531.09765625,
+              "max": 535.73828125,
+              "sum": 2671.13671875
+            }
+          }
+        },
+        "warm": {
+          "wallMS": {
+            "count": 5,
+            "median": 5879,
+            "min": 5777,
+            "max": 6038,
+            "sum": 29481
+          },
+          "stagesMS": {
+            "ECMAScript click + navigation": {
+              "count": 5,
+              "median": 828.12,
+              "min": 815.76,
+              "max": 876.22,
+              "sum": 4178.27
+            },
+            "ECMAScript getAttribute href": {
+              "count": 5,
+              "median": 182.8,
+              "min": 177.99,
+              "max": 188.4,
+              "sum": 912.29
+            },
+            "ECMAScript heading innerText": {
+              "count": 5,
+              "median": 6.14,
+              "min": 5.52,
+              "max": 7.56,
+              "sum": 31.749999999999996
+            },
+            "ECMAScript heading visible": {
+              "count": 5,
+              "median": 805.69,
+              "min": 786.17,
+              "max": 841.45,
+              "sum": 4044.26
+            },
+            "ECMAScript innerText": {
+              "count": 5,
+              "median": 194.71,
+              "min": 187.3,
+              "max": 206.15,
+              "sum": 977.52
+            },
+            "ECMAScript page.title": {
+              "count": 5,
+              "median": 2.95,
+              "min": 2.22,
+              "max": 4.66,
+              "sum": 16.21
+            },
+            "ECMAScript scrollIntoViewIfNeeded": {
+              "count": 5,
+              "median": 402.76,
+              "min": 397.96,
+              "max": 414.92,
+              "sum": 2029.37
+            },
+            "JavaScript heading visible": {
+              "count": 5,
+              "median": 1358.67,
+              "min": 1326.08,
+              "max": 1453.31,
+              "sum": 6875.01
+            },
+            "Search fill": {
+              "count": 5,
+              "median": 297.51,
+              "min": 292.11,
+              "max": 320.15,
+              "sum": 1505.8200000000002
+            },
+            "Search inputValue": {
+              "count": 5,
+              "median": 5.31,
+              "min": 4.88,
+              "max": 5.87,
+              "sum": 26.77
+            },
+            "Search press + navigation": {
+              "count": 5,
+              "median": 309.84,
+              "min": 303.64,
+              "max": 339.73,
+              "sum": 1576.59
+            }
+          },
+          "unassignedEnvelopeMS": {
+            "count": 5,
+            "median": 1461.0699999999997,
+            "min": 1402.7999999999993,
+            "max": 1505.5700000000006,
+            "sum": 7307.139999999999
+          },
+          "postPageCloseMiB": {
+            "PeakWorkingSet64": {
+              "count": 5,
+              "median": 925.41015625,
+              "min": 917.2578125,
+              "max": 937.25390625,
+              "sum": 4631.84375
+            },
+            "PrivateMemorySize64": {
+              "count": 5,
+              "median": 603.37109375,
+              "min": 584.40234375,
+              "max": 607.30859375,
+              "sum": 2997.44140625
+            },
+            "WorkingSet64": {
+              "count": 5,
+              "median": 563.98828125,
+              "min": 547.27734375,
+              "max": 573.4921875,
+              "sum": 2813.85546875
+            }
+          }
+        }
+      },
+      "blitz": {
+        "cold": {
+          "wallMS": {
+            "count": 5,
+            "median": 6144,
+            "min": 6046,
+            "max": 6423,
+            "sum": 30904
+          },
+          "stagesMS": {
+            "ECMAScript click + navigation": {
+              "count": 5,
+              "median": 1002.33,
+              "min": 967.45,
+              "max": 1053.08,
+              "sum": 5048.6900000000005
+            },
+            "ECMAScript getAttribute href": {
+              "count": 5,
+              "median": 204.49,
+              "min": 199.99,
+              "max": 205.52,
+              "sum": 1018.5600000000001
+            },
+            "ECMAScript heading innerText": {
+              "count": 5,
+              "median": 9.02,
+              "min": 6.84,
+              "max": 38.11,
+              "sum": 100.66
+            },
+            "ECMAScript heading visible": {
+              "count": 5,
+              "median": 356.39,
+              "min": 343.41,
+              "max": 421.63,
+              "sum": 1836.3200000000002
+            },
+            "ECMAScript innerText": {
+              "count": 5,
+              "median": 190.35,
+              "min": 189.33,
+              "max": 192.88,
+              "sum": 953.13
+            },
+            "ECMAScript page.title": {
+              "count": 5,
+              "median": 4.86,
+              "min": 3.15,
+              "max": 6.22,
+              "sum": 23.84
+            },
+            "ECMAScript scrollIntoViewIfNeeded": {
+              "count": 5,
+              "median": 662.11,
+              "min": 655.04,
+              "max": 670.98,
+              "sum": 3313.76
+            },
+            "JavaScript heading visible": {
+              "count": 5,
+              "median": 785.99,
+              "min": 769.05,
+              "max": 814.78,
+              "sum": 3934.4799999999996
+            },
+            "Search fill": {
+              "count": 5,
+              "median": 114.97,
+              "min": 100.65,
+              "max": 198.45,
+              "sum": 644.83
+            },
+            "Search inputValue": {
+              "count": 5,
+              "median": 82.63,
+              "min": 6.54,
+              "max": 85.87,
+              "sum": 275.33000000000004
+            },
+            "Search press + navigation": {
+              "count": 5,
+              "median": 748.87,
+              "min": 726.58,
+              "max": 773.31,
+              "sum": 3743.14
+            }
+          },
+          "unassignedEnvelopeMS": {
+            "count": 5,
+            "median": 1996.3200000000006,
+            "min": 1916.8100000000004,
+            "max": 2147.1500000000005,
+            "sum": 10011.260000000002
+          },
+          "postPageCloseMiB": {
+            "PeakWorkingSet64": {
+              "count": 5,
+              "median": 611.7421875,
+              "min": 605.09375,
+              "max": 621.546875,
+              "sum": 3061.91796875
+            },
+            "PrivateMemorySize64": {
+              "count": 5,
+              "median": 311.46875,
+              "min": 304.2890625,
+              "max": 313.328125,
+              "sum": 1549.015625
+            },
+            "WorkingSet64": {
+              "count": 5,
+              "median": 284.41796875,
+              "min": 278.078125,
+              "max": 287.0390625,
+              "sum": 1417.44921875
+            }
+          }
+        },
+        "warm": {
+          "wallMS": {
+            "count": 5,
+            "median": 3977,
+            "min": 3841,
+            "max": 4187,
+            "sum": 19965
+          },
+          "stagesMS": {
+            "ECMAScript click + navigation": {
+              "count": 5,
+              "median": 604.95,
+              "min": 585.27,
+              "max": 620.73,
+              "sum": 3017.2000000000003
+            },
+            "ECMAScript getAttribute href": {
+              "count": 5,
+              "median": 205.65,
+              "min": 198.96,
+              "max": 206.97,
+              "sum": 1019.85
+            },
+            "ECMAScript heading innerText": {
+              "count": 5,
+              "median": 38.28,
+              "min": 7.29,
+              "max": 40.65,
+              "sum": 133.76
+            },
+            "ECMAScript heading visible": {
+              "count": 5,
+              "median": 359.26,
+              "min": 342.25,
+              "max": 373.85,
+              "sum": 1793.7599999999998
+            },
+            "ECMAScript innerText": {
+              "count": 5,
+              "median": 190.89,
+              "min": 185.55,
+              "max": 195.51,
+              "sum": 955.6800000000001
+            },
+            "ECMAScript page.title": {
+              "count": 5,
+              "median": 3.92,
+              "min": 2.61,
+              "max": 5.61,
+              "sum": 20
+            },
+            "ECMAScript scrollIntoViewIfNeeded": {
+              "count": 5,
+              "median": 653.05,
+              "min": 635.77,
+              "max": 668.73,
+              "sum": 3257.47
+            },
+            "JavaScript heading visible": {
+              "count": 5,
+              "median": 324.2,
+              "min": 321.47,
+              "max": 344.55,
+              "sum": 1640.5800000000002
+            },
+            "Search fill": {
+              "count": 5,
+              "median": 59.03,
+              "min": 56.17,
+              "max": 73.25,
+              "sum": 317.26
+            },
+            "Search inputValue": {
+              "count": 5,
+              "median": 5.01,
+              "min": 4.96,
+              "max": 5.38,
+              "sum": 25.4
+            },
+            "Search press + navigation": {
+              "count": 5,
+              "median": 261.79,
+              "min": 239.06,
+              "max": 267.09,
+              "sum": 1292.1
+            }
+          },
+          "unassignedEnvelopeMS": {
+            "count": 5,
+            "median": 1297.06,
+            "min": 1196.4999999999995,
+            "max": 1430.6399999999999,
+            "sum": 6491.939999999999
+          },
+          "postPageCloseMiB": {
+            "PeakWorkingSet64": {
+              "count": 5,
+              "median": 611.7421875,
+              "min": 605.09375,
+              "max": 621.546875,
+              "sum": 3061.91796875
+            },
+            "PrivateMemorySize64": {
+              "count": 5,
+              "median": 340.6328125,
+              "min": 326.0703125,
+              "max": 344.390625,
+              "sum": 1692.1484375
+            },
+            "WorkingSet64": {
+              "count": 5,
+              "median": 312.58203125,
+              "min": 299.8515625,
+              "max": 316.54296875,
+              "sum": 1554.4609375
+            }
+          }
+        }
+      }
+    },
+    "comparisons": {
+      "blitz": {
+        "cold": {
+          "baselineCount": 5,
+          "candidateCount": 5,
+          "pairedCount": 5,
+          "unpairedBaseline": [],
+          "unpairedCandidate": [],
+          "deltaMS": {
+            "count": 5,
+            "median": -3489,
+            "min": -3910,
+            "max": -3109,
+            "sum": -17302
+          },
+          "deltaPercent": {
+            "count": 5,
+            "median": -36.16293532338308,
+            "min": -38.889994032225985,
+            "max": -32.616449853126305,
+            "sum": -179.20699150275357
+          },
+          "stageDeltaMS": {
+            "ECMAScript click + navigation": {
+              "count": 5,
+              "median": -252.93999999999994,
+              "min": -324.88,
+              "max": -177.94000000000005,
+              "sum": -1262.1799999999998
+            },
+            "ECMAScript getAttribute href": {
+              "count": 5,
+              "median": -212.97,
+              "min": -213.58999999999997,
+              "max": -179.71,
+              "sum": -1021.96
+            },
+            "ECMAScript heading innerText": {
+              "count": 5,
+              "median": -1.42,
+              "min": -4.16,
+              "max": 28.96,
+              "sum": 47.28
+            },
+            "ECMAScript heading visible": {
+              "count": 5,
+              "median": -424.26000000000005,
+              "min": -437.37,
+              "max": -360.66999999999996,
+              "sum": -2062.45
+            },
+            "ECMAScript innerText": {
+              "count": 5,
+              "median": -392.15,
+              "min": -415.26,
+              "max": -384.95000000000005,
+              "sum": -1991.8600000000004
+            },
+            "ECMAScript page.title": {
+              "count": 5,
+              "median": 0.6200000000000001,
+              "min": -1.0500000000000003,
+              "max": 3.8,
+              "sum": 4.73
+            },
+            "ECMAScript scrollIntoViewIfNeeded": {
+              "count": 5,
+              "median": 174.12,
+              "min": 141.66999999999996,
+              "max": 254.67000000000002,
+              "sum": 964.3599999999999
+            },
+            "JavaScript heading visible": {
+              "count": 5,
+              "median": -1096.08,
+              "min": -1149.5800000000002,
+              "max": -1075.69,
+              "sum": -5501.780000000001
+            },
+            "Search fill": {
+              "count": 5,
+              "median": -219.66,
+              "min": -387.91999999999996,
+              "max": -132.92000000000002,
+              "sum": -1335.52
+            },
+            "Search inputValue": {
+              "count": 5,
+              "median": 32.98,
+              "min": -44.230000000000004,
+              "max": 77.34,
+              "sum": 145.16
+            },
+            "Search press + navigation": {
+              "count": 5,
+              "median": -207.2600000000001,
+              "min": -328.62,
+              "max": -86,
+              "sum": -945.6400000000002
+            }
+          },
+          "pairs": [
+            {
+              "iteration": 0,
+              "deltaMS": -3910,
+              "deltaPercent": -38.889994032225985,
+              "stages": {
+                "Search fill": -378.28,
+                "Search inputValue": 77.34,
+                "Search press + navigation": -328.62,
+                "JavaScript heading visible": -1098.88,
+                "ECMAScript scrollIntoViewIfNeeded": 174.12,
+                "ECMAScript innerText": -392.15,
+                "ECMAScript getAttribute href": -213.58999999999997,
+                "ECMAScript click + navigation": -274.3799999999999,
+                "ECMAScript heading visible": -425.29,
+                "ECMAScript heading innerText": -4.16,
+                "ECMAScript page.title": 0.6200000000000001
+              }
+            },
+            {
+              "iteration": 1,
+              "deltaMS": -3489,
+              "deltaPercent": -36.16293532338308,
+              "stages": {
+                "Search fill": -216.73999999999998,
+                "Search inputValue": 32.98,
+                "Search press + navigation": -91.36000000000001,
+                "JavaScript heading visible": -1096.08,
+                "ECMAScript scrollIntoViewIfNeeded": 141.66999999999996,
+                "ECMAScript innerText": -392.09000000000003,
+                "ECMAScript getAttribute href": -212.97,
+                "ECMAScript click + navigation": -232.03999999999996,
+                "ECMAScript heading visible": -424.26000000000005,
+                "ECMAScript heading innerText": 26.410000000000004,
+                "ECMAScript page.title": -0.1299999999999999
+              }
+            },
+            {
+              "iteration": 2,
+              "deltaMS": -3109,
+              "deltaPercent": -32.616449853126305,
+              "stages": {
+                "Search fill": -219.66,
+                "Search inputValue": 70.7,
+                "Search press + navigation": -86,
+                "JavaScript heading visible": -1075.69,
+                "ECMAScript scrollIntoViewIfNeeded": 145.01,
+                "ECMAScript innerText": -384.95000000000005,
+                "ECMAScript getAttribute href": -213.48000000000002,
+                "ECMAScript click + navigation": -177.94000000000005,
+                "ECMAScript heading visible": -360.66999999999996,
+                "ECMAScript heading innerText": -1.42,
+                "ECMAScript page.title": 1.4900000000000002
+              }
+            },
+            {
+              "iteration": 3,
+              "deltaMS": -3651,
+              "deltaPercent": -37.650819841187996,
+              "stages": {
+                "Search fill": -387.91999999999996,
+                "Search inputValue": 8.370000000000001,
+                "Search press + navigation": -232.4000000000001,
+                "JavaScript heading visible": -1149.5800000000002,
+                "ECMAScript scrollIntoViewIfNeeded": 248.89,
+                "ECMAScript innerText": -415.26,
+                "ECMAScript getAttribute href": -202.21,
+                "ECMAScript click + navigation": -324.88,
+                "ECMAScript heading visible": -437.37,
+                "ECMAScript heading innerText": -2.51,
+                "ECMAScript page.title": 3.8
+              }
+            },
+            {
+              "iteration": 4,
+              "deltaMS": -3143,
+              "deltaPercent": -33.886792452830186,
+              "stages": {
+                "Search fill": -132.92000000000002,
+                "Search inputValue": -44.230000000000004,
+                "Search press + navigation": -207.2600000000001,
+                "JavaScript heading visible": -1081.5500000000002,
+                "ECMAScript scrollIntoViewIfNeeded": 254.67000000000002,
+                "ECMAScript innerText": -407.4100000000001,
+                "ECMAScript getAttribute href": -179.71,
+                "ECMAScript click + navigation": -252.93999999999994,
+                "ECMAScript heading visible": -414.85999999999996,
+                "ECMAScript heading innerText": 28.96,
+                "ECMAScript page.title": -1.0500000000000003
+              }
+            }
+          ]
+        },
+        "warm": {
+          "baselineCount": 5,
+          "candidateCount": 5,
+          "pairedCount": 5,
+          "unpairedBaseline": [],
+          "unpairedCandidate": [],
+          "deltaMS": {
+            "count": 5,
+            "median": -1854,
+            "min": -2061,
+            "max": -1754,
+            "sum": -9516
+          },
+          "deltaPercent": {
+            "count": 5,
+            "median": -31.71399247348614,
+            "min": -34.66575948290526,
+            "max": -29.523649217303483,
+            "sum": -161.35105102708718
+          },
+          "stageDeltaMS": {
+            "ECMAScript click + navigation": {
+              "count": 5,
+              "median": -230.49,
+              "min": -271.27,
+              "max": -204.2299999999999,
+              "sum": -1161.07
+            },
+            "ECMAScript getAttribute href": {
+              "count": 5,
+              "median": 23.42999999999998,
+              "min": 15.379999999999995,
+              "max": 27.329999999999984,
+              "sum": 107.55999999999995
+            },
+            "ECMAScript heading innerText": {
+              "count": 5,
+              "median": 30.720000000000002,
+              "min": 1.7700000000000005,
+              "max": 34.51,
+              "sum": 102.00999999999999
+            },
+            "ECMAScript heading visible": {
+              "count": 5,
+              "median": -446.43000000000006,
+              "min": -481.11000000000007,
+              "max": -416.15,
+              "sum": -2250.5
+            },
+            "ECMAScript innerText": {
+              "count": 5,
+              "median": -3.8300000000000125,
+              "min": -10.640000000000015,
+              "max": -0.2400000000000091,
+              "sum": -21.84000000000006
+            },
+            "ECMAScript page.title": {
+              "count": 5,
+              "median": 1.17,
+              "min": -1.08,
+              "max": 2.66,
+              "sum": 3.7899999999999996
+            },
+            "ECMAScript scrollIntoViewIfNeeded": {
+              "count": 5,
+              "median": 241.69,
+              "min": 233.01,
+              "max": 261.38,
+              "sum": 1228.1
+            },
+            "JavaScript heading visible": {
+              "count": 5,
+              "median": -1034.3799999999999,
+              "min": -1131.3,
+              "max": -1001.8799999999999,
+              "sum": -5234.429999999999
+            },
+            "Search fill": {
+              "count": 5,
+              "median": -233.43,
+              "min": -261.12,
+              "max": -222.95,
+              "sum": -1188.56
+            },
+            "Search inputValue": {
+              "count": 5,
+              "median": -0.15000000000000036,
+              "min": -0.8700000000000001,
+              "max": 0.08000000000000007,
+              "sum": -1.37
+            },
+            "Search press + navigation": {
+              "count": 5,
+              "median": -42.75,
+              "min": -100.67000000000002,
+              "max": -41.69,
+              "sum": -284.48999999999995
+            }
+          },
+          "pairs": [
+            {
+              "iteration": 0,
+              "deltaMS": -2061,
+              "deltaPercent": -34.13381914541239,
+              "stages": {
+                "Search fill": -227.38,
+                "Search inputValue": -0.8700000000000001,
+                "Search press + navigation": -56.72999999999996,
+                "JavaScript heading visible": -1131.3,
+                "ECMAScript scrollIntoViewIfNeeded": 238.20999999999998,
+                "ECMAScript innerText": -10.640000000000015,
+                "ECMAScript getAttribute href": 17.25,
+                "ECMAScript click + navigation": -247.69000000000005,
+                "ECMAScript heading visible": -481.11000000000007,
+                "ECMAScript heading innerText": 2.04,
+                "ECMAScript page.title": 1.23
+              }
+            },
+            {
+              "iteration": 1,
+              "deltaMS": -1809,
+              "deltaPercent": -31.313830707979918,
+              "stages": {
+                "Search fill": -261.12,
+                "Search inputValue": -0.15000000000000036,
+                "Search press + navigation": -42.75,
+                "JavaScript heading visible": -1034.3799999999999,
+                "ECMAScript scrollIntoViewIfNeeded": 261.38,
+                "ECMAScript innerText": -1.75,
+                "ECMAScript getAttribute href": 24.169999999999987,
+                "ECMAScript click + navigation": -204.2299999999999,
+                "ECMAScript heading visible": -416.15,
+                "ECMAScript heading innerText": 34.51,
+                "ECMAScript page.title": 1.17
+              }
+            },
+            {
+              "iteration": 2,
+              "deltaMS": -2038,
+              "deltaPercent": -34.66575948290526,
+              "stages": {
+                "Search fill": -243.68,
+                "Search inputValue": 0.08000000000000007,
+                "Search press + navigation": -42.64999999999998,
+                "JavaScript heading visible": -1030.3200000000002,
+                "ECMAScript scrollIntoViewIfNeeded": 233.01,
+                "ECMAScript innerText": -5.380000000000024,
+                "ECMAScript getAttribute href": 15.379999999999995,
+                "ECMAScript click + navigation": -230.49,
+                "ECMAScript heading visible": -478.70000000000005,
+                "ECMAScript heading innerText": 30.720000000000002,
+                "ECMAScript page.title": -1.08
+              }
+            },
+            {
+              "iteration": 3,
+              "deltaMS": -1754,
+              "deltaPercent": -29.523649217303483,
+              "stages": {
+                "Search fill": -222.95,
+                "Search inputValue": 0.07000000000000028,
+                "Search press + navigation": -100.67000000000002,
+                "JavaScript heading visible": -1036.55,
+                "ECMAScript scrollIntoViewIfNeeded": 253.81,
+                "ECMAScript innerText": -0.2400000000000091,
+                "ECMAScript getAttribute href": 27.329999999999984,
+                "ECMAScript click + navigation": -207.39,
+                "ECMAScript heading visible": -428.10999999999996,
+                "ECMAScript heading innerText": 32.97,
+                "ECMAScript page.title": 2.66
+              }
+            },
+            {
+              "iteration": 4,
+              "deltaMS": -1854,
+              "deltaPercent": -31.71399247348614,
+              "stages": {
+                "Search fill": -233.43,
+                "Search inputValue": -0.5,
+                "Search press + navigation": -41.69,
+                "JavaScript heading visible": -1001.8799999999999,
+                "ECMAScript scrollIntoViewIfNeeded": 241.69,
+                "ECMAScript innerText": -3.8300000000000125,
+                "ECMAScript getAttribute href": 23.42999999999998,
+                "ECMAScript click + navigation": -271.27,
+                "ECMAScript heading visible": -446.43000000000006,
+                "ECMAScript heading innerText": 1.7700000000000005,
+                "ECMAScript page.title": -0.1900000000000004
+              }
+            }
+          ]
+        }
+      }
+    },
+    "deltaConvention": "candidate minus baseline; negative means faster"
+  },
+  "profile": {
+    "accountingByOutcome": {
+      "first-build": {
+        "totalWallMS": {
+          "count": 8,
+          "median": 171.697,
+          "min": 94.2443,
+          "max": 291.9192,
+          "sum": 1407.5569
+        },
+        "phasesWallMS": {
+          "canonicalSync": {
+            "count": 8,
+            "median": 17.2512,
+            "min": 7.9373,
+            "max": 34.9723,
+            "sum": 150.7876
+          },
+          "controls": {
+            "count": 8,
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "sum": 0
+          },
+          "finalize": {
+            "count": 8,
+            "median": 0,
+            "min": 0,
+            "max": 0.6362,
+            "sum": 1.2641
+          },
+          "fonts": {
+            "count": 8,
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "sum": 0
+          },
+          "images": {
+            "count": 8,
+            "median": 0.5264,
+            "min": 0,
+            "max": 1.028,
+            "sum": 4.158799999999999
+          },
+          "inputs": {
+            "count": 8,
+            "median": 117.26769999999999,
+            "min": 56.5826,
+            "max": 188.0067,
+            "sum": 942.7844
+          },
+          "keyValidation": {
+            "count": 8,
+            "median": 0.2605,
+            "min": 0,
+            "max": 0.9771,
+            "sum": 2.573
+          },
+          "nativeResolve": {
+            "count": 8,
+            "median": 29.073050000000002,
+            "min": 13.4143,
+            "max": 57.6063,
+            "sum": 250.1806
+          },
+          "sheets": {
+            "count": 8,
+            "median": 6.689500000000001,
+            "min": 5.2559,
+            "max": 10.8104,
+            "sum": 55.8084
+          },
+          "states": {
+            "count": 8,
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "sum": 0
+          }
+        },
+        "reasons": []
+      },
+      "owner-rebuild": {
+        "totalWallMS": {
+          "count": 0,
+          "median": null,
+          "min": null,
+          "max": null,
+          "sum": 0
+        },
+        "phasesWallMS": {},
+        "reasons": []
+      },
+      "rebuild": {
+        "totalWallMS": {
+          "count": 20,
+          "median": 19.36625,
+          "min": 3.9508,
+          "max": 58.9073,
+          "sum": 383.05920000000003
+        },
+        "phasesWallMS": {
+          "canonicalSync": {
+            "count": 20,
+            "median": 7.30265,
+            "min": 0,
+            "max": 15.4833,
+            "sum": 125.56429999999999
+          },
+          "controls": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "sum": 0
+          },
+          "finalize": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 1.5157,
+            "sum": 4.0291
+          },
+          "fonts": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "sum": 0
+          },
+          "images": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 1.5791,
+            "sum": 8.2139
+          },
+          "inputs": {
+            "count": 20,
+            "median": 7.8742,
+            "min": 2.9377,
+            "max": 14.9392,
+            "sum": 140.49759999999998
+          },
+          "keyValidation": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 1.0367,
+            "sum": 7.1399
+          },
+          "nativeResolve": {
+            "count": 20,
+            "median": 0.5144,
+            "min": 0,
+            "max": 28.2533,
+            "sum": 81.3117
+          },
+          "sheets": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 7.4886,
+            "sum": 15.9407
+          },
+          "states": {
+            "count": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "sum": 0
+          }
+        },
+        "reasons": []
+      },
+      "reuse": {
+        "totalWallMS": {
+          "count": 4125,
+          "median": 0,
+          "min": 0,
+          "max": 1.5729,
+          "sum": 16.5404
+        },
+        "phasesWallMS": {
+          "finalize": {
+            "count": 4125,
+            "median": 0,
+            "min": 0,
+            "max": 0.5277,
+            "sum": 0.5277
+          },
+          "keyValidation": {
+            "count": 4125,
+            "median": 0,
+            "min": 0,
+            "max": 1.5729,
+            "sum": 12.418800000000001
+          }
+        },
+        "reasons": []
+      },
+      "fallback": {
+        "totalWallMS": {
+          "count": 0,
+          "median": null,
+          "min": null,
+          "max": null,
+          "sum": 0
+        },
+        "phasesWallMS": {},
+        "reasons": []
+      },
+      "error": {
+        "totalWallMS": {
+          "count": 0,
+          "median": null,
+          "min": null,
+          "max": null,
+          "sum": 0
+        },
+        "phasesWallMS": {},
+        "reasons": []
+      }
+    },
+    "producerEnvelopeWallMS": {
+      "count": 4153,
+      "median": 0,
+      "min": 0,
+      "max": 291.9192,
+      "sum": 1807.1565
+    },
+    "nativeByDocument": {
+      "1": {
+        "records": 7,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 7,
+            "median": 0.004,
+            "min": 0.001,
+            "max": 0.1367,
+            "sum": 0.15649999999999997
+          },
+          "construct": {
+            "count": 7,
+            "median": 0.1016,
+            "min": 0.0218,
+            "max": 1.5913,
+            "sum": 2.0389999999999997
+          },
+          "damage": {
+            "count": 7,
+            "median": 0.005,
+            "min": 0.0012,
+            "max": 0.0477,
+            "sum": 0.0744
+          },
+          "deferredShapingAndImages": {
+            "count": 7,
+            "median": 0.0507,
+            "min": 0.0007,
+            "max": 6.3117,
+            "sum": 6.5255
+          },
+          "flush": {
+            "count": 7,
+            "median": 0.0549,
+            "min": 0.0454,
+            "max": 0.0866,
+            "sum": 0.4144
+          },
+          "layout": {
+            "count": 7,
+            "median": 0.2594,
+            "min": 0.0575,
+            "max": 2.3317,
+            "sum": 3.5389999999999997
+          },
+          "preludeDevice": {
+            "count": 7,
+            "median": 0.0013,
+            "min": 0.0009,
+            "max": 0.0138,
+            "sum": 0.0213
+          },
+          "style": {
+            "count": 7,
+            "median": 0.0408,
+            "min": 0.0172,
+            "max": 8.1324,
+            "sum": 16.1555
+          },
+          "subdocuments": {
+            "count": 7,
+            "median": 0.0001,
+            "min": 0,
+            "max": 0.0004,
+            "sum": 0.001
+          },
+          "transforms": {
+            "count": 7,
+            "median": 0.0029,
+            "min": 0.0002,
+            "max": 0.039,
+            "sum": 0.054900000000000004
+          }
+        }
+      },
+      "2": {
+        "records": 10,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 10,
+            "median": 0.0015999999999999999,
+            "min": 0.0002,
+            "max": 0.2605,
+            "sum": 0.27590000000000003
+          },
+          "construct": {
+            "count": 10,
+            "median": 0.06995000000000001,
+            "min": 0.0525,
+            "max": 1.4475,
+            "sum": 2.1127000000000002
+          },
+          "damage": {
+            "count": 10,
+            "median": 0.0024,
+            "min": 0.0003,
+            "max": 0.1898,
+            "sum": 0.2137
+          },
+          "deferredShapingAndImages": {
+            "count": 10,
+            "median": 0.0012000000000000001,
+            "min": 0.0007,
+            "max": 13.3005,
+            "sum": 13.6427
+          },
+          "flush": {
+            "count": 10,
+            "median": 0.09075,
+            "min": 0.0732,
+            "max": 0.201,
+            "sum": 1.0424
+          },
+          "layout": {
+            "count": 10,
+            "median": 0.15425,
+            "min": 0.0951,
+            "max": 6.807,
+            "sum": 8.4574
+          },
+          "preludeDevice": {
+            "count": 10,
+            "median": 0.0015,
+            "min": 0.0009,
+            "max": 0.0019,
+            "sum": 0.0141
+          },
+          "style": {
+            "count": 10,
+            "median": 0.53295,
+            "min": 0.1327,
+            "max": 27.2814,
+            "sum": 82.9146
+          },
+          "subdocuments": {
+            "count": 10,
+            "median": 0.0001,
+            "min": 0,
+            "max": 0.0002,
+            "sum": 0.0007
+          },
+          "transforms": {
+            "count": 10,
+            "median": 0.0018499999999999999,
+            "min": 0.0003,
+            "max": 0.0584,
+            "sum": 0.0754
+          }
+        }
+      },
+      "3": {
+        "records": 1,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 1,
+            "median": 0.082,
+            "min": 0.082,
+            "max": 0.082,
+            "sum": 0.082
+          },
+          "construct": {
+            "count": 1,
+            "median": 0.9822,
+            "min": 0.9822,
+            "max": 0.9822,
+            "sum": 0.9822
+          },
+          "damage": {
+            "count": 1,
+            "median": 0.1001,
+            "min": 0.1001,
+            "max": 0.1001,
+            "sum": 0.1001
+          },
+          "deferredShapingAndImages": {
+            "count": 1,
+            "median": 3.8493,
+            "min": 3.8493,
+            "max": 3.8493,
+            "sum": 3.8493
+          },
+          "flush": {
+            "count": 1,
+            "median": 0.0523,
+            "min": 0.0523,
+            "max": 0.0523,
+            "sum": 0.0523
+          },
+          "layout": {
+            "count": 1,
+            "median": 2.58,
+            "min": 2.58,
+            "max": 2.58,
+            "sum": 2.58
+          },
+          "preludeDevice": {
+            "count": 1,
+            "median": 0.0008,
+            "min": 0.0008,
+            "max": 0.0008,
+            "sum": 0.0008
+          },
+          "style": {
+            "count": 1,
+            "median": 9.9556,
+            "min": 9.9556,
+            "max": 9.9556,
+            "sum": 9.9556
+          },
+          "subdocuments": {
+            "count": 1,
+            "median": 0.0001,
+            "min": 0.0001,
+            "max": 0.0001,
+            "sum": 0.0001
+          },
+          "transforms": {
+            "count": 1,
+            "median": 0.0206,
+            "min": 0.0206,
+            "max": 0.0206,
+            "sum": 0.0206
+          }
+        }
+      },
+      "4": {
+        "records": 1,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 1,
+            "median": 0.2448,
+            "min": 0.2448,
+            "max": 0.2448,
+            "sum": 0.2448
+          },
+          "construct": {
+            "count": 1,
+            "median": 1.6059,
+            "min": 1.6059,
+            "max": 1.6059,
+            "sum": 1.6059
+          },
+          "damage": {
+            "count": 1,
+            "median": 0.2177,
+            "min": 0.2177,
+            "max": 0.2177,
+            "sum": 0.2177
+          },
+          "deferredShapingAndImages": {
+            "count": 1,
+            "median": 14.7143,
+            "min": 14.7143,
+            "max": 14.7143,
+            "sum": 14.7143
+          },
+          "flush": {
+            "count": 1,
+            "median": 0.127,
+            "min": 0.127,
+            "max": 0.127,
+            "sum": 0.127
+          },
+          "layout": {
+            "count": 1,
+            "median": 8.0257,
+            "min": 8.0257,
+            "max": 8.0257,
+            "sum": 8.0257
+          },
+          "preludeDevice": {
+            "count": 1,
+            "median": 0.0014,
+            "min": 0.0014,
+            "max": 0.0014,
+            "sum": 0.0014
+          },
+          "style": {
+            "count": 1,
+            "median": 16.0146,
+            "min": 16.0146,
+            "max": 16.0146,
+            "sum": 16.0146
+          },
+          "subdocuments": {
+            "count": 1,
+            "median": 0.0001,
+            "min": 0.0001,
+            "max": 0.0001,
+            "sum": 0.0001
+          },
+          "transforms": {
+            "count": 1,
+            "median": 0.062,
+            "min": 0.062,
+            "max": 0.062,
+            "sum": 0.062
+          }
+        }
+      },
+      "5": {
+        "records": 4,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 4,
+            "median": 0.0025,
+            "min": 0.001,
+            "max": 0.0879,
+            "sum": 0.09390000000000001
+          },
+          "construct": {
+            "count": 4,
+            "median": 0.06395,
+            "min": 0.0325,
+            "max": 0.8362,
+            "sum": 0.9966
+          },
+          "damage": {
+            "count": 4,
+            "median": 0.00435,
+            "min": 0.0016,
+            "max": 0.0362,
+            "sum": 0.0465
+          },
+          "deferredShapingAndImages": {
+            "count": 4,
+            "median": 0.03145,
+            "min": 0.0009,
+            "max": 4.6523,
+            "sum": 4.7161
+          },
+          "flush": {
+            "count": 4,
+            "median": 0.05955,
+            "min": 0.0543,
+            "max": 0.121,
+            "sum": 0.2944
+          },
+          "layout": {
+            "count": 4,
+            "median": 0.19415,
+            "min": 0.0611,
+            "max": 1.8736,
+            "sum": 2.323
+          },
+          "preludeDevice": {
+            "count": 4,
+            "median": 0.0014,
+            "min": 0.0011,
+            "max": 0.0024,
+            "sum": 0.0063
+          },
+          "style": {
+            "count": 4,
+            "median": 0.11895,
+            "min": 0.0045,
+            "max": 5.4632,
+            "sum": 5.7056
+          },
+          "subdocuments": {
+            "count": 4,
+            "median": 0.0001,
+            "min": 0.0001,
+            "max": 0.0001,
+            "sum": 0.0004
+          },
+          "transforms": {
+            "count": 4,
+            "median": 0.0023499999999999997,
+            "min": 0.0003,
+            "max": 0.019,
+            "sum": 0.024
+          }
+        }
+      },
+      "6": {
+        "records": 2,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 2,
+            "median": 0.315,
+            "min": 0.0021,
+            "max": 0.6279,
+            "sum": 0.63
+          },
+          "construct": {
+            "count": 2,
+            "median": 1.044,
+            "min": 0.0902,
+            "max": 1.9978,
+            "sum": 2.088
+          },
+          "damage": {
+            "count": 2,
+            "median": 0.2826,
+            "min": 0.0019,
+            "max": 0.5633,
+            "sum": 0.5652
+          },
+          "deferredShapingAndImages": {
+            "count": 2,
+            "median": 7.0811,
+            "min": 0.0008,
+            "max": 14.1614,
+            "sum": 14.1622
+          },
+          "flush": {
+            "count": 2,
+            "median": 0.14300000000000002,
+            "min": 0.089,
+            "max": 0.197,
+            "sum": 0.28600000000000003
+          },
+          "layout": {
+            "count": 2,
+            "median": 4.1361,
+            "min": 0.107,
+            "max": 8.1652,
+            "sum": 8.2722
+          },
+          "preludeDevice": {
+            "count": 2,
+            "median": 0.0014,
+            "min": 0.0011,
+            "max": 0.0017,
+            "sum": 0.0028
+          },
+          "style": {
+            "count": 2,
+            "median": 9.33565,
+            "min": 0.1547,
+            "max": 18.5166,
+            "sum": 18.6713
+          },
+          "subdocuments": {
+            "count": 2,
+            "median": 0.00015,
+            "min": 0,
+            "max": 0.0003,
+            "sum": 0.0003
+          },
+          "transforms": {
+            "count": 2,
+            "median": 0.09555,
+            "min": 0.0026,
+            "max": 0.1885,
+            "sum": 0.1911
+          }
+        }
+      },
+      "7": {
+        "records": 2,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 2,
+            "median": 0.051949999999999996,
+            "min": 0.0004,
+            "max": 0.1035,
+            "sum": 0.10389999999999999
+          },
+          "construct": {
+            "count": 2,
+            "median": 0.5896,
+            "min": 0.0519,
+            "max": 1.1273,
+            "sum": 1.1792
+          },
+          "damage": {
+            "count": 2,
+            "median": 0.0552,
+            "min": 0.0005,
+            "max": 0.1099,
+            "sum": 0.1104
+          },
+          "deferredShapingAndImages": {
+            "count": 2,
+            "median": 1.94125,
+            "min": 0.0015,
+            "max": 3.881,
+            "sum": 3.8825
+          },
+          "flush": {
+            "count": 2,
+            "median": 0.07975,
+            "min": 0.0767,
+            "max": 0.0828,
+            "sum": 0.1595
+          },
+          "layout": {
+            "count": 2,
+            "median": 1.3662,
+            "min": 0.0827,
+            "max": 2.6497,
+            "sum": 2.7324
+          },
+          "preludeDevice": {
+            "count": 2,
+            "median": 0.0018999999999999998,
+            "min": 0.0014,
+            "max": 0.0024,
+            "sum": 0.0037999999999999996
+          },
+          "style": {
+            "count": 2,
+            "median": 5.1591000000000005,
+            "min": 0.0059,
+            "max": 10.3123,
+            "sum": 10.318200000000001
+          },
+          "subdocuments": {
+            "count": 2,
+            "median": 0.00025,
+            "min": 0.0002,
+            "max": 0.0003,
+            "sum": 0.0005
+          },
+          "transforms": {
+            "count": 2,
+            "median": 0.0103,
+            "min": 0.0002,
+            "max": 0.0204,
+            "sum": 0.0206
+          }
+        }
+      },
+      "8": {
+        "records": 1,
+        "phasesWallMS": {
+          "cleanupHover": {
+            "count": 1,
+            "median": 0.8368,
+            "min": 0.8368,
+            "max": 0.8368,
+            "sum": 0.8368
+          },
+          "construct": {
+            "count": 1,
+            "median": 2.6568,
+            "min": 2.6568,
+            "max": 2.6568,
+            "sum": 2.6568
+          },
+          "damage": {
+            "count": 1,
+            "median": 0.4654,
+            "min": 0.4654,
+            "max": 0.4654,
+            "sum": 0.4654
+          },
+          "deferredShapingAndImages": {
+            "count": 1,
+            "median": 18.0936,
+            "min": 18.0936,
+            "max": 18.0936,
+            "sum": 18.0936
+          },
+          "flush": {
+            "count": 1,
+            "median": 0.1548,
+            "min": 0.1548,
+            "max": 0.1548,
+            "sum": 0.1548
+          },
+          "layout": {
+            "count": 1,
+            "median": 9.8013,
+            "min": 9.8013,
+            "max": 9.8013,
+            "sum": 9.8013
+          },
+          "preludeDevice": {
+            "count": 1,
+            "median": 0.0011,
+            "min": 0.0011,
+            "max": 0.0011,
+            "sum": 0.0011
+          },
+          "style": {
+            "count": 1,
+            "median": 24.9976,
+            "min": 24.9976,
+            "max": 24.9976,
+            "sum": 24.9976
+          },
+          "subdocuments": {
+            "count": 1,
+            "median": 0.0006,
+            "min": 0.0006,
+            "max": 0.0006,
+            "sum": 0.0006
+          },
+          "transforms": {
+            "count": 1,
+            "median": 0.227,
+            "min": 0.227,
+            "max": 0.227,
+            "sum": 0.227
+          }
+        }
+      }
+    },
+    "calls": {
+      "snapshot/": {
+        "count": 39,
+        "wallMS": 2571.805
+      },
+      "style/border-bottom-style": {
+        "count": 37,
+        "wallMS": 1.56
+      },
+      "style/border-bottom-width": {
+        "count": 39,
+        "wallMS": 2.6260000000000003
+      },
+      "style/border-left-style": {
+        "count": 37,
+        "wallMS": 0.552
+      },
+      "style/border-left-width": {
+        "count": 39,
+        "wallMS": 1.056
+      },
+      "style/border-right-style": {
+        "count": 37,
+        "wallMS": 2.573
+      },
+      "style/border-right-width": {
+        "count": 39,
+        "wallMS": 1.6550000000000002
+      },
+      "style/border-top-style": {
+        "count": 37,
+        "wallMS": 2.084
+      },
+      "style/border-top-width": {
+        "count": 39,
+        "wallMS": 1.048
+      },
+      "style/margin-bottom": {
+        "count": 39,
+        "wallMS": 3.7009999999999996
+      },
+      "style/margin-left": {
+        "count": 39,
+        "wallMS": 0.538
+      },
+      "style/margin-right": {
+        "count": 39,
+        "wallMS": 1.5550000000000002
+      },
+      "style/margin-top": {
+        "count": 39,
+        "wallMS": 0.52
+      },
+      "style/overflow": {
+        "count": 349,
+        "wallMS": 11.295
+      },
+      "style/padding-bottom": {
+        "count": 39,
+        "wallMS": 0.518
+      },
+      "style/padding-left": {
+        "count": 39,
+        "wallMS": 1.551
+      },
+      "style/padding-right": {
+        "count": 39,
+        "wallMS": 0.519
+      },
+      "style/padding-top": {
+        "count": 39,
+        "wallMS": 2.081
+      },
+      "style/scroll-margin-bottom": {
+        "count": 4,
+        "wallMS": 0.522
+      },
+      "style/scroll-margin-left": {
+        "count": 4,
+        "wallMS": 0
+      },
+      "style/scroll-margin-right": {
+        "count": 4,
+        "wallMS": 0
+      },
+      "style/scroll-margin-top": {
+        "count": 4,
+        "wallMS": 0.568
+      },
+      "style/scroll-padding-bottom": {
+        "count": 34,
+        "wallMS": 2.122
+      },
+      "style/scroll-padding-left": {
+        "count": 42,
+        "wallMS": 2.114
+      },
+      "style/scroll-padding-right": {
+        "count": 34,
+        "wallMS": 1.556
+      },
+      "style/scroll-padding-top": {
+        "count": 43,
+        "wallMS": 3.031
+      },
+      "node/": {
+        "count": 2973,
+        "wallMS": 259.606
+      },
+      "transform/": {
+        "count": 7,
+        "wallMS": 0
+      }
+    },
+    "legacyRecords": [
+      "world= Error",
+      "world= Error",
+      "world= Error",
+      "world= Error"
+    ],
+    "snapshots": {
+      "builtRecords": 28,
+      "largestPacketBytes": 1450638
+    },
+    "caveats": [
+      "Profile is a separate instrumented run, not timing evidence for the uninstrumented matrix.",
+      "Calls, snapshots, sync, native phases and accounting envelopes overlap; do not sum them.",
+      "Missing reuse/fallback records are not proof that no such calls occurred without profile coverage.",
+      "Document identifiers are scoped to a process; pass one server log, not concatenated processes."
+    ]
+  }
+}

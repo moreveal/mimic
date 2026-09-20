@@ -1,0 +1,12 @@
+{"browser":"mimic","trial":0,"n":100,"order":"rect","ok":true,"totalMs":1129.9899}
+{"browser":"mimic","trial":0,"n":100,"order":"style","ok":true,"totalMs":759.3141}
+{"browser":"mimic","trial":0,"n":100,"order":"visible","ok":true,"totalMs":677.3537999999999}
+{"browser":"mimic","trial":0,"n":100,"order":"click","ok":true,"totalMs":738.2042999999999}
+{"browser":"mimic","trial":0,"n":1000,"order":"rect","ok":true,"totalMs":781.3420000000001}
+{"browser":"mimic","trial":0,"n":1000,"order":"style","ok":true,"totalMs":822.1999999999998}
+{"browser":"mimic","trial":0,"n":1000,"order":"visible","ok":true,"totalMs":789.3270999999995}
+{"browser":"mimic","trial":0,"n":1000,"order":"click","ok":true,"totalMs":845.9503999999997}
+{"browser":"mimic","trial":0,"n":10000,"order":"rect","ok":true,"totalMs":1726.6205999999993}
+{"browser":"mimic","trial":0,"n":10000,"order":"style","ok":true,"totalMs":1703.3774999999987}
+{"browser":"mimic","trial":0,"n":10000,"order":"visible","ok":true,"totalMs":1697.6347999999998}
+{"browser":"mimic","trial":0,"n":10000,"order":"click","ok":true,"totalMs":1843.6214999999993}
