@@ -89,19 +89,19 @@ Measured against headless Chrome 152.0.7977.82 on Windows 11 x64,
 Intel i7-14700KF, 31.83 GiB RAM:
 
 <p align="center">
-  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-startup-20260914.svg" alt="Mimic and Chrome CDP readiness and startup memory" width="1200"></a>
+  <a href="benchmark/runs/11-release-20260920/public-summary.md"><img src="docs/assets/benchmark-startup-20260920.svg" alt="Mimic and Chrome CDP readiness and startup memory" width="1200"></a>
 </p>
 
 <p align="center">
-  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-scaling-20260914.svg" alt="Static concurrency memory and throughput through 50 pages" width="1200"></a>
+  <a href="benchmark/runs/11-release-20260920/public-summary.md"><img src="docs/assets/benchmark-scaling-20260920.svg" alt="Static concurrency memory and throughput through 50 pages" width="1200"></a>
 </p>
 
-**92% lower ready RSS. 62% less active RAM and 3.32× throughput at 50 static
+**88% lower ready RSS. 58% less active RAM and 2.84× throughput at 50 static
 Pages.** These are fixture- and machine-specific results, not universal claims.
 Mimic still trails Chrome on some mutation-heavy workloads.
 
-[Results and methodology](benchmark/runs/09-optimized-20260914/public-summary.md) ·
-[Full report](benchmark/runs/09-optimized-20260914/report.md) ·
+[Results and methodology](benchmark/runs/11-release-20260920/public-summary.md) ·
+[Full report](benchmark/runs/11-release-20260920/report.md) ·
 [Reproduce](benchmark/README.md) ·
 [Performance history](docs/performance/report.md)
 

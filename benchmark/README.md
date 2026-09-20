@@ -1,7 +1,7 @@
 # Reproducible benchmark: Mimic V8 and Chrome 152
 
-Latest product checkpoint: [September 14, 2026 summary](runs/09-optimized-20260914/public-summary.md)
-and [full measured report](runs/09-optimized-20260914/report.md).
+Latest product checkpoint: [September 20, 2026 summary](runs/11-release-20260920/public-summary.md)
+and [full measured report](runs/11-release-20260920/report.md).
 The original `results/` baseline and earlier runs remain historical records.
 
 From the repository root on Windows x64:

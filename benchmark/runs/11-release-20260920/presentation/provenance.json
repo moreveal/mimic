@@ -1,0 +1,9 @@
+{
+  "checkpoint": "2026-09-20",
+  "source_sha256": "e9677199b320df164b4398435b23612eb8fa58fb00c916681f7edf1c17a73ff1",
+  "generator_sha256": "bb42b7066bb3c120310ca1dbdb1a667f2d643db6803951f2aef84d46eb70ef72",
+  "artifacts": {
+    "benchmark-scaling.svg": "f40e3eb9ee68f20ebed78b93de7740224c1e9f908d545ff2636994e58bc5c7e1",
+    "benchmark-startup.svg": "153a17422fb747e65b9d5a62c8e46bcd6c7d9ddf5a610d27730c0c862f66beb1"
+  }
+}
