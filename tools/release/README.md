@@ -10,7 +10,7 @@ the Linux fonts documented in [getting started](../../docs/getting-started.md).
 Rust/Cargo is a build-time requirement for the native Blitz producer.
 
 ```powershell
-python tools/release/prepare.py --version v0.1.3
+python tools/release/prepare.py --version v0.1.4
 ```
 
 Run the equivalent command under Ubuntu 24.04/WSL2 for Linux. The tool builds a
@@ -47,7 +47,7 @@ mistaken for a fresh build.
 Push the exact release commit to `moreveal/mimic`, then run:
 
 ```powershell
-python tools/release/publish.py --version v0.1.3
+python tools/release/publish.py --version v0.1.4
 ```
 
 Publication requires verified Windows and Linux receipts for the current commit.
