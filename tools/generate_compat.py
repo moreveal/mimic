@@ -421,6 +421,7 @@ def generate_surface_js(catalog: dict) -> str:
 (function(host){{
   const catalog=JSON.parse(host.catalogJSON());
   const globals=globalThis;
+  const lazy=globals.__mimicLazySurface;
   if(String(globalThis.__mimicIDLExposure||'Window')==='Window')globals.__mimicNavigatorMembers={navigator_members};
   if(String(globalThis.__mimicIDLExposure||'Window')==='Window')globals.__mimicPermissionNames={permission_names};
   if(String(globalThis.__mimicIDLExposure||'Window')==='Window')globals.__mimicCapabilityInterfaces={capability_interfaces};
@@ -443,12 +444,14 @@ def generate_surface_js(catalog: dict) -> str:
       continue;
     }}
     const interfaceName=spec.name;
+    const lazyDomain=lazy&&lazy.domainFor(interfaceName);
     let ctor=globals[spec.name];
     const generated=typeof ctor!=='function';
     if(generated){{
-      ctor={{[spec.name]:function(){{if(interfaceName.startsWith('HTML')&&typeof constructCustomElement==='function')return constructCustomElement(new.target);missing(interfaceName,'constructor');throw new TypeError('Illegal constructor')}}}}[spec.name];
+      ctor={{[spec.name]:function(...args){{if(lazyDomain){{lazy.cell(interfaceName,'constructor');return lazy.invoke(interfaceName,'constructor',this,args,new.target)}}if(interfaceName.startsWith('HTML')&&typeof constructCustomElement==='function')return constructCustomElement(new.target);missing(interfaceName,'constructor');throw new TypeError('Illegal constructor')}}}}[spec.name];
       Object.defineProperty(globals,spec.name,{{value:ctor,writable:true,configurable:true}});
     }}
+    if(lazyDomain)lazy.cell(interfaceName,'constructor');
     if(!Object.hasOwn(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{{value:spec.name,configurable:true}});
     if(realmExposure==='Window')for(const alias of spec.legacyWindowAliases||[])Object.defineProperty(globals,alias,{{value:ctor,writable:true,configurable:true}});
     const parent=spec.parent&&globals[spec.parent];
@@ -471,9 +474,19 @@ def generate_surface_js(catalog: dict) -> str:
       // own-field assignment as internal storage. Slot-backed handwritten
       // interfaces receive the complete generated IDL surface too.
       if(!generated&&member.kind==='attribute'&&attributeUnsafe.has(spec.name))continue;
-      if(member.kind==='operation')Object.defineProperty(target,member.name,{{value:function(){{return missing(interfaceName,memberName)}},writable:true,enumerable:true,configurable:true}});
+      if(member.kind==='operation'){{
+        const value=lazyDomain?{{[memberName]:function(...args){{return lazy.invoke(interfaceName,memberName,this,args,undefined,'value')}}}}[memberName]:function(){{return missing(interfaceName,memberName)}};
+        if(lazyDomain)lazy.cell(interfaceName,memberName,'value');
+        Object.defineProperty(target,member.name,{{value,writable:true,enumerable:true,configurable:true}});
+      }}
       else if(member.kind==='constant')Object.defineProperty(target,member.name,{{value:Number(member.value)||0,enumerable:true}});
-      else Object.defineProperty(target,member.name,{{get:function(){{return missing(interfaceName,memberName)}},set:member.readonly?undefined:function(){{return missing(interfaceName,memberName)}},enumerable:true,configurable:true}});
+      else {{
+        const accessors=lazyDomain?{{get [memberName](){{return lazy.invoke(interfaceName,memberName,this,[],undefined,'get')}},set [memberName](value){{return lazy.invoke(interfaceName,memberName,this,[value],undefined,'set')}}}}:null;
+        const get=accessors?Object.getOwnPropertyDescriptor(accessors,memberName).get:function(){{return missing(interfaceName,memberName)}};
+        const set=member.readonly?undefined:(accessors?Object.getOwnPropertyDescriptor(accessors,memberName).set:function(){{return missing(interfaceName,memberName)}});
+        if(lazyDomain){{lazy.cell(interfaceName,memberName,'get');if(set)lazy.cell(interfaceName,memberName,'set')}}
+        Object.defineProperty(target,member.name,{{get,set,enumerable:true,configurable:true}});
+      }}
     }}
   }}
   // Interface declarations are sorted for reproducible output, not in base

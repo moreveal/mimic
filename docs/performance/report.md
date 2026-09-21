@@ -2806,3 +2806,20 @@ was 203.33 and 207.30 MiB respectively. These workloads contain no meaningful
 image payload, so they validate non-regression but do not quantify the deferred
 bitmap saving; that saving is approximately the avoided decoded raster area
 (`width * height * 4`) per loaded-but-unobserved image, less compressed bytes.
+# Lazy WebAPI implementation domains (2026-09-21)
+
+The Window bootstrap now publishes the generated WebIDL shape eagerly but keeps
+WebAudio and WebGL implementation source in process-wide immutable Go storage.
+Stable realm-local behavior cells synchronously materialize a domain on first
+construction/call (or WebGL context request) without replacing constructors,
+prototypes, methods, accessors, aliases, or descriptors. Dedicated regression
+tests retain reflected references before materialization and compare identity,
+native source, descriptors, `instanceof`, and prototype ownership afterward.
+
+On the external replay benchmark with ten isolated BrowserContexts/Pages alive
+concurrently, three repeated compiled-binary runs measured median peak private
+memory of **1132.77 MiB**, versus the preceding recorded **1419.29 MiB**
+baseline (**-20.2%**). Median batch wall time was **878.22 ms**. This is a real
+checkpoint, not the final memory gate: it does not yet meet the planned -30%
+threshold, and remaining domains must be migrated behind the same single
+registry rather than adding independent lazy mechanisms.

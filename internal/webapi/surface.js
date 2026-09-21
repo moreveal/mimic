@@ -9,6 +9,118 @@
     bootstrapCallbacks.push([name, callbacks]);
     host[name](...callbacks);
   };
+  // Shape is eager; implementation is not. These realm-local cells keep every
+  // public function/accessor and its descriptor stable across materialization.
+  const lazyDomainInterfaces = new Map();
+  const lazyDomainState = new Map();
+  const lazyBehaviorCells = new Map();
+  const lazyKey = (interfaceName, member, side = 'value') =>
+    interfaceName + '\0' + member + '\0' + side;
+  const defineLazyDomain = (name, interfaces) => {
+    lazyDomainState.set(name, { status: 'cold', error: undefined });
+    for (const interfaceName of interfaces) lazyDomainInterfaces.set(interfaceName, name);
+  };
+  const ensureLazyDomain = (name) => {
+    const state = lazyDomainState.get(name);
+    if (!state || state.status === 'ready') return;
+    if (state.status === 'failed') throw state.error;
+    // Re-entry sees the cells already published and never a partial public
+    // shape. Implementations which recurse during installation fail clearly.
+    if (state.status === 'loading') return;
+    state.status = 'loading';
+    try {
+      eval(host.lazyDomainSource(name));
+      state.status = 'ready';
+    } catch (error) {
+      state.error = error;
+      state.status = 'failed';
+      throw error;
+    }
+  };
+  const bindLazyBehavior = (interfaceName, member, implementation, side = 'value') => {
+    const cell = lazyBehaviorCells.get(lazyKey(interfaceName, member, side));
+    if (!cell) return false;
+    cell.implementation = implementation;
+    return true;
+  };
+  const invokeLazyBehavior = (interfaceName, member, receiver, args, newTarget, side) => {
+    const domain = lazyDomainInterfaces.get(interfaceName),
+      cell = lazyBehaviorCells.get(lazyKey(interfaceName, member, side || 'value'));
+    if (!domain || !cell)
+      return host.semanticMissingAt('surface.js/lazyBehavior', interfaceName + '.' + member);
+    ensureLazyDomain(domain);
+    const implementation = cell.implementation;
+    if (typeof implementation !== 'function')
+      throw new Error('lazy domain did not bind ' + interfaceName + '.' + member);
+    return newTarget
+      ? Reflect.construct(implementation, args, newTarget)
+      : Reflect.apply(implementation, receiver, args);
+  };
+  defineLazyDomain('audio', [
+    'AnalyserNode',
+    'AudioBuffer',
+    'AudioBufferSourceNode',
+    'AudioContext',
+    'AudioDestinationNode',
+    'AudioListener',
+    'AudioNode',
+    'AudioParam',
+    'AudioScheduledSourceNode',
+    'AudioWorkletNode',
+    'BaseAudioContext',
+    'BiquadFilterNode',
+    'ChannelMergerNode',
+    'ChannelSplitterNode',
+    'ConstantSourceNode',
+    'ConvolverNode',
+    'DelayNode',
+    'DynamicsCompressorNode',
+    'GainNode',
+    'IIRFilterNode',
+    'MediaElementAudioSourceNode',
+    'MediaStreamAudioDestinationNode',
+    'MediaStreamAudioSourceNode',
+    'OfflineAudioCompletionEvent',
+    'OfflineAudioContext',
+    'OscillatorNode',
+    'PannerNode',
+    'PeriodicWave',
+    'ScriptProcessorNode',
+    'StereoPannerNode',
+    'WaveShaperNode',
+  ]);
+  defineLazyDomain('webgl', [
+    'WebGLActiveInfo',
+    'WebGLBuffer',
+    'WebGLContextEvent',
+    'WebGLFramebuffer',
+    'WebGLProgram',
+    'WebGLQuery',
+    'WebGLRenderbuffer',
+    'WebGLRenderingContext',
+    'WebGL2RenderingContext',
+    'WebGLSampler',
+    'WebGLShader',
+    'WebGLShaderPrecisionFormat',
+    'WebGLSync',
+    'WebGLTexture',
+    'WebGLTransformFeedback',
+    'WebGLUniformLocation',
+    'WebGLVertexArrayObject',
+  ]);
+  Object.defineProperty(globalThis, '__mimicLazySurface', {
+    value: {
+      domainFor: (interfaceName) => lazyDomainInterfaces.get(interfaceName),
+      cell(interfaceName, member, side = 'value') {
+        const key = lazyKey(interfaceName, member, side);
+        let cell = lazyBehaviorCells.get(key);
+        if (!cell) lazyBehaviorCells.set(key, (cell = { implementation: undefined }));
+        return cell;
+      },
+      invoke: invokeLazyBehavior,
+    },
+    configurable: true,
+  });
   // Private brands and captured operations travel with owner references. Public
   // methods/prototypes are mutable and cannot validate or dispatch a borrowed
   // WebIDL operation. Conversion still runs in the calling method's realm.

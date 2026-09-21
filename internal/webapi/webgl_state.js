@@ -20,6 +20,13 @@
         return data[name];
       };
       if (typeof markNative === 'function') markNative(get, name, 'get ');
+      if (
+        typeof lazyDomainInterfaces !== 'undefined' &&
+        lazyDomainInterfaces.get('WebGLActiveInfo') === 'webgl'
+      ) {
+        bindLazyBehavior('WebGLActiveInfo', name, get, 'get');
+        continue;
+      }
       Object.defineProperty(WebGLActiveInfo.prototype, name, {
         get,
         enumerable: true,
@@ -35,6 +42,13 @@
         return data[name];
       };
       if (typeof markNative === 'function') markNative(get, name, 'get ');
+      if (
+        typeof lazyDomainInterfaces !== 'undefined' &&
+        lazyDomainInterfaces.get('WebGLShaderPrecisionFormat') === 'webgl'
+      ) {
+        bindLazyBehavior('WebGLShaderPrecisionFormat', name, get, 'get');
+        continue;
+      }
       Object.defineProperty(WebGLShaderPrecisionFormat.prototype, name, {
         get,
         enumerable: true,
@@ -90,6 +104,14 @@
     }[name];
     if (d?.value) Object.defineProperty(f, 'length', { value: d.value.length });
     if (typeof markNative === 'function') markNative(f, name);
+    const type =
+      proto === globalThis.WebGL2RenderingContext?.prototype
+        ? 'WebGL2RenderingContext'
+        : 'WebGLRenderingContext';
+    if (typeof lazyDomainInterfaces !== 'undefined' && lazyDomainInterfaces.get(type) === 'webgl') {
+      bindLazyBehavior(type, name, f);
+      return;
+    }
     Object.defineProperty(proto, name, {
       value: f,
       writable: true,

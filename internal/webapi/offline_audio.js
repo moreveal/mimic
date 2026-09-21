@@ -77,6 +77,10 @@
     if (prior?.value)
       Object.defineProperty(value, 'length', { value: prior.value.length, configurable: true });
     markNative(value, name);
+    if (lazyDomainInterfaces.get(type) === 'audio' && prior?.value) {
+      bindLazyBehavior(type, name, value);
+      return;
+    }
     Object.defineProperty(globalThis[type].prototype, name, {
       value,
       writable: true,
@@ -99,6 +103,12 @@
       };
       markNative(set, name, 'set ');
     }
+    const prior = Object.getOwnPropertyDescriptor(globalThis[type].prototype, name);
+    if (lazyDomainInterfaces.get(type) === 'audio' && prior) {
+      if (get) bindLazyBehavior(type, name, get, 'get');
+      if (set) bindLazyBehavior(type, name, set, 'set');
+      return;
+    }
     Object.defineProperty(globalThis[type].prototype, name, {
       get,
       set,
@@ -107,8 +117,13 @@
     });
   };
   const install = (name, ctor) => {
-    Object.setPrototypeOf(ctor, Object.getPrototypeOf(globalThis[name]));
-    ctor.prototype = globalThis[name].prototype;
+    const facade = globalThis[name];
+    Object.setPrototypeOf(ctor, Object.getPrototypeOf(facade));
+    ctor.prototype = facade.prototype;
+    if (lazyDomainInterfaces.get(name) === 'audio') {
+      bindLazyBehavior(name, 'constructor', ctor);
+      return;
+    }
     Object.defineProperty(ctor.prototype, 'constructor', {
       value: ctor,
       writable: true,

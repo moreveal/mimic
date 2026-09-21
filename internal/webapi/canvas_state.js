@@ -1048,6 +1048,11 @@ const canvasCompatibilityState = (() => {
   const getContext = (canvas, kind, attributes) => {
     const s = sync(state(canvas));
     kind = String(kind);
+    if (
+      typeof ensureLazyDomain !== 'undefined' &&
+      (kind === 'webgl' || kind === 'webgl2' || kind === 'experimental-webgl')
+    )
+      ensureLazyDomain('webgl');
     const entry = factories.get(kind);
     if (!entry) return null;
     if (s.kind) return s.kind === entry.canonical ? s.context : null;

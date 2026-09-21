@@ -231,6 +231,20 @@ func canvasObservationsSource() string {
 	return strings.Replace(s, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1)
 }
 
+// LazyDomainSource keeps dormant implementation source in process-wide Go
+// storage rather than copying it into every realm's V8 heap. Generated WebIDL
+// bindings still publish the complete observable shape during bootstrap.
+func LazyDomainSource(name string) (string, bool) {
+	switch name {
+	case "audio":
+		return strings.Replace(strings.Replace(offlineAudioSurface, "/* shared_audio_nodes */", audioNodesSurface, 1), "/* shared_realtime_audio */", realtimeAudioSurface, 1), true
+	case "webgl":
+		return webglObservationsSource(), true
+	default:
+		return "", false
+	}
+}
+
 //go:embed glsl_observations.js
 var glslObservationsSurface string
 
@@ -392,7 +406,7 @@ func composeSurface(generated, exposureSource string) string {
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", navigatorIdentitySurface, cssSupportsSurface, strings.Replace(domCompatibility, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, xpathCompatibilitySurface, cssomCompatibilitySurface, strings.Replace(strings.Replace(strings.Replace(strings.Replace(svgGeometrySurface, "/* shared_svg_boundaries */", svgBoundariesSurface, 1), "/* shared_svg_text */", svgTextSurface, 1), "/* shared_svg_css_transform */", svgCSSTransformSurface, 1), "/* shared_svg_types */", svgTypesSurface+svgCoordinatesSurface+svgReflectionsSurface+svgPathMetricsSurface+svgUseSurface+svgAttributeDefaultsSurface+svgAttributeSemanticsSurface, 1), streamPrelude,
-		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), strings.Replace(formControlsSurface, "/* constraint_validation */", constraintValidationSurface, 1), traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, webAnimationsSurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowErrorsSurface, inputSurface, windowObservationsSurface, windowServicesSurface, speechSynthesisSurface, documentPictureInPictureSurface, navigationSurface, indexedDBSurface, fileSystemSurface, documentStreamSurface, shadowSerializationSurface, canvasObservationsSource(), webglObservationsSource(), webgpuObservationsSource(), fontFacesSurface, strings.Replace(strings.Replace(offlineAudioSurface, "/* shared_audio_nodes */", audioNodesSurface, 1), "/* shared_realtime_audio */", realtimeAudioSurface, 1), rtcSessionSurface, trustedTypesSinksSurface, "trustedCaptureEvents();registerBootstrapCallback('installTrustedTypesEnforcer',trustedEnforceString);", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();finalizeNativeBindings();globalThis.__mimicNativeFunctionSources=nativeFunctionSourceState;", marker}
+		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), strings.Replace(formControlsSurface, "/* constraint_validation */", constraintValidationSurface, 1), traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, webAnimationsSurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowErrorsSurface, inputSurface, windowObservationsSurface, windowServicesSurface, speechSynthesisSurface, documentPictureInPictureSurface, navigationSurface, indexedDBSurface, fileSystemSurface, documentStreamSurface, shadowSerializationSurface, canvasObservationsSource(), webgpuObservationsSource(), fontFacesSurface, rtcSessionSurface, trustedTypesSinksSurface, "trustedCaptureEvents();registerBootstrapCallback('installTrustedTypesEnforcer',trustedEnforceString);", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();finalizeNativeBindings();globalThis.__mimicNativeFunctionSources=nativeFunctionSourceState;", marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* profile_locale */", localeSurface, 1)
 	base = strings.Replace(base, "/* native_intl */", intlSurface, 1)

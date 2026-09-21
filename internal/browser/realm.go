@@ -31,6 +31,7 @@ import (
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
+	"github.com/moreveal/mimic/internal/webapi"
 )
 
 type Realm struct {
@@ -774,6 +775,14 @@ func (r *Realm) installBindingsOnOwner() error {
 
 	p := r.agent.Page()
 	host := map[string]any{}
+	host["lazyDomainSource"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		name := strarg(args, 0)
+		source, ok := webapi.LazyDomainSource(name)
+		if !ok {
+			return nil, fmt.Errorf("unknown lazy WebAPI domain %q", name)
+		}
+		return r.val(source), nil
+	})
 	r.installBlitzProducer(host)
 	host["layoutTaffy"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		output, err := r.document.FlatLayoutState().PublishJSON(r.document.Revision(), strarg(args, 0))
@@ -2279,7 +2288,7 @@ func (r *Realm) installBindingsOnOwner() error {
 	r.frameLoadDispatcher = r.runtime.Get("__mimicDispatchFrameLoad")
 	r.resourceEventDispatcher = r.runtime.Get("__mimicDispatchResourceEvent")
 	r.performanceNotifier = r.runtime.Get("__mimicNotifyPerformanceObservers")
-	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicRestoreBootstrap;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicDispatchResourceEvent;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
+	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicLazySurface;delete globalThis.__mimicRestoreBootstrap;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicDispatchResourceEvent;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
 	if err == nil {
 		r.debuggerFactory, err = r.runtime.Eval(context.Background(), debuggerFactorySource, "mimic:debugger-intrinsics")
 	}
