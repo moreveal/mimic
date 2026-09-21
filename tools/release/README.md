@@ -1,7 +1,10 @@
 # Mimic releases
 
-Release archives are built locally from a clean, committed `moreveal/mimic`
-revision. Windows and Linux must use the same source revision.
+Release archives are built from a clean, committed `moreveal/mimic` revision.
+Windows and Linux must use the same source revision. The Package release CI
+workflow can run the same preparation and upload its verified archives and
+receipts. Download both artifacts into `.build/releases/VERSION/` before
+publishing, and verify the run's source revision is the release commit.
 
 ## Prepare
 
@@ -10,7 +13,7 @@ the Linux fonts documented in [getting started](../../docs/getting-started.md).
 Rust/Cargo is a build-time requirement for the native Blitz producer.
 
 ```powershell
-python tools/release/prepare.py --version v0.1.5
+python tools/release/prepare.py --version v0.1.6
 ```
 
 Run the equivalent command under Ubuntu 24.04/WSL2 for Linux. The tool builds a
@@ -64,13 +67,14 @@ mistaken for a fresh build.
 Push the exact release commit to `moreveal/mimic`, then run:
 
 ```powershell
-python tools/release/publish.py --version v0.1.5
+python tools/release/publish.py --version v0.1.6
 ```
 
 Publication requires verified Windows and Linux receipts for the current commit.
 It creates a draft release, uploads the archives, manifest, and checksums,
 downloads every asset to verify its hash, and only then publishes the release.
-Local verification is authoritative; the publisher does not wait for CI.
+The receipts and archive hashes are authoritative; the publisher does not wait
+for CI. Use only artifacts from a successful run for the exact release commit.
 
 ## Publish the website
 

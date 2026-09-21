@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from prepare import digest, validate_document_links
+from prepare import digest, resolve_unbundled_links, validate_document_links
 from publish import CHECKS, verified_archive
 
 
@@ -58,6 +58,20 @@ class PublicationGateTests(unittest.TestCase):
         doc.write_text('[Outside](../)')
         with self.assertRaisesRegex(RuntimeError, 'Missing bundled document link'):
             validate_document_links(self.root)
+
+    def test_repository_document_link_is_bundled_for_archive(self):
+        stage = self.root / 'package'
+        (stage / 'examples').mkdir(parents=True)
+        document = stage / 'examples' / 'README.md'
+        document.write_text('[Guide](../docs/compatibility/crawlee-playwright.md)')
+        guide = stage / 'docs/compatibility/crawlee-playwright.md'
+        guide.parent.mkdir(parents=True)
+        guide.write_text('# Crawlee guide\n')
+        resolve_unbundled_links(stage, 'revision')
+        self.assertEqual(document.read_text(),
+                         '[Guide](../docs/compatibility/crawlee-playwright.md)')
+        self.assertTrue((stage / 'docs/compatibility/crawlee-playwright.md').is_file())
+        validate_document_links(stage)
 
 
 if __name__ == '__main__':

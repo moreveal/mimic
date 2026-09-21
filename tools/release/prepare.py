@@ -56,6 +56,27 @@ def validate_document_links(stage):
                 raise RuntimeError(f'Missing bundled document link: {document.name}: {link}')
 
 
+def resolve_unbundled_links(stage, source_revision):
+    """Link omitted repository documents from the copy inside the archive."""
+    for document in stage.rglob('*.md'):
+        content = document.read_text(encoding='utf-8-sig')
+        def replace(match):
+            target = urlsplit(match.group(1))
+            if target.scheme or target.netloc or not target.path:
+                return match.group(0)
+            bundled = (document.parent / unquote(target.path)).resolve()
+            if bundled.is_relative_to(stage.resolve()) and bundled.exists():
+                return match.group(0)
+            source = (ROOT / document.relative_to(stage).parent / unquote(target.path)).resolve()
+            if not source.is_relative_to(ROOT) or not source.exists():
+                return match.group(0)
+            relative = source.relative_to(ROOT).as_posix()
+            return f'](https://github.com/moreveal/mimic/blob/{source_revision}/{relative})'
+        updated = re.sub(r'\]\(([^)]+)\)', replace, content)
+        if updated != content:
+            document.write_text(updated, encoding='utf-8', newline='\n')
+
+
 def notices(target):
     """Use the actual native command dependency graph, including local replacements."""
     deps = list(json_stream(run('go', 'list', '-deps', '-json', './cmd/mimic', capture=True)))
@@ -152,6 +173,10 @@ def main():
         '# Mimic Public Beta\n\n[Documentation](https://github.com/moreveal/mimic) · '
         '[Examples](examples/README.md) · [Release notes](RELEASE_NOTES.md) · [License](LICENSE)\n\n'
         'Website: https://moreveal.github.io/mimic-overview/\n', encoding='utf-8')
+    guide = stage / 'docs/compatibility/crawlee-playwright.md'
+    guide.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / 'docs/compatibility/crawlee-playwright.md', guide)
+    resolve_unbundled_links(stage, source_revision)
     validate_document_links(stage)
     stamp = int(run('git', 'show', '-s', '--format=%ct', source_revision, capture=True).strip())
     files = sorted(p for p in stage.rglob('*') if p.is_file())

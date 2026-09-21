@@ -1,0 +1,65 @@
+name: Package release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version (for example v0.1.6)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    env:
+      CGO_ENABLED: "1"
+      RELEASE_VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: |
+            go.sum
+            third_party/gov8/go.sum
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Windows C compiler
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+      - name: Add compiler to Windows PATH
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: echo "$(cygpath -w /ucrt64/bin)" >> "$GITHUB_PATH"
+      - name: Install Linux native dependencies and fonts
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev fonts-dejavu-core fonts-liberation
+      - name: Prepare and verify extracted package
+        run: python tools/release/prepare.py --version "$RELEASE_VERSION"
+        shell: bash
+      - name: Upload verified archive and receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ inputs.version }}-${{ runner.os }}-amd64
+          path: |
+            .build/releases/${{ inputs.version }}/*.zip
+            .build/releases/${{ inputs.version }}/*.tar.gz
+            .build/releases/${{ inputs.version }}/*.receipt.json
+          if-no-files-found: error
