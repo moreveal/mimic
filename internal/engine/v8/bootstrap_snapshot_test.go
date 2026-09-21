@@ -142,6 +142,64 @@ func TestBootstrapSnapshotSeparateStages(t *testing.T) {
 	}
 }
 
+func TestBootstrapRuntimePoolSharesIsolateAndIsolatesRealms(t *testing.T) {
+	snapshot, err := (Factory{}).BuildBootstrapSnapshot(context.Background(), `globalThis.seed={value:1}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	pool := snapshot.(*bootstrapSnapshot).NewRuntimePool(2)
+	first, err := pool.NewRuntime()
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := pool.NewRuntime()
+	if err != nil {
+		t.Fatal(err)
+	}
+	third, err := pool.NewRuntime()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if first.(*adapter).owner != second.(*adapter).owner {
+		t.Fatal("pool did not place realms in the same isolate")
+	}
+	if first.(*adapter).owner == third.(*adapter).owner {
+		t.Fatal("pool exceeded the per-isolate realm limit")
+	}
+	if _, err = first.Eval(context.Background(), `seed.value=9;globalThis.localOnly=true`, "mutate"); err != nil {
+		t.Fatal(err)
+	}
+	value, err := second.Eval(context.Background(), `seed.value===1&&typeof localOnly==='undefined'`, "isolated")
+	if err != nil || value.Export() != true {
+		t.Fatalf("realm state crossed Page boundary: %v %v", value, err)
+	}
+	if err = first.Close(); err != nil {
+		t.Fatal(err)
+	}
+	value, err = second.Eval(context.Background(), `seed.value`, "sibling-after-close")
+	if err != nil || value.String() != "1" {
+		t.Fatalf("closing one realm invalidated sibling: %v %v", value, err)
+	}
+	if err = pool.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = pool.NewRuntime(); err == nil {
+		t.Fatal("closed pool accepted runtime")
+	}
+	if _, err = second.Eval(context.Background(), `seed.value`, "live-after-pool-close"); err != nil {
+		t.Fatalf("pool close invalidated live realm: %v", err)
+	}
+	if err = second.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err = third.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err = snapshot.Close(); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestBootstrapSnapshotWasmIntrinsics(t *testing.T) {
 	s, err := (Factory{}).BuildBootstrapSnapshot(context.Background(), `globalThis.seedWasm=typeof WebAssembly; globalThis.WebAssembly={}`, `delete globalThis.WebAssembly`)
 	if err != nil {

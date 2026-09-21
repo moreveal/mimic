@@ -47,13 +47,17 @@ func (Factory) New() engine.Runtime {
 
 // Both ordinary and restored isolates install the same adapter-owned hooks.
 func newAdapter(owner *Runtime, profile *diagnosticState) (*adapter, error) {
+	return newAdapterWithRelease(owner, profile, owner.Dispose)
+}
+
+func newAdapterWithRelease(owner *Runtime, profile *diagnosticState, release func() error) (*adapter, error) {
 	started := time.Now()
 	realm, err := owner.NewRealm()
 	if err != nil {
-		_ = owner.Dispose()
+		_ = release()
 		return nil, fmt.Errorf("create V8 realm: %w", err)
 	}
-	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: profile}
+	backend := &adapter{owner: owner, realm: realm, release: release, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: profile}
 	if os.Getenv("MIMIC_PROFILE_PROCESSORS") == "1" {
 		backend.processorSamples = map[uintptr]uint64{}
 	}
@@ -92,6 +96,7 @@ type adapter struct {
 	profile                  *diagnosticState
 	owner                    *Runtime
 	realm                    *Realm
+	release                  func() error
 	now                      func() time.Time
 	observer                 func(string, bool)
 	closed                   bool
@@ -117,6 +122,7 @@ type adapter struct {
 	moduleNamespaceFactory   engine.Value
 	dynamicModuleHandler     engine.DynamicModuleHandler
 	debuggerUnsafeEval       bool               // owning actor only, scoped to synchronous inspector execution
+	evalSourceResolver       engine.Value       // realm-owned policy; rebound before this adapter enters V8
 	processorSamples         map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
 	nativePending            bool               // actor-thread only; foreground/background V8 tasks
 }
@@ -1136,6 +1142,7 @@ func (a *adapter) Close() error {
 		a.mu.Unlock()
 		return nil
 	}
+	a.closed = true
 	a.mu.Unlock()
 	_, _ = a.runCommand(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
 		for i := len(a.modules) - 1; i >= 0; i-- {
@@ -1158,10 +1165,7 @@ func (a *adapter) Close() error {
 		a.packedFrames = nil
 		return nil, nil
 	}, true)
-	a.mu.Lock()
-	a.closed = true
-	a.mu.Unlock()
-	return a.owner.Dispose()
+	return errors.Join(a.realm.Dispose(), a.release())
 }
 
 type realmOperation func(*state, *gov8.Context, *gov8.Scope) (engine.Value, error)
@@ -1183,6 +1187,23 @@ func (a *adapter) runCommand(operation realmOperation, outerOnly bool) (engine.V
 		defer scope.Close()
 		previousIsolate := a.activeIsolate
 		a.activeIsolate = s.isolate
+		previousAdapter := s.activeAdapter
+		s.activeAdapter = a
+		if a.evalSourceResolver != nil {
+			if err := a.installEvalSourceResolver(s, realm, scope, a.evalSourceResolver); err != nil {
+				s.activeAdapter = previousAdapter
+				a.activeIsolate = previousIsolate
+				return response{err: err}
+			}
+		}
+		defer func() {
+			s.activeAdapter = previousAdapter
+			if previousAdapter != nil && previousAdapter.evalSourceResolver != nil {
+				if previousRealm := s.realms[previousAdapter.realm.id]; previousRealm != nil {
+					_ = previousAdapter.installEvalSourceResolver(s, previousRealm, scope, previousAdapter.evalSourceResolver)
+				}
+			}
+		}()
 		a.runDepth++
 		result, err := operation(s, realm, scope)
 		a.runDepth--

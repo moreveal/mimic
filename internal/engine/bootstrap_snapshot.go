@@ -24,6 +24,20 @@ type BootstrapSnapshot interface {
 	SizeBytes() int
 }
 
+// RuntimePool creates independent realm runtimes while allowing an engine to
+// share immutable/native isolate infrastructure between them. Each returned
+// Runtime remains independently closeable.
+type RuntimePool interface {
+	NewRuntime() (Runtime, error)
+	Close() error
+}
+
+// RuntimePoolSnapshot is implemented by snapshots whose engine can host more
+// than one independent realm in a single isolate.
+type RuntimePoolSnapshot interface {
+	NewRuntimePool(maxRealmsPerIsolate int) RuntimePool
+}
+
 // PersistentBootstrapSnapshotFactory imports and identifies portable snapshot
 // bytes. The identity must change whenever the engine can no longer consume a
 // previously serialized blob.

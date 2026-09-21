@@ -189,10 +189,18 @@ func runSnapshotSeed(ctx context.Context, iso *gov8.Isolate, realm *gov8.Context
 }
 
 func (s *bootstrapSnapshot) NewRuntime() (engine.Runtime, error) {
+	owner, profile, err := s.newRuntimeOwner()
+	if err != nil {
+		return nil, err
+	}
+	return newAdapter(owner, profile)
+}
+
+func (s *bootstrapSnapshot) newRuntimeOwner() (*Runtime, *diagnosticState, error) {
 	s.mu.Lock()
 	if s.blob == nil {
 		s.mu.Unlock()
-		return nil, errors.New("bootstrap snapshot is closed")
+		return nil, nil, errors.New("bootstrap snapshot is closed")
 	}
 	// Every runtime owns its native consumer records, so teardown releases its
 	// native blob even while other Pages live. The serialized Go bytes are
@@ -200,19 +208,119 @@ func (s *bootstrapSnapshot) NewRuntime() (engine.Runtime, error) {
 	consumer, err := s.blob.ShareImmutableBytes()
 	s.mu.Unlock()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	profile := newDiagnostics()
 	started := time.Now()
 	owner, err := newRuntime(consumer)
 	if err != nil {
 		_ = consumer.Release()
-		return nil, err
+		return nil, nil, err
 	}
 	if profile != nil {
 		profile.Costs["factory:isolate"] = diagnosticCost{Count: 1, Nanoseconds: time.Since(started).Nanoseconds()}
 	}
-	return newAdapter(owner, profile)
+	return owner, profile, nil
+}
+
+type bootstrapRuntimeLane struct {
+	owner  *Runtime
+	active int
+}
+
+type bootstrapRuntimePool struct {
+	mu       sync.Mutex
+	snapshot *bootstrapSnapshot
+	max      int
+	lanes    []*bootstrapRuntimeLane
+	closed   bool
+}
+
+func (s *bootstrapSnapshot) NewRuntimePool(maxRealmsPerIsolate int) engine.RuntimePool {
+	if maxRealmsPerIsolate < 1 {
+		maxRealmsPerIsolate = 1
+	}
+	return &bootstrapRuntimePool{snapshot: s, max: maxRealmsPerIsolate}
+}
+
+func (p *bootstrapRuntimePool) NewRuntime() (engine.Runtime, error) {
+	p.mu.Lock()
+	if p.closed {
+		p.mu.Unlock()
+		return nil, errors.New("bootstrap runtime pool is closed")
+	}
+	var lane *bootstrapRuntimeLane
+	for _, candidate := range p.lanes {
+		if candidate.active < p.max {
+			lane = candidate
+			break
+		}
+	}
+	var profile *diagnosticState
+	if lane == nil {
+		owner, diagnostics, err := p.snapshot.newRuntimeOwner()
+		if err != nil {
+			p.mu.Unlock()
+			return nil, err
+		}
+		lane = &bootstrapRuntimeLane{owner: owner}
+		profile = diagnostics
+		p.lanes = append(p.lanes, lane)
+	} else {
+		profile = newDiagnostics()
+	}
+	lane.active++
+	p.mu.Unlock()
+
+	return newAdapterWithRelease(lane.owner, profile, func() error {
+		return p.release(lane)
+	})
+}
+
+func (p *bootstrapRuntimePool) release(lane *bootstrapRuntimeLane) error {
+	p.mu.Lock()
+	if lane.active > 0 {
+		lane.active--
+	}
+	dispose := p.closed && lane.active == 0
+	if dispose {
+		for i, candidate := range p.lanes {
+			if candidate == lane {
+				p.lanes = append(p.lanes[:i], p.lanes[i+1:]...)
+				break
+			}
+		}
+	}
+	p.mu.Unlock()
+	if dispose {
+		return lane.owner.Dispose()
+	}
+	return nil
+}
+
+func (p *bootstrapRuntimePool) Close() error {
+	p.mu.Lock()
+	if p.closed {
+		p.mu.Unlock()
+		return nil
+	}
+	p.closed = true
+	var idle []*Runtime
+	kept := p.lanes[:0]
+	for _, lane := range p.lanes {
+		if lane.active == 0 {
+			idle = append(idle, lane.owner)
+		} else {
+			kept = append(kept, lane)
+		}
+	}
+	p.lanes = kept
+	p.mu.Unlock()
+	var err error
+	for _, owner := range idle {
+		err = errors.Join(err, owner.Dispose())
+	}
+	return err
 }
 
 func (s *bootstrapSnapshot) SizeBytes() int { return s.size }
@@ -242,3 +350,5 @@ var _ engine.BootstrapSnapshotFactory = Factory{}
 var _ engine.PersistentBootstrapSnapshotFactory = Factory{}
 var _ engine.BootstrapSnapshot = (*bootstrapSnapshot)(nil)
 var _ engine.PersistentBootstrapSnapshot = (*bootstrapSnapshot)(nil)
+var _ engine.RuntimePoolSnapshot = (*bootstrapSnapshot)(nil)
+var _ engine.RuntimePool = (*bootstrapRuntimePool)(nil)

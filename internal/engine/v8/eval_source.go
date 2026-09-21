@@ -16,73 +16,77 @@ import (
 // reached through intrinsic prototypes and saved references.
 func (a *adapter) SetEvalSourceResolver(resolver engine.Value) error {
 	_, err := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
-		local, err := a.local(scope, resolver)
-		if err != nil {
+		if err := a.installEvalSourceResolver(s, realm, scope, resolver); err != nil {
 			return nil, err
 		}
-		if callable, err := local.IsFunction(); err != nil || !callable {
-			return nil, fmt.Errorf("eval source resolver must be a function")
-		}
-		err = s.isolate.SetModifyCodeGenerationFromStringsCallback(func(source gov8.Value, isCodeLike bool) (bool, *string) {
-			// This callback already runs on the owning isolate thread. A nested
-			// scope bounds all temporary handles to this one eval operation.
-			scope, err := s.isolate.NewScope()
-			if err != nil {
-				return false, nil
-			}
-			defer scope.Close()
-			local, err := a.local(scope, resolver)
-			if err != nil {
-				return false, nil
-			}
-			fn, ok, err := gov8.AsFunction(local, realm)
-			if err != nil || !ok {
-				return false, nil
-			}
-			receiver, err := scope.Undefined()
-			if err != nil {
-				return false, nil
-			}
-			codeLike, err := scope.Boolean(isCodeLike)
-			if err != nil {
-				return false, nil
-			}
-			catcher, err := s.isolate.NewTryCatch()
-			if err != nil {
-				return false, nil
-			}
-			unsafeEval, err := scope.Boolean(a.debuggerUnsafeEval)
-			if err != nil {
-				_ = catcher.Close()
-				return false, nil
-			}
-			result, ok, err := fn.Call(scope, receiver, source, codeLike, unsafeEval)
-			if err != nil || !ok {
-				// Preserve callback exception identity; returning false alone would
-				// replace a thrown application object with an engine EvalError.
-				if caught, _ := catcher.HasCaught(); caught {
-					_, _, _ = catcher.ReThrow(scope)
-				} else {
-					_ = catcher.Close()
-				}
-				return false, nil
-			}
-			_ = catcher.Close()
-			if isString, err := result.IsString(); err != nil || !isString {
-				return err == nil, nil
-			}
-			text, err := result.StringValue()
-			if err != nil {
-				return false, nil
-			}
-			return true, &text
-		})
-		if err != nil {
-			return nil, err
-		}
+		a.evalSourceResolver = resolver
 		return nil, realm.AllowCodeGenerationFromStrings(false)
 	})
 	return err
+}
+
+func (a *adapter) installEvalSourceResolver(s *state, realm *gov8.Context, scope *gov8.Scope, resolver engine.Value) error {
+	local, err := a.local(scope, resolver)
+	if err != nil {
+		return err
+	}
+	if callable, err := local.IsFunction(); err != nil || !callable {
+		return fmt.Errorf("eval source resolver must be a function")
+	}
+	return s.isolate.SetModifyCodeGenerationFromStringsCallback(func(source gov8.Value, isCodeLike bool) (bool, *string) {
+		// This callback already runs on the owning isolate thread. A nested
+		// scope bounds all temporary handles to this one eval operation.
+		scope, err := s.isolate.NewScope()
+		if err != nil {
+			return false, nil
+		}
+		defer scope.Close()
+		local, err := a.local(scope, resolver)
+		if err != nil {
+			return false, nil
+		}
+		fn, ok, err := gov8.AsFunction(local, realm)
+		if err != nil || !ok {
+			return false, nil
+		}
+		receiver, err := scope.Undefined()
+		if err != nil {
+			return false, nil
+		}
+		codeLike, err := scope.Boolean(isCodeLike)
+		if err != nil {
+			return false, nil
+		}
+		catcher, err := s.isolate.NewTryCatch()
+		if err != nil {
+			return false, nil
+		}
+		unsafeEval, err := scope.Boolean(a.debuggerUnsafeEval)
+		if err != nil {
+			_ = catcher.Close()
+			return false, nil
+		}
+		result, ok, err := fn.Call(scope, receiver, source, codeLike, unsafeEval)
+		if err != nil || !ok {
+			// Preserve callback exception identity; returning false alone would
+			// replace a thrown application object with an engine EvalError.
+			if caught, _ := catcher.HasCaught(); caught {
+				_, _, _ = catcher.ReThrow(scope)
+			} else {
+				_ = catcher.Close()
+			}
+			return false, nil
+		}
+		_ = catcher.Close()
+		if isString, err := result.IsString(); err != nil || !isString {
+			return err == nil, nil
+		}
+		text, err := result.StringValue()
+		if err != nil {
+			return false, nil
+		}
+		return true, &text
+	})
 }
 
 func (a *adapter) RunWithUnsafeEval(ctx context.Context, operation func(context.Context) error) error {

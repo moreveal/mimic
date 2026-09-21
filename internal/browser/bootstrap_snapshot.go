@@ -4,8 +4,10 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -16,12 +18,48 @@ import (
 	"github.com/moreveal/mimic/internal/webapi"
 )
 
-// The cache belongs to a browser Context, not to a process-wide V8 owner.
-// It stores immutable seed data only; every consumer receives its own isolate,
-// JS graph and native callbacks. A second use admits a background build so an
-// ordinary single-realm Page does not pay snapshot serialization startup cost.
+// The cache belongs to Browser, not to a process-wide V8 owner. It stores only
+// immutable seed data. Restored Pages receive independent realms and callbacks;
+// V8 may pool a bounded number of those realms in one isolate. A second use
+// admits a background build so a single-realm Page avoids serialization cost.
 const bootstrapSnapshotEntries = 4
 const bootstrapSnapshotBytes = 32 << 20
+
+const defaultRealmsPerIsolate = 8
+
+type pooledBootstrapSnapshot struct {
+	base engine.BootstrapSnapshot
+	pool engine.RuntimePool
+}
+
+func withRuntimePool(snapshot engine.BootstrapSnapshot) engine.BootstrapSnapshot {
+	provider, ok := snapshot.(engine.RuntimePoolSnapshot)
+	if !ok {
+		return snapshot
+	}
+	capacity := defaultRealmsPerIsolate
+	if value, err := strconv.Atoi(os.Getenv("MIMIC_REALMS_PER_ISOLATE")); err == nil && value > 0 {
+		capacity = value
+	}
+	return &pooledBootstrapSnapshot{base: snapshot, pool: provider.NewRuntimePool(capacity)}
+}
+
+func (s *pooledBootstrapSnapshot) NewRuntime() (engine.Runtime, error) {
+	return s.pool.NewRuntime()
+}
+
+func (s *pooledBootstrapSnapshot) SizeBytes() int { return s.base.SizeBytes() }
+
+func (s *pooledBootstrapSnapshot) BootstrapSnapshotBytes() []byte {
+	if persistent, ok := s.base.(engine.PersistentBootstrapSnapshot); ok {
+		return persistent.BootstrapSnapshotBytes()
+	}
+	return nil
+}
+
+func (s *pooledBootstrapSnapshot) Close() error {
+	return errors.Join(s.pool.Close(), s.base.Close())
+}
 
 type bootstrapSource struct {
 	source, exposureJSON, catalogJSON string
@@ -188,6 +226,7 @@ func (c *bootstrapSnapshotCache) selectEntry(ctx context.Context, factory engine
 			return existing.snapshot, nil, existing.err
 		}
 		if err == nil && snapshot != nil {
+			snapshot = withRuntimePool(snapshot)
 			entry = &bootstrapSnapshotEntry{key: key, snapshot: snapshot, touched: c.sequence}
 			c.entries[key] = entry
 			c.mu.Unlock()
@@ -240,6 +279,7 @@ func (c *bootstrapSnapshotCache) startBuildLocked(ctx context.Context, factory e
 			discard = err != nil
 		}
 		if !discard {
+			snapshot = withRuntimePool(snapshot)
 			entry.snapshot = snapshot
 		}
 		entry.err = err

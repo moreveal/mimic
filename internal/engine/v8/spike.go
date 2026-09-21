@@ -31,6 +31,7 @@ type actorCommand struct {
 type state struct {
 	isolate             *gov8.Isolate
 	realms              map[uint64]*gov8.Context
+	activeAdapter       *adapter
 	next                uint64
 	restoreThreadPolicy func() error
 }
