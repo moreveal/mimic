@@ -21,9 +21,6 @@ func TestProtocolInputRestoredWorldOwnership(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") != "1" && !world.bootstrapRestored {
-		t.Fatal("expected an isolated world restored from the warmed main-world snapshot")
-	}
 	d := NewDebugger(p)
 	defer d.Close()
 	evaluate := func(source string) any {
@@ -33,6 +30,10 @@ func TestProtocolInputRestoredWorldOwnership(t *testing.T) {
 			t.Fatalf("isolated evaluation: %#v %v", result, err)
 		}
 		return result["result"].(map[string]any)["value"]
+	}
+	evaluate(`1`)
+	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") != "1" && !world.bootstrapRestored {
+		t.Fatal("expected the observed isolated world restored from the warmed main-world snapshot")
 	}
 	evaluate(`document.querySelector('#name').focus()`)
 	for _, letter := range []string{"A", "l", "p", "h", "a", " ", "4", "2"} {

@@ -297,6 +297,12 @@ func (p *Page) runInitScripts(ctx context.Context, realm *Realm) {
 			}
 			target = world
 		}
+		// Creating a named world is observable through CDP, but a script made
+		// exclusively of whitespace/comments has no JavaScript effects. Keep its
+		// realm logical and deferred until the first actual operation targets it.
+		if semanticallyEmptyScript(script.Source) {
+			continue
+		}
 		if _, err := target.Evaluate(ctx, script.Source, "mimic:init-script"); err != nil {
 			p.trace.Add(trace.Exception, "initScript", map[string]any{"scriptId": script.ID, "error": err.Error(), "realm": realm.ID})
 			continue
@@ -305,6 +311,37 @@ func (p *Page) runInitScripts(ctx context.Context, realm *Realm) {
 			p.trace.Add(trace.Error, "initScriptMicrotaskCheckpoint", map[string]any{"scriptId": script.ID, "error": err.Error(), "realm": realm.ID})
 		}
 	}
+}
+
+func semanticallyEmptyScript(source string) bool {
+	for at := 0; at < len(source); {
+		switch source[at] {
+		case ' ', '\t', '\r', '\n', '\f', '\v':
+			at++
+		case '/':
+			if at+1 >= len(source) {
+				return false
+			}
+			if source[at+1] == '/' {
+				at += 2
+				for at < len(source) && source[at] != '\r' && source[at] != '\n' {
+					at++
+				}
+				continue
+			}
+			if source[at+1] != '*' {
+				return false
+			}
+			end := strings.Index(source[at+2:], "*/")
+			if end < 0 {
+				return false
+			}
+			at += end + 4
+		default:
+			return false
+		}
+	}
+	return true
 }
 func (p *Page) SetBypassCSP(bypass bool) { p.mu.Lock(); p.bypassCSP = bypass; p.mu.Unlock() }
 func (r *Realm) allowsScript(resource *url.URL, inline, dynamic bool, nonce string) bool {

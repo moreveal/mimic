@@ -2859,3 +2859,26 @@ its RAM delta against the pooled median is small; V8 diagnostics bound the live
 JavaScript heap at roughly 20-24 MiB for the entire pooled isolate. Replacing
 these facades with native FunctionTemplates therefore cannot account for the
 remaining roughly 1.2 GiB and is not pursued as a high-risk identity rewrite.
+
+## 2026-09-21 -- demand-driven isolated-world backing
+
+Named isolated worlds now publish their logical execution-context identity and
+lifecycle immediately, but do not allocate a V8 context or install the WebAPI
+surface until an operation first observes that world. Executable initialization
+scripts remain synchronous and force materialization before document scripts.
+Whitespace/comment-only initialization scripts create the named world without
+materializing it because they have no JavaScript-visible effects. The first
+evaluation restores the same bootstrap snapshot and binds the same realm-local
+host state as the previous eager path.
+
+This removes a complete unused realm from automation sessions whose utility
+world contains only a `sourceURL` comment. It is a general realm-lifecycle fix,
+not a Campfire resource or URL shortcut. Three 50-run official Lightpanda
+Campfire measurements of compiled binary SHA-256
+`2D1681EB47447D05D25B095FDDDDCB788F34D5F38B5DFA216586D32F1BCE9399` measured
+Mimic totals of **2734 / 2753 / 2841 ms**, peak RAM of
+**260.75 / 262.29 / 262.88 MiB**, and CPU of
+**5437.5 / 5437.5 / 6484.38 ms**. Against the supplied 4079 ms / 520.83 MiB /
+9593.75 ms baseline, the median is **32.5% less wall time (1.48x throughput),
+49.6% less peak RAM, and 43.3% less CPU**. All three runs completed 50/50, and
+the full repository test suite passed.

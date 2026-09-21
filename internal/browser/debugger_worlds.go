@@ -61,11 +61,6 @@ func (p *Page) isolatedWorld(ctx context.Context, main *Realm, name string) (*Re
 		main.isolatedWorlds = make(map[string]*Realm)
 	}
 	main.isolatedWorlds[name] = world
-	if _, err := world.runtime.(*deferredRuntime).ready(); err != nil {
-		delete(main.isolatedWorlds, name)
-		_ = world.Close()
-		return nil, err
-	}
 	p.trace.Add(trace.Lifecycle, "isolatedWorldCreated", map[string]any{"frameId": main.agent.ContextID(), "realm": world.ID, "mainRealm": main.ID, "worldName": name, "url": main.url.String()})
 	return world, nil
 }
