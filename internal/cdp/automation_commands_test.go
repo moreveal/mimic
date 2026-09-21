@@ -139,6 +139,28 @@ func TestLocaleOverrideAppliesToNavigationRealmAndResets(t *testing.T) {
 	}
 }
 
+func TestTimezoneOverrideRefreshesCurrentRealm(t *testing.T) {
+	s, addr := runningServer(t)
+	c := browserConnection(t, addr)
+	sid := wireCall(t, c, 1, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
+	read := func(id int) string {
+		result := flatCall(t, c, sid, id, "Runtime.evaluate", map[string]any{
+			"expression":    "new Intl.DateTimeFormat().resolvedOptions().timeZone",
+			"returnByValue": true,
+		})
+		return result["result"].(map[string]any)["value"].(string)
+	}
+	base := read(2)
+	flatCall(t, c, sid, 3, "Emulation.setTimezoneOverride", map[string]any{"timezoneId": "Asia/Tokyo"})
+	if got := read(4); got != "Asia/Tokyo" {
+		t.Fatalf("timezone override: got %q", got)
+	}
+	flatCall(t, c, sid, 5, "Emulation.setTimezoneOverride", map[string]any{"timezoneId": ""})
+	if got := read(6); got != base {
+		t.Fatalf("timezone reset: got %q, want %q", got, base)
+	}
+}
+
 func TestBrowserWindowCommandsShareCanonicalBounds(t *testing.T) {
 	s, addr := runningServer(t)
 	c := browserConnection(t, addr)

@@ -51,7 +51,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 		if err := s.page.SetTimezoneOverride(stringValue(p["timezoneId"])); err != nil {
 			return nil, true, err
 		}
-		_, err := s.page.EvaluateCommand(s.ctx, "", `__mimicRefreshIntlEnvironment()`)
+		_, err := s.page.EvaluateCommand(s.ctx, "", `globalThis[Symbol.for('__mimicRefreshIntlEnvironment')]()`)
 		return empty, true, err
 	case "Network.setUserAgentOverride", "Emulation.setUserAgentOverride":
 		o := &state.UserAgentOverride{UserAgent: stringValue(p["userAgent"]), Platform: stringValue(p["platform"])}
