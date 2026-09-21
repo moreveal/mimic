@@ -70,7 +70,7 @@ func (b streamBackend) Create(data htmlstream.NodeData) int64 {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	node := &Node{ID: d.next, Attributes: map[string]string{}, OwnerDocument: d.root}
+	node := &Node{ID: d.next, OwnerDocument: d.root}
 	switch data.Type {
 	case html.ElementNode:
 		node.Type = "element"

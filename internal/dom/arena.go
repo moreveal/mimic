@@ -4,7 +4,7 @@ func (d *Document) CreateDocumentFragment() Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	node := &Node{ID: d.next, Type: "fragment", OwnerDocument: d.root, Attributes: map[string]string{}}
+	node := &Node{ID: d.next, Type: "fragment", OwnerDocument: d.root}
 	d.nodes[node.ID] = node
 	return *node
 }

@@ -87,7 +87,7 @@ func (d *Document) CreateHTMLDocument(title *string) Node {
 	defer d.mu.Unlock()
 	newNode := func(kind, tag string, parent int64) *Node {
 		d.next++
-		n := &Node{ID: d.next, Type: kind, TagName: tag, Parent: parent, Attributes: map[string]string{}}
+		n := &Node{ID: d.next, Type: kind, TagName: tag, Parent: parent}
 		if kind == "element" {
 			n.Namespace = "http://www.w3.org/1999/xhtml"
 		}
@@ -116,7 +116,7 @@ func (d *Document) CreateXMLDocument(namespace, name string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	root := &Node{ID: d.next, Type: "document", ContentType: "application/xml", Attributes: map[string]string{}}
+	root := &Node{ID: d.next, Type: "document", ContentType: "application/xml"}
 	switch namespace {
 	case "http://www.w3.org/1999/xhtml":
 		root.ContentType = "application/xhtml+xml"
@@ -134,7 +134,7 @@ func (d *Document) CreateXMLDocument(namespace, name string) Node {
 
 func (d *Document) createDocumentElementLocked(owner int64, namespace, name string) *Node {
 	d.next++
-	n := &Node{ID: d.next, Type: "element", TagName: name, QualifiedName: name, Namespace: namespace, OwnerDocument: owner, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "element", TagName: name, QualifiedName: name, Namespace: namespace, OwnerDocument: owner}
 	d.nodes[n.ID] = n
 	return n
 }

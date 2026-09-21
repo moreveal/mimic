@@ -175,7 +175,7 @@ func Parse(source string) (*Document, error) {
 	walk = func(n *html.Node, parent int64) {
 		d.next++
 		id := d.next
-		node := &Node{ID: id, Parent: parent, OwnerDocument: d.root, Attributes: map[string]string{}}
+		node := &Node{ID: id, Parent: parent, OwnerDocument: d.root}
 		switch n.Type {
 		case html.DocumentNode:
 			node.Type = "document"
@@ -598,6 +598,9 @@ func (d *Document) FindAllByTagName(tag string) []Node {
 }
 
 func cloneAttributes(in map[string]string) map[string]string {
+	if len(in) == 0 {
+		return nil
+	}
 	out := make(map[string]string, len(in))
 	for k, v := range in {
 		out[k] = v
@@ -651,7 +654,7 @@ func (d *Document) CreateElementNS(namespace, tag string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, OwnerDocument: d.root, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, OwnerDocument: d.root}
 	n.ScriptForceAsync = n.TagName == "SCRIPT"
 	if namespace != "http://www.w3.org/1999/xhtml" {
 		n.QualifiedName = tag
@@ -667,7 +670,7 @@ func (d *Document) CreateComment(data string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	n := &Node{ID: d.next, Type: "comment", Text: data, OwnerDocument: d.root, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "comment", Text: data, OwnerDocument: d.root}
 	d.nodes[n.ID] = n
 	return *n
 }
@@ -675,7 +678,7 @@ func (d *Document) CreateText(data string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	n := &Node{ID: d.next, Type: "text", Text: data, OwnerDocument: d.root, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "text", Text: data, OwnerDocument: d.root}
 	d.nodes[n.ID] = n
 	return *n
 }
@@ -986,7 +989,7 @@ func (d *Document) SetTextContent(id int64, value string) error {
 	n.Children = nil
 	if value != "" {
 		d.next++
-		text := &Node{ID: d.next, Type: "text", Text: value, Parent: id, OwnerDocument: d.ownerDocumentLocked(id), Attributes: map[string]string{}}
+		text := &Node{ID: d.next, Type: "text", Text: value, Parent: id, OwnerDocument: d.ownerDocumentLocked(id)}
 		d.nodes[text.ID] = text
 		n.Children = append(n.Children, text.ID)
 	}
@@ -1104,7 +1107,7 @@ func (d *Document) insertHTMLLocked(parent, contextElement *Node, source string,
 	var add func(*html.Node, int64)
 	add = func(raw *html.Node, parentID int64) {
 		d.next++
-		n := &Node{ID: d.next, Parent: parentID, OwnerDocument: d.ownerDocumentLocked(parentID), Attributes: map[string]string{}}
+		n := &Node{ID: d.next, Parent: parentID, OwnerDocument: d.ownerDocumentLocked(parentID)}
 		switch raw.Type {
 		case html.ElementNode:
 			n.Type, n.TagName = "element", strings.ToUpper(raw.Data)

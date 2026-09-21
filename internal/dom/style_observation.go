@@ -21,7 +21,9 @@ func (d *Document) StyleObservationState(id int64) string {
 		state.Children = append(state.Children, n.Children...)
 		state.OwnerDocument = d.ownerDocumentLocked(id)
 		state.Connected = d.isConnectedLocked(id)
-		state.Attributes = n.Attributes
+		if n.Attributes != nil {
+			state.Attributes = n.Attributes
+		}
 		if n.StyleDeclarationsJSON != "" {
 			state.Inline = "j" + n.StyleDeclarationsJSON
 		} else {

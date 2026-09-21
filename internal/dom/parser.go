@@ -62,14 +62,11 @@ func (d *Document) ParseInertDocument(source, mime, documentURL string) (Node, e
 // Chrome's exact localized parser diagnostics remain outside this parser.
 func parseXMLDocument(source string) *Document {
 	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}, next: 1, flatLayout: new(layoutflat.State)}, root: 1}
-	d.nodes[1] = &Node{ID: 1, Type: "document", Attributes: map[string]string{}}
+	d.nodes[1] = &Node{ID: 1, Type: "document"}
 	add := func(n *Node, parent int64) {
 		d.next++
 		n.ID = d.next
 		n.Parent = parent
-		if n.Attributes == nil {
-			n.Attributes = map[string]string{}
-		}
 		d.nodes[n.ID] = n
 		d.nodes[parent].Children = append(d.nodes[parent].Children, n.ID)
 	}
@@ -120,7 +117,7 @@ func parseXMLDocument(source string) *Document {
 			if t.Name.Space != "" {
 				name = t.Name.Space + ":" + name
 			}
-			n := &Node{Type: "element", TagName: name, QualifiedName: name, Namespace: ns[t.Name.Space], Attributes: map[string]string{}}
+			n := &Node{Type: "element", TagName: name, QualifiedName: name, Namespace: ns[t.Name.Space]}
 			for _, a := range t.Attr {
 				key := a.Name.Local
 				uri := ""
