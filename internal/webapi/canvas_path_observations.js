@@ -53,7 +53,25 @@ const strokeContains = (path, x, y, width) => {
   }
   return false;
 };
-const paintSnapshot = (style, space = 'srgb', scheme = 'light') => {
+const paintSnapshot = (style, space = 'srgb', scheme = 'light', transform = [1, 0, 0, 1, 0, 0]) => {
+  const pattern = patterns.get(style);
+  if (pattern) {
+    const [a, b, c, d, e, f] = transform,
+      [u, v, w, z, q, r] = pattern.matrix;
+    return {
+      ...pattern,
+      matrix: [
+        a * u + c * v,
+        b * u + d * v,
+        a * w + c * z,
+        b * w + d * z,
+        a * q + c * r + e,
+        b * q + d * r + f,
+      ],
+      image: { ...pattern.image, pixels: pattern.image.pixels.slice() },
+      targetSpace: space,
+    };
+  }
   const g = gradients.get(style);
   return g
     ? {
@@ -70,6 +88,38 @@ const paintSnapshot = (style, space = 'srgb', scheme = 'light') => {
 };
 const paintColor = (paint, x, y) => {
   if (Array.isArray(paint)) return paint;
+  if (paint?.kind === 'pattern') {
+    const m = paint.matrix,
+      det = m[0] * m[3] - m[1] * m[2];
+    if (!det) return [0, 0, 0, 0];
+    let px = Math.floor((m[3] * (x - m[4]) - m[2] * (y - m[5])) / det),
+      py = Math.floor((-m[1] * (x - m[4]) + m[0] * (y - m[5])) / det);
+    const image = paint.image;
+    if (
+      (px < 0 || px >= image.width) &&
+      (paint.repetition === 'repeat-y' || paint.repetition === 'no-repeat')
+    )
+      return [0, 0, 0, 0];
+    if (
+      (py < 0 || py >= image.height) &&
+      (paint.repetition === 'repeat-x' || paint.repetition === 'no-repeat')
+    )
+      return [0, 0, 0, 0];
+    px = ((px % image.width) + image.width) % image.width;
+    py = ((py % image.height) + image.height) % image.height;
+    const index = (py * image.width + px) * 4,
+      alpha = image.pixels[index + 3];
+    return canvasPaintColor(
+      [
+        alpha ? (image.pixels[index] * 255) / alpha : 0,
+        alpha ? (image.pixels[index + 1] * 255) / alpha : 0,
+        alpha ? (image.pixels[index + 2] * 255) / alpha : 0,
+        alpha,
+        image.colorSpace || 'srgb',
+      ],
+      paint.targetSpace,
+    );
+  }
   if (!paint || !paint.stops.length) return [0, 0, 0, 0];
   const m = paint.matrix,
     det = m[0] * m[3] - m[1] * m[2];
@@ -288,8 +338,10 @@ const queuePath = (c, path, rule, stroke = false, clear = false) => {
         stroke ? d.strokeStyle : d.fillStyle,
         c.surface.colorSpace || 'srgb',
         canvasColorScheme(c.surface),
+        d.transform,
       );
   if (!paint) return;
+  if (paint.kind === 'pattern' && paint.image.originClean === false) c.surface.originClean = false;
   const scale = Math.max(
     Math.hypot(d.transform[0], d.transform[1]),
     Math.hypot(d.transform[2], d.transform[3]),

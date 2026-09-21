@@ -57,6 +57,33 @@ func TestCanvasLanguageStateChrome152(t *testing.T) {
 	}
 }
 
+func TestCanvasPatternSnapshotsAndRepeatsChrome152(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const source=document.createElement('canvas');source.width=2;source.height=1;const a=source.getContext('2d');a.fillStyle='red';a.fillRect(0,0,1,1);a.fillStyle='blue';a.fillRect(1,0,1,1);const target=document.createElement('canvas');target.width=4;target.height=2;const x=target.getContext('2d');const pattern=x.createPattern(source,'repeat-x');a.fillStyle='lime';a.fillRect(0,0,1,1);x.fillStyle=pattern;x.fillRect(0,0,4,2);return JSON.stringify({length:x.createPattern.length,tag:Object.prototype.toString.call(pattern),colors:[[0,0],[1,0],[2,0],[3,0],[0,1]].map(([px,py])=>Array.from(x.getImageData(px,py,1,1).data))})})()`)
+	if err != nil || value != `{"length":2,"tag":"[object CanvasPattern]","colors":[[255,0,0,255],[0,0,255,255],[255,0,0,255],[0,0,255,255],[0,0,0,0]]}` {
+		t.Fatalf("canvas pattern: %v %v", value, err)
+	}
+}
+
+func TestCanvasPatternCombinesTransformsChrome152(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const source=document.createElement('canvas');source.width=2;source.height=1;const a=source.getContext('2d');a.fillStyle='red';a.fillRect(0,0,1,1);a.fillStyle='blue';a.fillRect(1,0,1,1);const target=document.createElement('canvas');target.width=5;target.height=1;const x=target.getContext('2d'),pattern=x.createPattern(source,'repeat');pattern.setTransform(new DOMMatrix().translate(1,0));x.translate(1,0);x.fillStyle=pattern;x.fillRect(0,0,4,1);return JSON.stringify([0,1,2,3,4].map(i=>Array.from(x.getImageData(i,0,1,1).data).slice(0,3)))})()`)
+	if err != nil || value != `[[0,0,0],[0,0,255],[255,0,0],[0,0,255],[255,0,0]]` {
+		t.Fatalf("canvas pattern transform: %v %v", value, err)
+	}
+}
+
+func TestCanvasFocusRingForFocusedFallbackElement(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const c=document.createElement('canvas');c.width=c.height=20;const button=document.createElement('button');c.append(button);document.body.append(c);const x=c.getContext('2d');x.beginPath();x.rect(5,5,10,10);x.drawFocusIfNeeded(button);const before=x.getImageData(3,8,1,1).data[3];button.focus();x.drawFocusIfNeeded(button);const after=x.getImageData(3,8,1,1).data[3],center=x.getImageData(8,8,1,1).data[3];return JSON.stringify([before,after>0,center,x.drawFocusIfNeeded.length])})()`)
+	if err != nil || value != `[0,true,0,1]` {
+		t.Fatalf("canvas focus ring: %v %v", value, err)
+	}
+}
+
 func TestCanvasStateWindowAndWorker(t *testing.T) {
 	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {

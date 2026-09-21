@@ -10,6 +10,7 @@ const canvasCompatibilityState = (() => {
     'ImageData',
     'ImageBitmap',
     'CanvasGradient',
+    'CanvasPattern',
     'TextMetrics',
     'HTMLCanvasElement',
   ];
@@ -52,6 +53,7 @@ const canvasCompatibilityState = (() => {
     images = new WeakMap(),
     bitmaps = new WeakMap(),
     gradients = new WeakMap(),
+    patterns = new WeakMap(),
     factories = new Map(),
     token = {};
   const fail = (name, message) => {
@@ -314,6 +316,23 @@ const canvasCompatibilityState = (() => {
       gradients.get(this).stops.push({ offset, color: rgba });
     }
   }
+  class CanvasPattern {
+    constructor(key, image, repetition) {
+      if (key !== token) throw new TypeError('Illegal constructor');
+      patterns.set(this, { kind: 'pattern', image, repetition, matrix: [1, 0, 0, 1, 0, 0] });
+    }
+    setTransform(transform = {}) {
+      const matrix = [
+        transform.a ?? transform.m11 ?? 1,
+        transform.b ?? transform.m12 ?? 0,
+        transform.c ?? transform.m21 ?? 0,
+        transform.d ?? transform.m22 ?? 1,
+        transform.e ?? transform.m41 ?? 0,
+        transform.f ?? transform.m42 ?? 0,
+      ].map(Number);
+      if (matrix.every(Number.isFinite)) patterns.get(this).matrix = matrix;
+    }
+  }
   const metricSlots = new WeakMap();
   class TextMetrics {
     constructor(key, data) {
@@ -466,6 +485,7 @@ const canvasCompatibilityState = (() => {
         stroke ? d.strokeStyle : d.fillStyle,
         c.surface.colorSpace || 'srgb',
         canvasColorScheme(c.surface),
+        d.transform,
       );
     if (!paint) {
       record(c, stroke ? 'strokeText' : 'fillText', [text, x, y, maxWidth]);
@@ -961,6 +981,83 @@ const canvasCompatibilityState = (() => {
       gradients.get(gradient).matrix = c.draw.transform.slice();
       return gradient;
     }
+    createPattern(source, repetition) {
+      contextState(this);
+      repetition = repetition == null || repetition === '' ? 'repeat' : String(repetition);
+      if (!['repeat', 'repeat-x', 'repeat-y', 'no-repeat'].includes(repetition))
+        fail(
+          'SyntaxError',
+          `Failed to execute 'createPattern' on 'CanvasRenderingContext2D': The provided type ('${repetition}') is not one of 'repeat', 'no-repeat', 'repeat-x', or 'repeat-y'.`,
+        );
+      let image;
+      if (bitmaps.has(source)) {
+        image = bitmaps.get(source);
+        if (image.closed) fail('InvalidStateError', 'ImageBitmap is closed');
+      } else if (
+        canvases.has(source) ||
+        (typeof HTMLCanvasElement !== 'undefined' && source instanceof HTMLCanvasElement)
+      ) {
+        const surface = sync(state(source));
+        if (!surface.width || !surface.height)
+          fail(
+            'InvalidStateError',
+            "Failed to execute 'createPattern' on 'CanvasRenderingContext2D': The image argument is a canvas element with a width or height of 0.",
+          );
+        image = {
+          width: surface.width,
+          height: surface.height,
+          pixels: buffer(surface),
+          colorSpace: surface.colorSpace || 'srgb',
+          originClean: surface.originClean,
+        };
+      } else if (typeof HTMLImageElement !== 'undefined' && source instanceof HTMLImageElement) {
+        image = sourceImage(source);
+        if (!image) return null;
+      } else throw new TypeError('Invalid canvas pattern source');
+      if (!image.pixels) return null;
+      return new CanvasPattern(token, { ...image, pixels: image.pixels.slice() }, repetition);
+    }
+    drawFocusIfNeeded(element, maybeElement) {
+      const c = contextState(this);
+      if (!arguments.length)
+        throw new TypeError(
+          "Failed to execute 'drawFocusIfNeeded' on 'CanvasRenderingContext2D': 1 argument required, but only 0 present.",
+        );
+      if (!(element instanceof Element)) {
+        if (arguments.length < 2)
+          throw new TypeError(
+            "Failed to execute 'drawFocusIfNeeded' on 'CanvasRenderingContext2D': parameter 1 is not of type 'Element'.",
+          );
+        if (!(element instanceof Path2D))
+          throw new TypeError(
+            "Failed to execute 'drawFocusIfNeeded' on 'CanvasRenderingContext2D': parameter 1 is not of type 'Path2D'.",
+          );
+        if (!(maybeElement instanceof Element))
+          throw new TypeError(
+            "Failed to execute 'drawFocusIfNeeded' on 'CanvasRenderingContext2D': parameter 2 is not of type 'Element'.",
+          );
+        element = maybeElement;
+        if (document.activeElement === element && c.surface.canvas.contains(element))
+          fail('NotSupportedError', 'Path2D focus-ring geometry is not implemented');
+        return;
+      }
+      if (document.activeElement !== element || !c.surface.canvas.contains(element)) return;
+      reportBoundary(c, 'approximateFocusRing');
+      const original = c.draw;
+      c.draw = {
+        ...original,
+        strokeStyle: '#101010',
+        lineWidth: 6,
+        globalAlpha: 1,
+        globalCompositeOperation: 'source-over',
+        transform: [1, 0, 0, 1, 0, 0],
+      };
+      try {
+        queuePath(c, c.path || [], 'nonzero', true);
+      } finally {
+        c.draw = original;
+      }
+    }
     measureText(text) {
       const c = contextState(this);
       return new TextMetrics(token, textMetrics(c.draw, String(text)));
@@ -1007,7 +1104,7 @@ const canvasCompatibilityState = (() => {
         };
         if (allowed[key] && !allowed[key].includes(String(value))) return;
         if (key === 'fillStyle' || key === 'strokeStyle' || key === 'shadowColor') {
-          if (gradients.has(value) && key !== 'shadowColor') {
+          if ((gradients.has(value) || patterns.has(value)) && key !== 'shadowColor') {
             c.draw[key] = value;
             return;
           }
@@ -1334,6 +1431,7 @@ const canvasCompatibilityState = (() => {
     ImageData,
     ImageBitmap,
     CanvasGradient,
+    CanvasPattern,
     TextMetrics,
   })) {
     if (name === 'CanvasRenderingContext2D' && typeof document === 'undefined') continue;
@@ -1405,6 +1503,7 @@ const canvasCompatibilityState = (() => {
       ImageData,
       ImageBitmap,
       CanvasGradient,
+      CanvasPattern,
       TextMetrics,
     ]) {
       markNative(ctor, ctor.name);
