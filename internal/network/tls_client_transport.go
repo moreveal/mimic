@@ -137,7 +137,23 @@ func (t *TLSClientTransport) roundTrip(request *http.Request, client tls_client.
 	// Browser TLS behavior is irrelevant for clear-text local development and
 	// retaining net/http here makes ordinary httptest servers deterministic.
 	if request.URL.Scheme != "https" && !t.proxied {
-		return t.fallback.RoundTrip(request)
+		wireRequest := request.Clone(request.Context())
+		wireRequest.Header = request.Header.Clone()
+		_, authorOrder := browserHeaderLayout(request.Context())
+		authorPriority := false
+		for _, name := range authorOrder {
+			if strings.EqualFold(name, "Priority") {
+				authorPriority = true
+				break
+			}
+		}
+		// Chrome 152 omits its browser-generated Priority header on HTTP/1.1
+		// clear-text requests, while it sends an explicit keep-alive header.
+		if !authorPriority {
+			wireRequest.Header.Del("Priority")
+		}
+		wireRequest.Header.Set("Connection", "keep-alive")
+		return t.fallback.RoundTrip(wireRequest)
 	}
 	body, err := requestBytes(request)
 	if err != nil {
