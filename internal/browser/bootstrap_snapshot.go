@@ -25,7 +25,12 @@ import (
 const bootstrapSnapshotEntries = 4
 const bootstrapSnapshotBytes = 32 << 20
 
-const defaultRealmsPerIsolate = 8
+// A Page owns its V8 isolate. Sharing one isolate between concurrently active
+// Pages makes teardown of one restored realm race native V8 work in siblings;
+// on Windows this presents as an access violation rather than a Go-level
+// failure. Keep the environment override for controlled experiments, but make
+// the production default preserve Page isolation and independent event loops.
+const defaultRealmsPerIsolate = 1
 
 type pooledBootstrapSnapshot struct {
 	base engine.BootstrapSnapshot

@@ -122,17 +122,19 @@ func (p *Page) SetLocaleOverride(locale string) error {
 }
 
 // SetWindowBounds updates the modeled native window shared by Window metrics
-// and CDP. Zero values preserve the corresponding current dimension.
+// and CDP. The outer bounds may be smaller than the emulated viewport: Chrome
+// preserves the viewport in that case and reports the independently sized
+// outer window through Browser.getWindowBounds and window.outerWidth/Height.
 func (p *Page) SetWindowBounds(left, top, width, height *int) error {
 	p.mu.Lock()
 	if width != nil {
-		if *width <= 0 || *width < p.env.Window.ViewportWidth {
+		if *width <= 0 {
 			p.mu.Unlock()
 			return fmt.Errorf("Invalid window width")
 		}
 	}
 	if height != nil {
-		if *height <= 0 || *height < p.env.Window.ViewportHeight {
+		if *height <= 0 {
 			p.mu.Unlock()
 			return fmt.Errorf("Invalid window height")
 		}

@@ -149,15 +149,17 @@ func TestBrowserWindowCommandsShareCanonicalBounds(t *testing.T) {
 	}
 	wireCall(t, c, 3, "Browser.setWindowBounds", map[string]any{
 		"windowId": primaryWindowID,
-		"bounds":   map[string]any{"left": 40, "top": 50, "width": 1400, "height": 900},
+		// Chrome permits outer bounds smaller than an emulated viewport. This
+		// occurs when concurrent Playwright contexts use different fingerprints.
+		"bounds": map[string]any{"left": 40, "top": 50, "width": 1000, "height": 700},
 	})
 	bounds := wireCall(t, c, 4, "Browser.getWindowBounds", map[string]any{"windowId": primaryWindowID})["bounds"].(map[string]any)
-	if bounds["left"] != float64(40) || bounds["top"] != float64(50) || bounds["width"] != float64(1400) || bounds["height"] != float64(900) || bounds["windowState"] != "normal" {
+	if bounds["left"] != float64(40) || bounds["top"] != float64(50) || bounds["width"] != float64(1000) || bounds["height"] != float64(700) || bounds["windowState"] != "normal" {
 		t.Fatal(bounds)
 	}
 	for _, page := range s.pages() {
 		window := page.Environment().Window
-		if window.X != 40 || window.Y != 50 || window.OuterWidth != 1400 || window.OuterHeight != 900 {
+		if window.X != 40 || window.Y != 50 || window.OuterWidth != 1000 || window.OuterHeight != 700 {
 			t.Fatalf("page %s bounds = %+v", page.ID, window)
 		}
 	}
