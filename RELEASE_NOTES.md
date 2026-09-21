@@ -23,11 +23,11 @@ Changes since v0.1.4:
   architecture while keeping the full browser and engine test suites passing.
   Current local compiled runs complete in roughly 5.7--5.9 seconds with about
   222--244 MiB peak memory; results and methodology are recorded in the
-  [performance report](docs/performance/report.md).
+  [performance report](https://github.com/moreveal/mimic/blob/main/docs/performance/report.md).
 
 Mimic remains a renderer-free public beta for Windows and Linux amd64. It models
 browser-observable state for supported workflows; it does not provide complete
 Chrome, rendering, media, or Web API compatibility. See the
-[compatibility notes](docs/compatibility.md) and
-[performance report](docs/performance/report.md) for current boundaries and
+[compatibility notes](https://github.com/moreveal/mimic/blob/main/docs/compatibility.md) and
+[performance report](https://github.com/moreveal/mimic/blob/main/docs/performance/report.md) for current boundaries and
 measured tradeoffs.
