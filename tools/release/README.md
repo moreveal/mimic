@@ -10,7 +10,7 @@ the Linux fonts documented in [getting started](../../docs/getting-started.md).
 Rust/Cargo is a build-time requirement for the native Blitz producer.
 
 ```powershell
-python tools/release/prepare.py --version v0.1.4
+python tools/release/prepare.py --version v0.1.5
 ```
 
 Run the equivalent command under Ubuntu 24.04/WSL2 for Linux. The tool builds a
@@ -44,7 +44,7 @@ The startup banner derives its version from Go build information through
 `runtime/debug.ReadBuildInfo`. Do not add a second version constant, edit source
 files for a release, or inject a display version with `-ldflags -X`.
 
-- A semantic module version is displayed unchanged, for example `v0.1.4`.
+- A semantic module version is displayed unchanged, for example `v0.1.5`.
 - A repository build displays `dev+<short-revision>` from the embedded
   `vcs.revision` and adds `-dirty` when Go records modified sources.
 - A Go pseudo-version such as `v0.0.0-20260920165425-17f508b820af` describes a
@@ -64,10 +64,27 @@ mistaken for a fresh build.
 Push the exact release commit to `moreveal/mimic`, then run:
 
 ```powershell
-python tools/release/publish.py --version v0.1.4
+python tools/release/publish.py --version v0.1.5
 ```
 
 Publication requires verified Windows and Linux receipts for the current commit.
 It creates a draft release, uploads the archives, manifest, and checksums,
 downloads every asset to verify its hash, and only then publishes the release.
 Local verification is authoritative; the publisher does not wait for CI.
+
+## Publish the website
+
+Updating the separate `moreveal/mimic-overview` website is a required part of
+every release. After publishing the GitHub Release:
+
+1. Update every displayed version and version-specific download link in the
+   website repository.
+2. Copy the release's `RELEASE_NOTES.md` to the website repository unchanged.
+   The website changelog and the GitHub Release body must have exactly the same
+   source text; do not maintain a shortened or rewritten website variant.
+3. Run `npm run build` and `npm run test:links` in `mimic-overview`.
+4. Commit and push `main`, then verify that the GitHub Pages deployment succeeds
+   and that the live changelog shows the new release.
+
+A release is not complete until both the GitHub Release and the public website
+are published and verified.
