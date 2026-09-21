@@ -442,7 +442,8 @@ const installNavigatorCapabilities = () => {
     boundTypes.add(type);
   // A deliberately absent subsystem fails explicitly, with the WebIDL return
   // convention, rather than inheriting semanticMissing's successful null.
-  for (const type of boundTypes)
+  for (const type of boundTypes) {
+    if (typeof lazyDomainInterfaces !== 'undefined' && lazyDomainInterfaces.has(type)) continue;
     for (const member of capabilityInterfaces[type] || []) {
       const unsupported = () => {
         throw error('NotSupportedError', `${type}.${member.name} backend is unavailable.`);
@@ -451,6 +452,7 @@ const installNavigatorCapabilities = () => {
         method(type, member.name, unsupported, String(member.returnType).startsWith('Promise'));
       if (member.kind === 'attribute') attribute(type, member.name, unsupported, unsupported);
     }
+  }
   const quotaPrototype = {};
   Object.defineProperty(quotaPrototype, Symbol.toStringTag, {
     value: 'DeprecatedStorageQuota',
@@ -536,6 +538,8 @@ const installNavigatorCapabilities = () => {
     const getter = {
       [member.name]() {
         if (this !== nav) throw new TypeError('Illegal invocation');
+        if (member.name === 'gpu' && typeof requireLazySingleton === 'function')
+          return requireLazySingleton('webgpu', 'gpu');
         if (['vendorSub', 'productSub', 'appCodeName', 'doNotTrack'].includes(member.name))
           return scalar()[member.name];
         if (member.name === 'deprecatedRunAdAuctionEnforcesKAnonymity') return false;

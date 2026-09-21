@@ -12,7 +12,15 @@
   };
   const check = (value, type) => {
     const s = slots.get(value);
-    if (!s || s.type !== type) throw new TypeError('Illegal invocation');
+    if (
+      !s ||
+      (s.type !== type &&
+        !(
+          type === 'GPUError' &&
+          ['GPUValidationError', 'GPUOutOfMemoryError', 'GPUInternalError'].includes(s.type)
+        ))
+    )
+      throw new TypeError('Illegal invocation');
     return s;
   };
   const make = (type, data = {}) => {
@@ -34,6 +42,12 @@
       }[name];
     if (prior?.value) Object.defineProperty(value, 'length', { value: prior.value.length });
     if (typeof markNative === 'function') markNative(value, name);
+    if (
+      typeof lazyDomainInterfaces !== 'undefined' &&
+      lazyDomainInterfaces.get(type) === 'webgpu'
+    ) {
+      if (bindLazyBehavior(type, name, value)) return;
+    }
     Object.defineProperty(proto, name, {
       value,
       enumerable: true,
@@ -53,6 +67,14 @@
       d.set = function (v) {
         set(check(this, type), v);
       };
+    if (
+      typeof lazyDomainInterfaces !== 'undefined' &&
+      lazyDomainInterfaces.get(type) === 'webgpu'
+    ) {
+      const boundGet = bindLazyBehavior(type, name, get, 'get');
+      const boundSet = !d.set || bindLazyBehavior(type, name, d.set, 'set');
+      if (boundGet && boundSet) return;
+    }
     Object.defineProperty(proto, name, d);
   };
   const detach = (buffer) => {
@@ -105,8 +127,7 @@
       },
     );
   }
-  for (const type of ['GPUValidationError', 'GPUOutOfMemoryError', 'GPUInternalError'])
-    getter(type, 'message', (s) => s.message);
+  getter('GPUError', 'message', (s) => s.message);
   getter('GPUDeviceLostInfo', 'reason', (s) => s.reason);
   getter('GPUDeviceLostInfo', 'message', (s) => s.message);
   const features = (values) => make('GPUSupportedFeatures', { values: new Set(values) });
@@ -117,13 +138,20 @@
     if (typeof callback !== 'function') throw new TypeError('Expected callback');
     s.values.forEach((v, k) => callback.call(thisArg, v, k, s.object));
   });
-  Object.defineProperty(GPUSupportedFeatures.prototype, Symbol.iterator, {
-    value: function () {
-      return check(this, 'GPUSupportedFeatures').values.values();
-    },
-    writable: true,
-    configurable: true,
-  });
+  const featureIterator = function values() {
+    return check(this, 'GPUSupportedFeatures').values.values();
+  };
+  if (
+    typeof lazyDomainInterfaces !== 'undefined' &&
+    lazyDomainInterfaces.get('GPUSupportedFeatures') === 'webgpu'
+  )
+    bindLazyBehavior('GPUSupportedFeatures', '@@iterator', featureIterator);
+  else
+    Object.defineProperty(GPUSupportedFeatures.prototype, Symbol.iterator, {
+      value: featureIterator,
+      writable: true,
+      configurable: true,
+    });
   const gpuCapabilities = host.gpuCapabilities(),
     gpuLimitDefaults = gpuCapabilities.defaults;
   for (const name of Object.keys(gpuLimitDefaults))
@@ -148,6 +176,7 @@
   );
   // The navigator owns one canonical GPU object; adapters/devices own their views.
   const gpu = make('GPU');
+  if (typeof publishLazySingleton === 'function') publishLazySingleton('webgpu', 'gpu', gpu);
   method('GPU', 'getPreferredCanvasFormat', () => 'bgra8unorm');
   if (globalThis.WGSLLanguageFeatures?.prototype) {
     const languageFeatures = make('WGSLLanguageFeatures', {
@@ -161,13 +190,20 @@
       if (typeof callback !== 'function') throw new TypeError('Expected callback');
       s.values.forEach((v, k) => Reflect.apply(callback, thisArg, [v, k, languageFeatures]));
     });
-    Object.defineProperty(WGSLLanguageFeatures.prototype, Symbol.iterator, {
-      value: function () {
-        return check(this, 'WGSLLanguageFeatures').values.values();
-      },
-      writable: true,
-      configurable: true,
-    });
+    const iterator = function values() {
+      return check(this, 'WGSLLanguageFeatures').values.values();
+    };
+    if (
+      typeof lazyDomainInterfaces !== 'undefined' &&
+      lazyDomainInterfaces.get('WGSLLanguageFeatures') === 'webgpu'
+    )
+      bindLazyBehavior('WGSLLanguageFeatures', '@@iterator', iterator);
+    else
+      Object.defineProperty(WGSLLanguageFeatures.prototype, Symbol.iterator, {
+        value: iterator,
+        writable: true,
+        configurable: true,
+      });
   }
   method('GPU', 'requestAdapter', (_, options = {}) => {
     options = options ?? {};
@@ -193,7 +229,7 @@
     typeof host.isSecureContext === 'function'
       ? host.isSecureContext()
       : host.documentSecurity().secureContext;
-  if (secure) {
+  if (secure && typeof publishLazySingleton === 'undefined') {
     // Capture the owning navigator: inheriting its prototype does not confer its brand.
     const owner = globalThis.navigator;
     const get = Object.getOwnPropertyDescriptor(

@@ -2809,7 +2809,7 @@ bitmap saving; that saving is approximately the avoided decoded raster area
 # Lazy WebAPI implementation domains (2026-09-21)
 
 The Window bootstrap now publishes the generated WebIDL shape eagerly but keeps
-WebAudio and WebGL implementation source in process-wide immutable Go storage.
+WebAudio, WebGL, and WebGPU implementation source in process-wide immutable Go storage.
 Stable realm-local behavior cells synchronously materialize a domain on first
 construction/call (or WebGL context request) without replacing constructors,
 prototypes, methods, accessors, aliases, or descriptors. Dedicated regression

@@ -14,6 +14,7 @@
   const lazyDomainInterfaces = new Map();
   const lazyDomainState = new Map();
   const lazyBehaviorCells = new Map();
+  const lazySingletons = new Map();
   const lazyKey = (interfaceName, member, side = 'value') =>
     interfaceName + '\0' + member + '\0' + side;
   const defineLazyDomain = (name, interfaces) => {
@@ -50,11 +51,52 @@
       return host.semanticMissingAt('surface.js/lazyBehavior', interfaceName + '.' + member);
     ensureLazyDomain(domain);
     const implementation = cell.implementation;
-    if (typeof implementation !== 'function')
-      throw new Error('lazy domain did not bind ' + interfaceName + '.' + member);
+    if (typeof implementation !== 'function') {
+      host.semanticMissingAt('surface.js/lazyBehavior', interfaceName + '.' + member);
+      if (member === 'constructor') throw new TypeError('Illegal constructor');
+      return;
+    }
     return newTarget
       ? Reflect.construct(implementation, args, newTarget)
       : Reflect.apply(implementation, receiver, args);
+  };
+  const requireLazySingleton = (domain, name) => {
+    ensureLazyDomain(domain);
+    if (!lazySingletons.has(domain + '\0' + name))
+      throw new Error('lazy domain did not publish singleton ' + domain + '.' + name);
+    return lazySingletons.get(domain + '\0' + name);
+  };
+  const publishLazySingleton = (domain, name, value) =>
+    lazySingletons.set(domain + '\0' + name, value);
+  const installLazyShape = () => {
+    for (const interfaceName of ['GPUSupportedFeatures', 'WGSLLanguageFeatures']) {
+      const prototype = globalThis[interfaceName]?.prototype;
+      if (!prototype || Object.hasOwn(prototype, Symbol.iterator)) continue;
+      const iterator = function values() {
+        return invokeLazyBehavior(interfaceName, '@@iterator', this, [], undefined, 'value');
+      };
+      lazyBehaviorCells.set(lazyKey(interfaceName, '@@iterator'), {
+        implementation: undefined,
+      });
+      Object.defineProperty(prototype, Symbol.iterator, {
+        value: iterator,
+        writable: true,
+        configurable: true,
+      });
+    }
+  };
+  const installLazySingletonBindings = () => {
+    if (!globalThis.Navigator?.prototype || !globalThis.GPU) return;
+    const get = function () {
+      if (this !== nav) throw new TypeError('Illegal invocation');
+      return requireLazySingleton('webgpu', 'gpu');
+    };
+    markNative(get, 'gpu', 'get ');
+    Object.defineProperty(globalThis.Navigator.prototype, 'gpu', {
+      get,
+      enumerable: true,
+      configurable: true,
+    });
   };
   defineLazyDomain('audio', [
     'AnalyserNode',
@@ -107,6 +149,47 @@
     'WebGLTransformFeedback',
     'WebGLUniformLocation',
     'WebGLVertexArrayObject',
+  ]);
+  defineLazyDomain('webgpu', [
+    'GPU',
+    'GPUAdapter',
+    'GPUAdapterInfo',
+    'GPUBindGroup',
+    'GPUBindGroupLayout',
+    'GPUBuffer',
+    'GPUCanvasContext',
+    'GPUCommandBuffer',
+    'GPUCommandEncoder',
+    'GPUCompilationInfo',
+    'GPUCompilationMessage',
+    'GPUComputePassEncoder',
+    'GPUComputePipeline',
+    'GPUDevice',
+    'GPUDeviceLostInfo',
+    'GPUError',
+    'GPUExternalTexture',
+    'GPUInternalError',
+    'GPUMemoryHeapInfo',
+    'GPUOutOfMemoryError',
+    'GPUPipelineError',
+    'GPUPipelineLayout',
+    'GPUQuerySet',
+    'GPUQueue',
+    'GPURenderBundle',
+    'GPURenderBundleEncoder',
+    'GPURenderPassEncoder',
+    'GPURenderPipeline',
+    'GPUResourceTable',
+    'GPUSampler',
+    'GPUShaderModule',
+    'GPUSubgroupMatrixConfig',
+    'GPUSupportedFeatures',
+    'GPUSupportedLimits',
+    'GPUTexture',
+    'GPUTextureView',
+    'GPUUncapturedErrorEvent',
+    'GPUValidationError',
+    'WGSLLanguageFeatures',
   ]);
   Object.defineProperty(globalThis, '__mimicLazySurface', {
     value: {
@@ -8613,30 +8696,79 @@
         )
           continue;
         const descriptor = { enumerable: property.enumerable, configurable: property.configurable };
+        const lazyDomain = lazyDomainInterfaces.get(interfaceName);
         if (property.valueType === 'accessor') {
           descriptor.get = property.getter
-            ? function () {
-                return host.semanticMissingAt('surface.js:659', interfaceName + '.' + propertyName);
-              }
+            ? lazyDomain
+              ? function () {
+                  return invokeLazyBehavior(
+                    interfaceName,
+                    propertyName,
+                    this,
+                    [],
+                    undefined,
+                    'get',
+                  );
+                }
+              : function () {
+                  return host.semanticMissingAt(
+                    'surface.js:659',
+                    interfaceName + '.' + propertyName,
+                  );
+                }
             : undefined;
           descriptor.set = property.setter
-            ? function () {
-                return host.semanticMissingAt(
-                  'surface.js:660',
-                  interfaceName + '.' + propertyName + ' setter',
-                );
-              }
+            ? lazyDomain
+              ? function (value) {
+                  return invokeLazyBehavior(
+                    interfaceName,
+                    propertyName,
+                    this,
+                    [value],
+                    undefined,
+                    'set',
+                  );
+                }
+              : function () {
+                  return host.semanticMissingAt(
+                    'surface.js:660',
+                    interfaceName + '.' + propertyName + ' setter',
+                  );
+                }
             : undefined;
+          if (lazyDomain) {
+            if (descriptor.get)
+              lazyBehaviorCells.set(lazyKey(interfaceName, propertyName, 'get'), {});
+            if (descriptor.set)
+              lazyBehaviorCells.set(lazyKey(interfaceName, propertyName, 'set'), {});
+          }
         } else {
           let value;
           if (property.name === 'constructor') value = ctor;
           else if (property.valueType === 'function') {
             const functionName = property.functionName || property.name;
-            value = {
-              [functionName]: function () {
-                return host.semanticMissingAt('surface.js:666', interfaceName + '.' + propertyName);
-              },
-            }[functionName];
+            value = lazyDomain
+              ? {
+                  [functionName]: function (...args) {
+                    return invokeLazyBehavior(
+                      interfaceName,
+                      propertyName,
+                      this,
+                      args,
+                      undefined,
+                      'value',
+                    );
+                  },
+                }[functionName]
+              : {
+                  [functionName]: function () {
+                    return host.semanticMissingAt(
+                      'surface.js:666',
+                      interfaceName + '.' + propertyName,
+                    );
+                  },
+                }[functionName];
+            if (lazyDomain) lazyBehaviorCells.set(lazyKey(interfaceName, propertyName), {});
             if (property.functionLength !== null && property.functionLength !== undefined)
               Object.defineProperty(value, 'length', {
                 value: property.functionLength,
