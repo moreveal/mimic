@@ -1,26 +1,33 @@
-# Mimic v0.1.4
+# Mimic v0.1.5
 
-Changes since v0.1.3:
+Changes since v0.1.4:
 
-- Added Blitz as the production style and geometry producer. A native,
-  document-owned model now supplies computed styles, boxes, hit testing, and CDP
-  geometry from one canonical state shared across worlds and consumers.
-- Improved real-page CSS and layout behavior, including stylesheet URL
-  resolution, fonts and intrinsic images, SVG sizing, live form controls,
-  skipped content, tables, captions, and dependency-driven invalidation.
-- Expanded Chrome 152 compatibility across DOM and Web IDL bindings, navigation,
-  storage, networking, Performance APIs, Trusted Types, console behavior, media,
-  WebGPU, and cross-realm object lifecycles.
-- Strengthened Playwright and Puppeteer automation with more complete CDP
-  coverage, steadier navigation and frame handling, and isolated concurrent Page
-  execution.
-- Made the public command a self-contained native executable. Release packages
-  require no Go, Rust, Cargo, Chromium, display server, or GPU at runtime.
-- Added a clearer startup banner and tightened the reproducible local release
-  pipeline for Windows and Linux amd64.
+- Added browser-owned bootstrap artifacts shared across short-lived contexts,
+  including a fingerprinted persistent cache with bounded retention, integrity
+  validation, stale-entry cleanup, and deterministic shutdown.
+- Reduced Page startup cost by publishing unused isolated-world identity without
+  eagerly allocating a second V8/WebAPI realm. The realm materializes on its
+  first executable operation while preserving init-script ordering and CDP
+  lifecycle visibility.
+- Added demand-driven WebAPI implementation domains for WebAudio, WebGL, and
+  WebGPU while preserving the complete reflected surface, descriptors,
+  constructor and prototype identity, native function shape, and realm-local
+  state.
+- Reduced memory for concurrent Pages through bounded V8 isolate pooling,
+  compact generated shape metadata, lazy DOM attribute storage, and deferred
+  image bitmap decoding.
+- Fixed V8 context teardown so closed Pages release their native callback
+  registrations instead of retaining unreachable realms and DOM state in a hot
+  pooled isolate.
+- Improved the official 100-page Campfire workload from the previous release
+  architecture while keeping the full browser and engine test suites passing.
+  Current local compiled runs complete in roughly 5.7--5.9 seconds with about
+  222--244 MiB peak memory; results and methodology are recorded in the
+  [performance report](docs/performance/report.md).
 
 Mimic remains a renderer-free public beta for Windows and Linux amd64. It models
 browser-observable state for supported workflows; it does not provide complete
 Chrome, rendering, media, or Web API compatibility. See the
-[compatibility notes](https://github.com/moreveal/mimic/blob/main/docs/compatibility.md) and [performance report](https://github.com/moreveal/mimic/blob/main/docs/performance/report.md)
-for current boundaries and measured tradeoffs.
+[compatibility notes](docs/compatibility.md) and
+[performance report](docs/performance/report.md) for current boundaries and
+measured tradeoffs.
