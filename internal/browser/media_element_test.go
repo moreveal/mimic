@@ -35,6 +35,16 @@ func TestMediaElementLoadAndPlaybackState(t *testing.T) {
 	}
 }
 
+func TestMediaControlsListChrome152(t *testing.T) {
+	parallelBrowserTest(t)
+	p := testPage(t)
+	defer p.Close()
+	value, err := p.Evaluate(context.Background(), `(()=>{const audio=document.createElement('audio'),list=audio.controlsList;audio.controlsList='foo   nodownload foo';return JSON.stringify({same:list===audio.controlsList,value:list.value,attribute:audio.getAttribute('controlslist'),supported:list.supports('nodownload'),unknown:list.supports('foo'),setter:typeof Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype,'controlsList').set})})()`)
+	if err != nil || value != `{"same":true,"value":"foo   nodownload foo","attribute":"foo   nodownload foo","supported":true,"unknown":false,"setter":"function"}` {
+		t.Fatalf("controlsList: %v %v", value, err)
+	}
+}
+
 func TestMediaPreloadNoneDefersTransportUntilExplicitLoad(t *testing.T) {
 	parallelBrowserTest(t)
 	var requests atomic.Int32

@@ -1164,7 +1164,8 @@
       return domTokens(this).length;
     }
     get value() {
-      return domTokens(this).join(' ');
+      const state = domTokenState(this);
+      return state.element.getAttribute(state.attribute) || '';
     }
     set value(v) {
       const state = domTokenState(this);
@@ -1203,7 +1204,12 @@
       writeDOMTokens(this, a);
       return true;
     }
-    supports() {
+    supports(token) {
+      const state = domTokenState(this);
+      if (state.attribute === 'controlslist')
+        return ['nodownload', 'nofullscreen', 'noremoteplayback', 'noplaybackrate'].includes(
+          String(token),
+        );
       return false;
     }
     forEach(cb, thisArg) {
@@ -4185,7 +4191,19 @@
     };
   // Loading/reset observations are supported without a media decoder.
   // Playback is an explicit unsupported boundary, never a resolved fake play.
+  const mediaControlsLists = new WeakMap();
   class HTMLMediaElement extends HTMLElement {
+    get controlsList() {
+      let list = mediaControlsLists.get(this);
+      if (!list) {
+        list = new DOMTokenList(this, 'controlslist');
+        mediaControlsLists.set(this, list);
+      }
+      return list;
+    }
+    set controlsList(value) {
+      this.controlsList.value = String(value);
+    }
     get src() {
       const value = this.getAttribute('src');
       return value === null ? '' : host.urlParts(value).href;
