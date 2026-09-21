@@ -83,6 +83,7 @@ const canvasCompatibilityState = (() => {
     shadowBlur: 0,
     shadowColor: 'rgba(0, 0, 0, 0)',
     font: '10px sans-serif',
+    lang: 'inherit',
     textAlign: 'start',
     textBaseline: 'alphabetic',
     direction: 'inherit',
@@ -942,6 +943,21 @@ const canvasCompatibilityState = (() => {
       const c = contextState(this);
       if (Number(args[2]) < 0 || Number(args[5]) < 0) fail('IndexSizeError', 'Negative radius');
       const gradient = new CanvasGradient(token, 'radial', args.map(Number));
+      gradients.get(gradient).matrix = c.draw.transform.slice();
+      return gradient;
+    }
+    createConicGradient(startAngle, x, y) {
+      const c = contextState(this);
+      if (arguments.length < 3)
+        throw new TypeError(
+          `Failed to execute 'createConicGradient' on 'CanvasRenderingContext2D': 3 arguments required, but only ${arguments.length} present.`,
+        );
+      const args = [startAngle, x, y].map(Number);
+      if (args.some((value) => !Number.isFinite(value)))
+        throw new TypeError(
+          "Failed to execute 'createConicGradient' on 'CanvasRenderingContext2D': The provided double value is non-finite.",
+        );
+      const gradient = new CanvasGradient(token, 'conic', args);
       gradients.get(gradient).matrix = c.draw.transform.slice();
       return gradient;
     }

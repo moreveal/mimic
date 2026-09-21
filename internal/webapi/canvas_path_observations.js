@@ -82,6 +82,10 @@ const paintColor = (paint, x, y) => {
       dx = x1 - x0,
       dy = y1 - y0;
     t = ((px - x0) * dx + (py - y0) * dy) / (dx * dx + dy * dy);
+  } else if (paint.kind === 'conic') {
+    const [startAngle, centerX, centerY] = paint.args;
+    const turn = (Math.atan2(py - centerY, px - centerX) - startAngle) / (2 * Math.PI);
+    t = ((turn % 1) + 1) % 1;
   } else {
     const [x0, y0, r0, x1, y1, r1] = paint.args,
       dx = x1 - x0,

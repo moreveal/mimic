@@ -30,6 +30,33 @@ func TestCanvasZeroImageDataDimensionMessage(t *testing.T) {
 	}
 }
 
+func TestCanvasConicGradientChromeQuadrants(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const c=document.createElement('canvas');c.width=c.height=9;const x=c.getContext('2d');const g=x.createConicGradient(0,4.5,4.5);g.addColorStop(0,'red');g.addColorStop(.25,'lime');g.addColorStop(.5,'blue');g.addColorStop(.75,'white');g.addColorStop(1,'red');x.fillStyle=g;x.fillRect(0,0,9,9);return JSON.stringify({length:x.createConicGradient.length,colors:[[4,1],[7,4],[4,7],[1,4]].map(([a,b])=>Array.from(x.getImageData(a,b,1,1).data))})})()`)
+	if err != nil || value != `{"length":3,"colors":[[255,255,255,255],[255,0,0,255],[0,255,0,255],[0,0,255,255]]}` {
+		t.Fatalf("conic gradient: %v %v", value, err)
+	}
+}
+
+func TestCanvasConicGradientRejectsNonFiniteArguments(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const x=document.createElement('canvas').getContext('2d');try{x.createConicGradient(Infinity,0,0)}catch(e){return JSON.stringify([e.name,e.message])}})()`)
+	if err != nil || value != `["TypeError","Failed to execute 'createConicGradient' on 'CanvasRenderingContext2D': The provided double value is non-finite."]` {
+		t.Fatalf("nonfinite conic gradient: %v %v", value, err)
+	}
+}
+
+func TestCanvasLanguageStateChrome152(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const c=document.createElement('canvas'),x=c.getContext('2d');const initial=x.lang;c.setAttribute('lang','de');const fromCanvas=x.lang;x.lang='es';x.save();x.lang='fr';const saved=x.lang;x.restore();const restored=x.lang;x.reset();return JSON.stringify([initial,fromCanvas,saved,restored,x.lang,c.getAttribute('lang')])})()`)
+	if err != nil || value != `["inherit","inherit","fr","es","inherit","de"]` {
+		t.Fatalf("canvas language state: %v %v", value, err)
+	}
+}
+
 func TestCanvasStateWindowAndWorker(t *testing.T) {
 	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
