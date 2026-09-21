@@ -861,7 +861,13 @@ impl<'a, B: Brush> BreakLines<'a, B> {
         // println!("\nBREAK ALL");
         self.state.layout_max_advance = max_advance;
         self.state.line_max_advance = max_advance;
-        while self.break_next().is_some() {}
+        while let Some(event) = self.break_next() {
+            // This convenience method has no caller to position a custom out-of-flow
+            // box. Repeating the same yield would otherwise spin forever.
+            if matches!(event, YieldData::InlineBoxBreak(_)) {
+                panic!("CustomOutOfFlow requires break_lines() so the caller can place the box");
+            }
+        }
         self.finish();
     }
 

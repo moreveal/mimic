@@ -7,6 +7,8 @@ package layoutblitz
 #cgo linux,amd64 LDFLAGS: ${SRCDIR}/native/target/x86_64-unknown-linux-gnu/release/libmimic_layout_blitz.a -lfontconfig -ldl -lpthread -lm
 #include <stdint.h>
 #include <stddef.h>
+#include "native_build_stamp.h"
+static const char* mimic_native_archive_stamp(void) { return MIMIC_BLITZ_NATIVE_ARCHIVE_SHA256; }
 typedef struct MimicBlitzHandle MimicBlitzHandle;
 typedef struct { float x,y,width,height,client_width,client_height,content_width,content_height; uint32_t flags; } MimicBlitzRect;
 MimicBlitzHandle* mimic_blitz_new(uint64_t, uint32_t, uint32_t);
@@ -37,12 +39,20 @@ import (
 )
 
 type Owner struct{ handle *C.MimicBlitzHandle }
+
+// Refer to the generated archive digest from Go so a rebuilt static library
+// invalidates cgo's build cache and the executable links the new archive.
+var nativeArchiveStamp = C.GoString(C.mimic_native_archive_stamp())
+
 type Rect struct {
 	X, Y, Width, Height, ClientWidth, ClientHeight, ContentWidth, ContentHeight float64
 	Flags                                                                       uint32
 }
 
 func New(root uint64, width, height uint32) (*Owner, error) {
+	if nativeArchiveStamp == "" {
+		return nil, fmt.Errorf("blitz: missing native archive stamp")
+	}
 	p := C.mimic_blitz_new(C.uint64_t(root), C.uint32_t(width), C.uint32_t(height))
 	if p == nil {
 		return nil, fmt.Errorf("blitz: document creation failed")
