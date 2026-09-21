@@ -6,6 +6,23 @@ import (
 	"github.com/moreveal/mimic/compatibility"
 )
 
+type shapeCatalogMember struct {
+	Name     string          `json:"name"`
+	Kind     string          `json:"kind"`
+	Static   bool            `json:"static,omitempty"`
+	Readonly bool            `json:"readonly,omitempty"`
+	Value    json.RawMessage `json:"value,omitempty"`
+}
+
+type shapeCatalogSpec struct {
+	Name                string               `json:"name"`
+	Kind                string               `json:"kind"`
+	Exposed             json.RawMessage      `json:"exposed"`
+	Parent              string               `json:"parent,omitempty"`
+	LegacyWindowAliases []string             `json:"legacyWindowAliases,omitempty"`
+	Members             []shapeCatalogMember `json:"members"`
+}
+
 // selectedCatalog removes fallback bindings which applyTargetExposure would
 // immediately delete. The complete captured exposure still owns final shape;
 // native members and handwritten implementations are not filtered here.
@@ -108,7 +125,35 @@ func selectedCatalog(source string, exposure compatibility.RealmExposure) string
 		spec["members"] = encoded
 		selected = append(selected, spec)
 	}
-	encoded, err := json.Marshal(selected)
+	// The generated publisher needs only shape fields. Discard source paths,
+	// argument/type graphs and Blink feature metadata before the JSON crosses
+	// into a realm; capability installation has its own generated immutable
+	// tables. This keeps one authoritative catalog while avoiding a rich IDL
+	// AST allocation in every Page.
+	compact := make([]shapeCatalogSpec, 0, len(selected))
+	for _, spec := range selected {
+		item := shapeCatalogSpec{
+			Name:    decodeString(spec["name"]),
+			Kind:    decodeString(spec["kind"]),
+			Exposed: append(json.RawMessage(nil), spec["exposed"]...),
+			Parent:  decodeString(spec["parent"]),
+		}
+		_ = json.Unmarshal(spec["legacyWindowAliases"], &item.LegacyWindowAliases)
+		var members []map[string]json.RawMessage
+		if json.Unmarshal(spec["members"], &members) != nil {
+			return source
+		}
+		item.Members = make([]shapeCatalogMember, 0, len(members))
+		for _, member := range members {
+			entry := shapeCatalogMember{Name: decodeString(member["name"]), Kind: decodeString(member["kind"])}
+			_ = json.Unmarshal(member["static"], &entry.Static)
+			_ = json.Unmarshal(member["readonly"], &entry.Readonly)
+			entry.Value = append(json.RawMessage(nil), member["value"]...)
+			item.Members = append(item.Members, entry)
+		}
+		compact = append(compact, item)
+	}
+	encoded, err := json.Marshal(compact)
 	if err != nil {
 		return source
 	}
