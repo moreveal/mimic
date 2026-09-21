@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/moreveal/mimic/internal/state"
+	"golang.org/x/text/language"
 )
 
 func (p *Page) SetDeviceMetrics(width, height int, scale float64, screenWidth, screenHeight int) error {
@@ -100,4 +101,58 @@ func (p *Page) SetMediaPreferences(scheme string, reducedMotion *bool) {
 	if reducedMotion != nil {
 		p.env.Preferences.ReducedMotion = *reducedMotion
 	}
+}
+
+// SetLocaleOverride changes the default ICU locale without changing
+// navigator.languages or Accept-Language. Future navigation realms inherit
+// the canonical Page environment.
+func (p *Page) SetLocaleOverride(locale string) error {
+	if locale == "" {
+		locale = p.ctx.Environment().Locale.IntlLocale
+	}
+	canonical, err := language.Parse(locale)
+	if err != nil || canonical == language.Und {
+		return fmt.Errorf("Invalid locale")
+	}
+	locale = canonical.String()
+	p.mu.Lock()
+	p.env.Locale.IntlLocale = locale
+	p.mu.Unlock()
+	return nil
+}
+
+// SetWindowBounds updates the modeled native window shared by Window metrics
+// and CDP. Zero values preserve the corresponding current dimension.
+func (p *Page) SetWindowBounds(left, top, width, height *int) error {
+	p.mu.Lock()
+	if width != nil {
+		if *width <= 0 || *width < p.env.Window.ViewportWidth {
+			p.mu.Unlock()
+			return fmt.Errorf("Invalid window width")
+		}
+	}
+	if height != nil {
+		if *height <= 0 || *height < p.env.Window.ViewportHeight {
+			p.mu.Unlock()
+			return fmt.Errorf("Invalid window height")
+		}
+	}
+	p.mu.Unlock()
+	p.viewportObservationChange(true)
+	defer p.viewportObservationChange(false)
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if width != nil {
+		p.env.Window.OuterWidth = *width
+	}
+	if height != nil {
+		p.env.Window.OuterHeight = *height
+	}
+	if left != nil {
+		p.env.Window.X = *left
+	}
+	if top != nil {
+		p.env.Window.Y = *top
+	}
+	return nil
 }

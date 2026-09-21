@@ -108,6 +108,61 @@ func TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal(t *testi
 	}
 }
 
+func TestLocaleOverrideAppliesToNavigationRealmAndResets(t *testing.T) {
+	fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		fmt.Fprint(w, "<!doctype html><body>locale</body>")
+	}))
+	defer fixture.Close()
+	s, addr := runningServer(t)
+	c := browserConnection(t, addr)
+	sid := wireCall(t, c, 1, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
+	read := func(id int) map[string]any {
+		return flatCall(t, c, sid, id, "Runtime.evaluate", map[string]any{
+			"expression":    "({locale:new Intl.NumberFormat().resolvedOptions().locale,language:navigator.language})",
+			"returnByValue": true,
+		})["result"].(map[string]any)["value"].(map[string]any)
+	}
+	base := read(2)
+	flatCall(t, c, sid, 3, "Emulation.setLocaleOverride", map[string]any{"locale": "fr-FR"})
+	if err := s.Page.Navigate(context.Background(), fixture.URL); err != nil {
+		t.Fatal(err)
+	}
+	if got := read(4); got["locale"] != "fr-FR" || got["language"] != base["language"] {
+		t.Fatal(got)
+	}
+	flatCall(t, c, sid, 5, "Emulation.setLocaleOverride", map[string]any{"locale": ""})
+	if err := s.Page.Navigate(context.Background(), fixture.URL); err != nil {
+		t.Fatal(err)
+	}
+	if got := read(6); got["locale"] != base["locale"] || got["language"] != base["language"] {
+		t.Fatal(got)
+	}
+}
+
+func TestBrowserWindowCommandsShareCanonicalBounds(t *testing.T) {
+	s, addr := runningServer(t)
+	c := browserConnection(t, addr)
+	otherID := wireCall(t, c, 1, "Target.createTarget", map[string]any{"url": "about:blank"})["targetId"].(string)
+	window := wireCall(t, c, 2, "Browser.getWindowForTarget", map[string]any{"targetId": otherID})
+	if window["windowId"] != float64(primaryWindowID) {
+		t.Fatal(window)
+	}
+	wireCall(t, c, 3, "Browser.setWindowBounds", map[string]any{
+		"windowId": primaryWindowID,
+		"bounds":   map[string]any{"left": 40, "top": 50, "width": 1400, "height": 900},
+	})
+	bounds := wireCall(t, c, 4, "Browser.getWindowBounds", map[string]any{"windowId": primaryWindowID})["bounds"].(map[string]any)
+	if bounds["left"] != float64(40) || bounds["top"] != float64(50) || bounds["width"] != float64(1400) || bounds["height"] != float64(900) || bounds["windowState"] != "normal" {
+		t.Fatal(bounds)
+	}
+	for _, page := range s.pages() {
+		window := page.Environment().Window
+		if window.X != 40 || window.Y != 50 || window.OuterWidth != 1400 || window.OuterHeight != 900 {
+			t.Fatalf("page %s bounds = %+v", page.ID, window)
+		}
+	}
+}
+
 func TestDetachReleasesFetchPauseAndPreservesPageNavigation(t *testing.T) {
 	fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "<title>Detached load</title><body>ready</body>")

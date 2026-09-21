@@ -26,6 +26,27 @@
       "compatibility/cdp_automation.py#browser.version"
     ]
   },
+  "Browser.getWindowBounds": {
+    "status": "partial",
+    "notes": "Canonical bounds for Mimic's single modeled browser window. Multiple native windows, minimized/maximized/fullscreen transitions and display placement are unsupported.",
+    "tests": [
+      "internal/cdp/automation_commands_test.go#TestBrowserWindowCommandsShareCanonicalBounds"
+    ]
+  },
+  "Browser.getWindowForTarget": {
+    "status": "partial",
+    "notes": "Resolves page and tab targets to Mimic's single modeled browser window and returns its canonical bounds. Multiple native windows are unsupported.",
+    "tests": [
+      "internal/cdp/automation_commands_test.go#TestBrowserWindowCommandsShareCanonicalBounds"
+    ]
+  },
+  "Browser.setWindowBounds": {
+    "status": "partial",
+    "notes": "Updates canonical position and outer dimensions across pages in Mimic's single modeled browser window. Non-normal window states and multiple native windows are unsupported.",
+    "tests": [
+      "internal/cdp/automation_commands_test.go#TestBrowserWindowCommandsShareCanonicalBounds"
+    ]
+  },
   "Browser.setDownloadBehavior": {
     "status": "unsupported",
     "notes": "Acknowledgment only for client initialization. Download policy, filesystem destinations, context-specific behavior and download events are not implemented.",
@@ -213,6 +234,13 @@
     "status": "unsupported",
     "notes": "Acknowledgment only for client initialization. The enabled flag does not override document focus, active state or focus lifecycle events; focus emulation semantics are not implemented.",
     "tests": []
+  },
+  "Emulation.setLocaleOverride": {
+    "status": "partial",
+    "notes": "Updates the default Intl locale for future navigation realms and supports reset with an empty locale. Existing realms retain their creation locale; navigator.languages and Accept-Language are deliberately unchanged. Complete ICU locale availability follows the selected JS engine.",
+    "tests": [
+      "internal/cdp/automation_commands_test.go#TestLocaleOverrideAppliesToNavigationRealmAndResets"
+    ]
   },
   "Emulation.setTouchEmulationEnabled": {
     "status": "partial",

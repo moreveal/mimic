@@ -612,6 +612,10 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 		s.reply(m.ID, value, emuErr)
 		return
 	}
+	if value, handled, browserErr := s.handleBrowserWindow(m.Method, p); handled {
+		s.reply(m.ID, value, browserErr)
+		return
+	}
 	switch m.Method {
 	case "Input.dispatchKeyEvent", "Input.insertText", "Input.dispatchMouseEvent", "Input.setIgnoreInputEvents":
 		err = s.page.DispatchProtocolInput(s.ctx, m.Method, p)

@@ -45,6 +45,8 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 		enabled, _ := p["enabled"].(bool)
 		s.page.SetFocusEmulationEnabled(enabled)
 		return empty, true, nil
+	case "Emulation.setLocaleOverride":
+		return empty, true, s.page.SetLocaleOverride(stringValue(p["locale"]))
 	case "Network.setUserAgentOverride", "Emulation.setUserAgentOverride":
 		o := &state.UserAgentOverride{UserAgent: stringValue(p["userAgent"]), Platform: stringValue(p["platform"])}
 		for _, lang := range strings.Split(stringValue(p["acceptLanguage"]), ",") {

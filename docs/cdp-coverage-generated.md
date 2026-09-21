@@ -14,7 +14,7 @@ Source: pinned Chrome 152.0.7977.82. The schema contains 58 domains, 665 command
 | Autofill | 0 / 0 / 4 | 0 / 0 / 1 |
 | BackgroundService | 0 / 0 / 4 | 0 / 0 / 2 |
 | BluetoothEmulation | 0 / 0 / 15 | 0 / 0 / 3 |
-| Browser | 0 / 2 / 17 | 0 / 0 / 2 |
+| Browser | 0 / 5 / 14 | 0 / 0 / 2 |
 | CSS | 0 / 0 / 39 | 0 / 0 / 6 |
 | CacheStorage | 0 / 0 / 5 | 0 / 0 / 0 |
 | Cast | 0 / 0 / 6 | 0 / 0 / 2 |
@@ -28,7 +28,7 @@ Source: pinned Chrome 152.0.7977.82. The schema contains 58 domains, 665 command
 | DeviceAccess | 0 / 0 / 4 | 0 / 0 / 1 |
 | DeviceOrientation | 0 / 0 / 2 | 0 / 0 / 0 |
 | DigitalCredentials | 0 / 0 / 1 | 0 / 0 / 0 |
-| Emulation | 0 / 5 / 42 | 0 / 0 / 2 |
+| Emulation | 0 / 6 / 41 | 0 / 0 / 2 |
 | EventBreakpoints | 0 / 0 / 3 | 0 / 0 / 0 |
 | Extensions | 0 / 0 / 8 | 0 / 0 / 0 |
 | FedCm | 0 / 0 / 7 | 0 / 0 / 2 |
@@ -47,7 +47,7 @@ Source: pinned Chrome 152.0.7977.82. The schema contains 58 domains, 665 command
 | Network | 1 / 15 / 25 | 0 / 5 / 39 |
 | Overlay | 0 / 0 / 31 | 0 / 0 / 6 |
 | PWA | 0 / 0 / 7 | 0 / 0 / 0 |
-| Page | 1 / 15 / 45 | 0 / 7 / 21 |
+| Page | 1 / 16 / 44 | 0 / 7 / 21 |
 | Performance | 0 / 3 / 1 | 0 / 0 / 1 |
 | PerformanceTimeline | 0 / 0 / 1 | 0 / 0 / 1 |
 | Preload | 0 / 0 / 2 | 0 / 0 / 6 |
@@ -76,7 +76,10 @@ Unlisted entries are unsupported. Some harmless client acknowledgments are expli
 | `Audits.enable` | unsupported | Client subscription state only; no Audits issue engine or WebMCP model-context backend. Semantic support is not claimed. | [browser.connect](../compatibility/cdp_automation.mjs) |
 | `Browser.close` | partial | Acknowledges then closes CDP server and owned Pages; embedding process lifetime is separate. | No focused evidence recorded |
 | `Browser.getVersion` | partial | Pinned protocol and product identity; Mimic product name and virtual JS engine version identify the actual implementation. | [TestProtocolDiscoveryAndErrorCodes](../internal/cdp/transport_test.go); [browser.version](../compatibility/cdp_automation.py) |
+| `Browser.getWindowBounds` | partial | Canonical bounds for Mimic's single modeled browser window. Multiple native windows, minimized/maximized/fullscreen transitions and display placement are unsupported. | [TestBrowserWindowCommandsShareCanonicalBounds](../internal/cdp/automation_commands_test.go) |
+| `Browser.getWindowForTarget` | partial | Resolves page and tab targets to Mimic's single modeled browser window and returns its canonical bounds. Multiple native windows are unsupported. | [TestBrowserWindowCommandsShareCanonicalBounds](../internal/cdp/automation_commands_test.go) |
 | `Browser.setDownloadBehavior` | unsupported | Acknowledgment only for client initialization. Download policy, filesystem destinations, context-specific behavior and download events are not implemented. | No focused evidence recorded |
+| `Browser.setWindowBounds` | partial | Updates canonical position and outer dimensions across pages in Mimic's single modeled browser window. Non-normal window states and multiple native windows are unsupported. | [TestBrowserWindowCommandsShareCanonicalBounds](../internal/cdp/automation_commands_test.go) |
 | `DOM.describeNode` | partial | Canonical node IDs, metadata, attributes, children and depth traversal. Shadow piercing, whitespace modes, distributed nodes and full frontend node lifecycle are incomplete. | [TestDOMQueryInitialDocumentBootstrapsRealm](../internal/cdp/dom_query_test.go); [dom.selectors_element_evaluation](../compatibility/cdp_automation.mjs) |
 | `DOM.disable` | partial | Subscription state; includeWhitespace and complete incremental mutation tracking are not implemented. | [TestDOMQueriesShareRealmSelectorEngine](../internal/cdp/dom_query_test.go) |
 | `DOM.enable` | partial | Subscription state; includeWhitespace and complete incremental mutation tracking are not implemented. | [TestDOMQueriesShareRealmSelectorEngine](../internal/cdp/dom_query_test.go) |
@@ -102,6 +105,7 @@ Unlisted entries are unsupported. Some harmless client acknowledgments are expli
 | `Emulation.setDeviceMetricsOverride` | partial | Canonical viewport/device scale/screen dimensions/orientation and reset. Mobile layout, scale/position/dontSetVisibleSize are incomplete; clipping/display features/posture reject. | [emulation.viewport](../compatibility/cdp_automation.py); [TestConsumedWindowStateNavigationAndViewportResize](../internal/browser/consumed_window_state_test.go); [TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal](../internal/cdp/automation_commands_test.go) |
 | `Emulation.setEmulatedMedia` | partial | Screen media and canonical prefers-color-scheme/reduced-motion. forced-colors and prefers-contrast are accepted without applying an override; other media/features reject. Complete dynamic cascade/query-change events are not verified. | [TestMatchMediaDerivesFromCanonicalPreferences](../internal/browser/page_test.go) |
 | `Emulation.setFocusEmulationEnabled` | unsupported | Acknowledgment only for client initialization. The enabled flag does not override document focus, active state or focus lifecycle events; focus emulation semantics are not implemented. | No focused evidence recorded |
+| `Emulation.setLocaleOverride` | partial | Updates the default Intl locale for future navigation realms and supports reset with an empty locale. Existing realms retain their creation locale; navigator.languages and Accept-Language are deliberately unchanged. Complete ICU locale availability follows the selected JS engine. | [TestLocaleOverrideAppliesToNavigationRealmAndResets](../internal/cdp/automation_commands_test.go) |
 | `Emulation.setTouchEmulationEnabled` | partial | Desktop reset only: enabled=false accepted; enabled=true explicitly rejects because touch/gesture/media emulation is absent. | [emulation.viewport](../compatibility/cdp_automation.mjs) |
 | `Emulation.setUserAgentOverride` | partial | Canonical Navigator/languages/platform, User-Agent and Client Hints request projection. formFactors, full metadata validation and all Client Hints negotiation cases are incomplete. | [network.user_agent_override](../compatibility/cdp_automation.py); [TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal](../internal/cdp/automation_commands_test.go) |
 | `Fetch.continueRequest` | partial | Resumes/overrides URL/method/headers/body in same loader; Fetch supports per-request response interception. Auth/complete redirect semantics are unsupported. | [network.interception_continue_post](../compatibility/cdp_automation.py); [TestInterceptionResponsePatternsAndPerRequestOverride](../internal/cdp/intercept_test.go) |
@@ -150,6 +154,7 @@ Unlisted entries are unsupported. Some harmless client acknowledgments are expli
 | `Page.removeScriptToEvaluateOnNewDocument` | implemented | Removes a stored future-document script; unknown identifiers fail. | [page.init_script_removal](../compatibility/cdp_automation.py) |
 | `Page.setBypassCSP` | partial | Changes canonical Page bypass policy used by supported script/resource/content-handler checks; full Chrome CSP/reporting is outside the implementation. | [TestCSPUsesOnePolicyForInlineAndExternalScripts](../internal/browser/page_test.go) |
 | `Page.setDocumentContent` | partial | Writes selected frame document through normal parser/lifecycle; complete error/transition ordering is not verified. | [page.set_content](../compatibility/cdp_automation.py) |
+| `Page.setFontFamilies` | partial | Updates the Page generic font defaults used by the modeled environment; per-script family overrides and complete font selection behavior are not implemented. | [TestPageSetFontFamiliesUpdatesGenericDefaults](../internal/cdp/page_font_families_test.go) |
 | `Page.setLifecycleEventsEnabled` | partial | Per-session opt-in with current commit/load replay and shared-loader 500ms idle windows; not every Chrome lifecycle phase/timestamp is modeled. | [TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents](../internal/cdp/server_test.go); [navigation.networkidle0](../compatibility/cdp_automation.py); [TestNetworkIdleWaitsForQuietWindowAfterLoad](../internal/cdp/automation_commands_test.go) |
 | `Page.stopLoading` | partial | Cancels active Page navigation/execution while retaining committed DOM. | [TestStopLoadingCancelsNavigationAndKeepsCommittedDOM](../internal/cdp/server_test.go) |
 | `Performance.disable` | partial | Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented. | [TestPyppeteerBrowserAndSessionHandshake](../internal/cdp/server_test.go) |
