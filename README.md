@@ -85,23 +85,20 @@ See the [runnable examples](examples/README.md),
 
 ## Benchmarks
 
-Measured against headless Chrome 152.0.7977.82 on Windows 11 x64,
-Intel i7-14700KF, 31.83 GiB RAM:
+Fresh v0.1.5 checkpoint against headless Chrome 152.0.7977.82 on Windows 11
+x64, Intel i7-14700KF, 31.83 GiB RAM:
 
 <p align="center">
-  <a href="benchmark/runs/11-release-20260920/public-summary.md"><img src="docs/assets/benchmark-startup-20260920.svg" alt="Mimic and Chrome CDP readiness and startup memory" width="1200"></a>
+  <a href="benchmark/runs/12-release-20260921/public-summary.md"><img src="docs/assets/benchmark-story-20260921.png" alt="Mimic v0.1.5 benchmark: 2.5 times less ready RSS, 4.1 times static throughput, and 3 times less active RSS than Chrome at 50 Pages" width="1200"></a>
 </p>
 
-<p align="center">
-  <a href="benchmark/runs/11-release-20260920/public-summary.md"><img src="docs/assets/benchmark-scaling-20260920.svg" alt="Static concurrency memory and throughput through 50 pages" width="1200"></a>
-</p>
+**2.5× less ready RSS. 3.0× less active RSS and 4.1× throughput at 50 static
+Pages.** All 12 correctness gates, 360 measured single-Page attempts, and every
+concurrency series passed. These are fixture- and machine-specific results, not
+universal claims; the full matrix includes workloads where Chrome is faster.
 
-**88% lower ready RSS. 58% less active RAM and 2.84× throughput at 50 static
-Pages.** These are fixture- and machine-specific results, not universal claims.
-Mimic still trails Chrome on some mutation-heavy workloads.
-
-[Results and methodology](benchmark/runs/11-release-20260920/public-summary.md) ·
-[Full report](benchmark/runs/11-release-20260920/report.md) ·
+[Results and methodology](benchmark/runs/12-release-20260921/public-summary.md) ·
+[Full report](benchmark/runs/12-release-20260921/report.md) ·
 [Reproduce](benchmark/README.md) ·
 [Performance history](docs/performance/report.md)
 

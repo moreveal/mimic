@@ -1,7 +1,7 @@
 # Reproducible benchmark: Mimic V8 and Chrome 152
 
-Latest product checkpoint: [September 20, 2026 summary](runs/11-release-20260920/public-summary.md)
-and [full measured report](runs/11-release-20260920/report.md).
+Latest product checkpoint: [September 21, 2026 summary](runs/12-release-20260921/public-summary.md)
+and [full measured report](runs/12-release-20260921/report.md).
 The original `results/` baseline and earlier runs remain historical records.
 
 From the repository root on Windows x64:
@@ -89,6 +89,20 @@ Check Job Object counters, accounting for exited child processes, and statistics
 The historical `benchmark/report.py` remains byte-for-byte frozen because it is
 part of the measurement harness fingerprint. `tools/report_benchmark.py` provides
 the English reporting variant with the same calculations.
+
+Generate the current README benchmark story from a completed, integrity-checked
+checkpoint. The decorative background is checked in; every displayed number is
+read from `raw.json` and `summary.json`, whose hashes are validated against the
+checkpoint manifest:
+
+```powershell
+.build/benchmark-venv/Scripts/python.exe tools/performance/benchmark_story.py `
+  benchmark/runs/12-release-20260921 `
+  docs/assets/benchmark-story-20260921.png
+```
+
+The generator also writes `benchmark-story-20260921.receipt.json` with source,
+generator, background and output hashes.
 
 ## Measurement contract
 
