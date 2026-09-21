@@ -82,6 +82,8 @@ await browser.close();
 See the [runnable examples](examples/README.md),
 [supported CDP surface](docs/cdp-compatibility.md), and
 [snapshot/capture guide](docs/getting-started.md).
+The [Crawlee compatibility checkpoint](docs/compatibility/crawlee-playwright.md)
+links to the tested fork and its bounded crawler example.
 
 ## Benchmarks
 

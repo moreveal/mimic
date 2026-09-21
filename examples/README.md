@@ -60,3 +60,6 @@ Puppeteer compatibility. Screenshots and rendered PDFs are not supported.
 
 The files in this directory are [MIT licensed](LICENSE) so you can adapt them.
 The Mimic executable is governed by the authoritative project [LICENSE](../LICENSE).
+
+For a separate Crawlee PlaywrightCrawler example and its measured limits, see
+the [Crawlee compatibility checkpoint](../docs/compatibility/crawlee-playwright.md).
