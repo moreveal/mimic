@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
+	_ "time/tzdata"
 
 	"github.com/moreveal/mimic/internal/state"
 	"golang.org/x/text/language"
@@ -117,6 +119,21 @@ func (p *Page) SetLocaleOverride(locale string) error {
 	locale = canonical.String()
 	p.mu.Lock()
 	p.env.Locale.IntlLocale = locale
+	p.mu.Unlock()
+	return nil
+}
+
+// SetTimezoneOverride changes the Page's clock projection without changing the
+// process-wide Go or ICU timezone. The empty identifier restores the context.
+func (p *Page) SetTimezoneOverride(timezone string) error {
+	if timezone == "" {
+		timezone = p.ctx.Environment().Locale.Timezone
+	}
+	if _, err := time.LoadLocation(timezone); err != nil {
+		return fmt.Errorf("Invalid timezone id")
+	}
+	p.mu.Lock()
+	p.env.Locale.Timezone = timezone
 	p.mu.Unlock()
 	return nil
 }

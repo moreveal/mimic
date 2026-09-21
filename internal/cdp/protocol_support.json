@@ -48,9 +48,9 @@
     ]
   },
   "Browser.setDownloadBehavior": {
-    "status": "unsupported",
-    "notes": "Acknowledgment only for client initialization. Download policy, filesystem destinations, context-specific behavior and download events are not implemented.",
-    "tests": []
+    "status": "partial",
+    "notes": "Per-context allow, allowAndName, deny and default policies for attachment navigation responses; completed bytes are written to the configured destination and Browser download events are emitted. Other download initiators and streaming progress are not modeled.",
+    "tests": ["internal/cdp/download_test.go#TestDownloadBehaviorValidatesPolicyAndContext", "test/integration/mimic-playwright-crawler.test.ts#exposes attachment downloads through listDownloads()"]
   },
   "DOM.describeNode": {
     "status": "partial",
@@ -241,6 +241,11 @@
     "tests": [
       "internal/cdp/automation_commands_test.go#TestLocaleOverrideAppliesToNavigationRealmAndResets"
     ]
+  },
+  "Emulation.setTimezoneOverride": {
+    "status": "partial",
+    "notes": "Page-local IANA timezone override and empty reset affect Intl and Date observations in the current top realm and future realms. Existing child realms and workers are not refreshed.",
+    "tests": ["test/integration/mimic-playwright-crawler.test.ts#applies timezoneId through Emulation.setTimezoneOverride"]
   },
   "Emulation.setTouchEmulationEnabled": {
     "status": "partial",

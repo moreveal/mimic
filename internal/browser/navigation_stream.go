@@ -282,6 +282,10 @@ func (p *Page) fetchNavigationResponse(ctx context.Context, u *url.URL, loaderID
 				}
 			}
 			if err == nil {
+				if p.captureDownload(response) {
+					finishCommit(nil)
+					return nil
+				}
 				err = p.commitNavigationResponse(navigationContext, taskContext, u, loaderID, performanceOrigin, response, historyTarget, true, finishCommit, replace...)
 			}
 			if err != nil {

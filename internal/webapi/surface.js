@@ -272,6 +272,9 @@
   // the target profile's locale/time-zone through a small deterministic Intl
   // layer while richer CLDR-backed semantics are added behind the same API.
   let intlEnvironment = host.intlEnvironment();
+  globalThis.__mimicRefreshIntlEnvironment = () => {
+    intlEnvironment = host.intlEnvironment();
+  };
   const nativeIntl = typeof globalThis.Intl !== 'undefined';
   if (typeof globalThis.Intl === 'undefined') {
     const canonicalLocale = (value) => String(value || intlEnvironment.locale).replace(/_/g, '-');

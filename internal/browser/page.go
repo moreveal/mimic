@@ -54,6 +54,7 @@ type Page struct {
 	env                state.Environment
 	loader             *network.Loader
 	trace              *trace.Recorder
+	downloads          map[string]Download
 	Top                *Frame
 	loaderID           string
 	navigationCancel   context.CancelFunc
@@ -518,6 +519,9 @@ func (p *Page) beginNavigationRequestWithCommit(ctx context.Context, raw, loader
 	res, err := p.loader.Load(ctx, request)
 	if err != nil {
 		return err
+	}
+	if p.captureDownload(res) {
+		return nil
 	}
 	return p.commitNavigationResponse(ctx, ctx, u, loaderID, performanceOrigin, res, historyTarget, false, committed, replace...)
 }

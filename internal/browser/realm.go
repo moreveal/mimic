@@ -29,6 +29,7 @@ import (
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
 	"github.com/moreveal/mimic/internal/webapi"
@@ -794,7 +795,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(output), nil
 	})
-	installLocaleHost(host, r.runtime, p.environmentView().Locale)
+	installLocaleHost(host, r.runtime, func() state.Locale { return p.environmentView().Locale })
 	installStructuredCloneHost(host, r.runtime)
 	r.files = installOPFSHost(host, r.runtime, r.agent.Page().ctx, func() string { return r.origin })
 	r.installDocumentStream(host)

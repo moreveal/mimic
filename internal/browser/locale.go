@@ -11,12 +11,9 @@ import (
 
 // The location belongs to this realm's immutable context environment. Never
 // change time.Local or ICU's process-global defaults: Pages run concurrently.
-func installLocaleHost(host map[string]any, runtime engine.Runtime, locale state.Locale) {
-	location, err := time.LoadLocation(locale.Timezone)
-	if err != nil {
-		panic(err) // Environment validation precedes realm construction.
-	}
+func installLocaleHost(host map[string]any, runtime engine.Runtime, currentLocale func() state.Locale) {
 	host["intlEnvironment"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		locale := currentLocale()
 		name := locale.IntlLocale
 		if name == "" && len(locale.Languages) > 0 {
 			name = locale.Languages[0]
@@ -27,6 +24,11 @@ func installLocaleHost(host map[string]any, runtime engine.Runtime, locale state
 		return runtime.Value(map[string]any{"locale": name, "timeZone": locale.Timezone}), nil
 	})
 	host["dateZone"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		locale := currentLocale()
+		location, err := time.LoadLocation(locale.Timezone)
+		if err != nil {
+			return nil, err
+		}
 		ms := numarg(args, 0)
 		if math.IsNaN(ms) || math.IsInf(ms, 0) || math.Abs(ms) > 8.64e15+2592000000 {
 			return runtime.Value(nil), nil

@@ -20,6 +20,7 @@ import (
 	"github.com/moreveal/mimic/internal/monotime"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
 	"github.com/moreveal/mimic/internal/webapi"
@@ -173,7 +174,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 	})
 	host := map[string]any{}
-	installLocaleHost(host, runtime, p.environmentView().Locale)
+	installLocaleHost(host, runtime, func() state.Locale { return p.environmentView().Locale })
 	installStructuredCloneHost(host, runtime)
 	files := installOPFSHost(host, runtime, p.ctx, func() string {
 		u := w.url

@@ -41,6 +41,7 @@ type Server struct {
 	pumps             map[*browser.Page]context.CancelFunc
 	executions        map[*browser.Page]context.CancelFunc
 	pausedPumps       map[*browser.Page]int
+	downloadPolicies  map[string]downloadPolicy
 	closed            bool
 	workers           sync.WaitGroup
 	Browser           *browser.Browser

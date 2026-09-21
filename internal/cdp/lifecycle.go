@@ -38,6 +38,10 @@ func (s *session) replayIdle() {
 }
 
 func (s *Server) observePageLifecycle(page *browser.Page, e trace.Event) {
+	if e.Kind == trace.Lifecycle && e.Name == "download" {
+		s.completeDownload(page, stringValue(e.Data["guid"]))
+		return
+	}
 	if e.Kind == trace.Lifecycle && e.Name == "windowOpen" {
 		targetID := stringValue(e.Data["targetId"])
 		popup, ok := s.page(targetID)
