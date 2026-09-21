@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "gate:cloudflare-playground": "node cloudflare_playground_gate.mjs"
+  },
   "dependencies": {
     "playwright-core": "^1.63.0"
   }

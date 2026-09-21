@@ -178,6 +178,7 @@ type Realm struct {
 	baseCacheReference       *url.URL
 	fetchCancels             map[string]context.CancelFunc
 	xhrCancels               map[string]context.CancelFunc
+	webSockets               map[string]*realmWebSocket
 	nativePollQueued         bool
 	checkpointQueued         bool
 	checkpointClosed         bool
@@ -489,6 +490,7 @@ func (r *Realm) Close() error {
 	delete(p.realmOwners, r.ID)
 	p.mu.Unlock()
 	r.checkpointClosed = true
+	r.closeWebSockets()
 	r.scheduler.Close()
 	clear(r.timers)
 	c := r.agent.Page().ctx
@@ -2091,6 +2093,9 @@ func (r *Realm) installBindingsOnOwner() error {
 		return nil, nil
 	})
 	host["xhr"] = r.fn(r.hostXHR)
+	host["openWebSocket"] = r.fn(r.hostOpenWebSocket)
+	host["sendWebSocket"] = r.fn(r.hostSendWebSocket)
+	host["closeWebSocket"] = r.fn(r.hostCloseWebSocket)
 	installConsoleKind(host, r.runtime)
 	host["executionContextActive"] = r.transientFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["console"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {

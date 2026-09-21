@@ -7631,6 +7631,181 @@
     remoteWindowCache.set(id, proxy);
     return proxy;
   };
+  const closeEventSlots = new WeakMap();
+  class CloseEvent extends Event {
+    constructor(type, init = {}) {
+      super(type, init);
+      closeEventSlots.set(this, {
+        wasClean: !!init.wasClean,
+        code: Number(init.code || 0),
+        reason: String(init.reason || ''),
+      });
+    }
+    get wasClean() {
+      return closeEventSlots.get(this).wasClean;
+    }
+    get code() {
+      return closeEventSlots.get(this).code;
+    }
+    get reason() {
+      return closeEventSlots.get(this).reason;
+    }
+  }
+  const webSocketSlots = new WeakMap();
+  let nextWebSocketID = 0;
+  class WebSocket extends EventTarget {
+    constructor(url, protocols = []) {
+      super();
+      if (arguments.length === 0)
+        throw new TypeError(
+          "Failed to construct 'WebSocket': 1 argument required, but only 0 present.",
+        );
+      let parsed;
+      try {
+        parsed = new URL(String(url), location.href);
+      } catch (_) {
+        throw new DOMException(`The URL '${String(url)}' is invalid.`, 'SyntaxError');
+      }
+      if ((parsed.protocol !== 'ws:' && parsed.protocol !== 'wss:') || parsed.hash)
+        throw new DOMException(
+          `The URL's scheme must be either 'ws' or 'wss'. '${parsed.protocol.replace(':', '')}' is not allowed.`,
+          'SyntaxError',
+        );
+      if (parsed.username || parsed.password)
+        throw new DOMException(
+          'The URL contains a username and password, which is not allowed.',
+          'SyntaxError',
+        );
+      if (location.protocol === 'https:' && parsed.protocol === 'ws:')
+        throw new DOMException(
+          'An insecure WebSocket connection may not be initiated from a page loaded over HTTPS.',
+          'SecurityError',
+        );
+      const list = typeof protocols === 'string' ? [protocols] : Array.from(protocols);
+      const seen = new Set();
+      for (const protocol of list) {
+        const value = String(protocol);
+        if (!value || /[^!#$%&'*+.^_`|~0-9A-Za-z-]/.test(value) || seen.has(value))
+          throw new DOMException(`The subprotocol '${value}' is invalid.`, 'SyntaxError');
+        seen.add(value);
+      }
+      const state = {
+        id: `websocket-${++nextWebSocketID}`,
+        url:
+          parsed.pathname === ''
+            ? parsed.href.replace(/([?#]|$)/, (suffix) => `/${suffix}`)
+            : parsed.href,
+        readyState: 0,
+        bufferedAmount: 0,
+        extensions: '',
+        protocol: '',
+        binaryType: 'blob',
+      };
+      webSocketSlots.set(this, state);
+      host.openWebSocket(
+        (event) => {
+          if (event.type === 'open') {
+            if (state.readyState !== 0) return;
+            state.readyState = 1;
+            state.protocol = String(event.protocol || '');
+            dispatchTrusted(this, new Event('open'));
+          } else if (event.type === 'message') {
+            if (state.readyState !== 1) return;
+            let data = event.data;
+            if (event.binary) {
+              const bytes = new Uint8Array(event.bytes || []);
+              data = state.binaryType === 'arraybuffer' ? bytes.buffer : new Blob([bytes]);
+            }
+            dispatchTrusted(this, new MessageEvent('message', { data, origin: parsed.origin }));
+          } else if (event.type === 'error') {
+            dispatchTrusted(this, new Event('error'));
+          } else if (event.type === 'close') {
+            if (state.readyState === 3) return;
+            state.readyState = 3;
+            dispatchTrusted(
+              this,
+              new CloseEvent('close', {
+                code: event.code,
+                reason: event.reason,
+                wasClean: event.wasClean,
+              }),
+            );
+          }
+        },
+        state.id,
+        state.url,
+        list,
+      );
+    }
+    send(data) {
+      const state = webSocketSlots.get(this);
+      if (!state) throw new TypeError('Illegal invocation');
+      if (state.readyState === 0)
+        throw new DOMException('Still in CONNECTING state.', 'InvalidStateError');
+      if (state.readyState !== 1) return;
+      if (data instanceof ArrayBuffer) host.sendWebSocket(state.id, new Uint8Array(data), true);
+      else if (ArrayBuffer.isView(data))
+        host.sendWebSocket(
+          state.id,
+          new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
+          true,
+        );
+      else if (data instanceof Blob) {
+        data.arrayBuffer().then((buffer) => {
+          if (state.readyState === 1) host.sendWebSocket(state.id, new Uint8Array(buffer), true);
+        });
+      } else host.sendWebSocket(state.id, String(data), false);
+    }
+    close(code = undefined, reason = '') {
+      const state = webSocketSlots.get(this);
+      if (!state) throw new TypeError('Illegal invocation');
+      if (code !== undefined && code !== 1000 && (Number(code) < 3000 || Number(code) > 4999))
+        throw new DOMException(
+          `The code must be either 1000, or between 3000 and 4999.`,
+          'InvalidAccessError',
+        );
+      reason = String(reason);
+      if (new TextEncoder().encode(reason).byteLength > 123)
+        throw new DOMException('The message must not be greater than 123 bytes.', 'SyntaxError');
+      if (state.readyState === 2 || state.readyState === 3) return;
+      state.readyState = 2;
+      host.closeWebSocket(state.id, code === undefined ? 1000 : Number(code), reason);
+    }
+  }
+  for (const key of ['url', 'readyState', 'bufferedAmount', 'extensions', 'protocol'])
+    def(WebSocket.prototype, key, {
+      get() {
+        const state = webSocketSlots.get(this);
+        if (!state) throw new TypeError('Illegal invocation');
+        return state[key];
+      },
+    });
+  def(WebSocket.prototype, 'binaryType', {
+    get() {
+      const state = webSocketSlots.get(this);
+      if (!state) throw new TypeError('Illegal invocation');
+      return state.binaryType;
+    },
+    set(value) {
+      const state = webSocketSlots.get(this);
+      if (!state) throw new TypeError('Illegal invocation');
+      value = String(value);
+      if (value === 'blob' || value === 'arraybuffer') state.binaryType = value;
+    },
+  });
+  for (const type of ['open', 'message', 'error', 'close'])
+    def(WebSocket.prototype, `on${type}`, {
+      get() {
+        return eventHandlerRecord(this, type).value;
+      },
+      set(value) {
+        setEventHandlerValue(this, type, value);
+      },
+    });
+  for (const [name, value] of Object.entries({ CONNECTING: 0, OPEN: 1, CLOSING: 2, CLOSED: 3 })) {
+    Object.defineProperty(WebSocket, name, { value, enumerable: true });
+    Object.defineProperty(WebSocket.prototype, name, { value, enumerable: true });
+  }
   let nextXHRID = 0;
   const xhrSlots = new WeakMap(),
     xhrState = (xhr) => xhrSlots.get(xhr);
@@ -8049,6 +8224,7 @@
     Event,
     MessageEvent,
     ErrorEvent,
+    CloseEvent,
     EventTarget,
     Node,
     DocumentFragment,
@@ -8099,6 +8275,7 @@
     Storage,
     XMLHttpRequestEventTarget,
     XMLHttpRequest,
+    WebSocket,
     GPU,
     GPUAdapter,
     GPUAdapterInfo,
@@ -9196,6 +9373,7 @@
       Event,
       MessageEvent,
       ErrorEvent,
+      CloseEvent,
       EventTarget,
       Node,
       DocumentFragment,
@@ -9249,6 +9427,7 @@
       Storage,
       XMLHttpRequestEventTarget,
       XMLHttpRequest,
+      WebSocket,
       GPU,
       GPUAdapter,
       GPUAdapterInfo,

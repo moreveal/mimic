@@ -297,6 +297,15 @@ func WithProtocolRacing() HttpClientOption {
 	}
 }
 
+// WithDisableProtocolRacing lets a derived HTTP/1-only transport reuse a
+// browser session's options without inheriting its HTTP/3 racing policy. A
+// WebSocket upgrade is always HTTP/1.1, even when ordinary requests race H3.
+func WithDisableProtocolRacing() HttpClientOption {
+	return func(config *httpClientConfig) {
+		config.enableProtocolRacing = false
+	}
+}
+
 // WithClientProfile configures a TLS client to use the specified client profile.
 func WithClientProfile(clientProfile profiles.ClientProfile) HttpClientOption {
 	return func(config *httpClientConfig) {
