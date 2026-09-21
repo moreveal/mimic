@@ -2848,3 +2848,14 @@ V8 `--optimize-for-size` and tighter heap constraints were measured and rejected
 both increased memory and/or CPU on the same workload. Pooling therefore remains
 an incremental layer, not the claimed 50% solution; most remaining marginal
 cost is per-realm native/context state and navigation allocation pressure.
+
+The generated shape publisher was subsequently changed to discard its parsed
+IDL graph after publication and Browser-selected catalogs now contain only the
+fields needed to construct observable shape. Rich generator metadata (source,
+types, arguments, origins and Blink annotations) remains process-wide and no
+longer crosses into every realm. A compiled 10-Page replay measured 1232.19 MiB
+private and 894.31 ms. This is compatible and reduces bootstrap allocation, but
+its RAM delta against the pooled median is small; V8 diagnostics bound the live
+JavaScript heap at roughly 20-24 MiB for the entire pooled isolate. Replacing
+these facades with native FunctionTemplates therefore cannot account for the
+remaining roughly 1.2 GiB and is not pursued as a high-risk identity rewrite.
