@@ -748,7 +748,16 @@ const canvasCompatibilityState = (() => {
         s = c.surface;
       if (s.originClean === false) fail('SecurityError', 'Canvas is not origin-clean');
       [x, y, width, height] = [x, y, width, height].map((v) => Math.trunc(Number(v)));
-      if (!width || !height) fail('IndexSizeError', 'ImageData dimensions must be nonzero');
+      if (!width)
+        fail(
+          'IndexSizeError',
+          "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0.",
+        );
+      if (!height)
+        fail(
+          'IndexSizeError',
+          "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source height is 0.",
+        );
       if (width < 0) {
         x += width;
         width = -width;

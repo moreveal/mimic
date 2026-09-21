@@ -21,6 +21,15 @@ const canvasStateFixture = `(async()=>{
  return true;
 })()`
 
+func TestCanvasZeroImageDataDimensionMessage(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{const ctx=document.createElement('canvas').getContext('2d');const messages=[];for(const size of [[0,1],[1,0]]){try{ctx.getImageData(0,0,...size)}catch(e){messages.push([e.name,e.message])}}return JSON.stringify(messages)})()`)
+	if err != nil || value != `[["IndexSizeError","Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0."],["IndexSizeError","Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source height is 0."]]` {
+		t.Fatalf("zero ImageData dimensions: %v %v", value, err)
+	}
+}
+
 func TestCanvasStateWindowAndWorker(t *testing.T) {
 	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
