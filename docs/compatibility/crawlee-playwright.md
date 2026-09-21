@@ -6,6 +6,27 @@ optional `mimicPath` launcher; Mimic itself remains a CDP runtime. This is a
 tested integration, not an upstream Crawlee feature or a claim that every
 Playwright workflow is supported.
 
+## Use upstream Crawlee without the fork
+
+Upstream Crawlee's existing `remoteBrowser` option can connect to a Mimic
+process over CDP. Start Mimic separately:
+
+```powershell
+E:/GitHub/mimic/.build/mimic.exe -listen 127.0.0.1:9222
+```
+
+Then configure `PlaywrightCrawler` with
+`remoteBrowser: { endpoint: 'http://127.0.0.1:9222' }`. Crawlee connects and
+manages its browser pages; the caller starts and stops the Mimic process. The
+fork's optional `mimicPath` option adds that process lifecycle to Crawlee's
+browser launcher. It is not required to use Mimic with upstream Crawlee.
+
+We checked this path with a locally served page: a `PlaywrightCrawler` using
+`remoteBrowser` and no `mimicPath` connected through `connectOverCDP`, read the
+page title and text, and completed one request with no failures. The fork does
+not change Crawlee's `remoteBrowser` implementation. This is a focused
+compatibility check, not a full upstream Crawlee test run.
+
 ## Run the fork's example
 
 Build Mimic from this repository (see [getting started](../getting-started.md))
