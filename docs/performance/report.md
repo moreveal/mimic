@@ -2823,3 +2823,28 @@ baseline (**-20.2%**). Median batch wall time was **878.22 ms**. This is a real
 checkpoint, not the final memory gate: it does not yet meet the planned -30%
 threshold, and remaining domains must be migrated behind the same single
 registry rather than adding independent lazy mechanisms.
+
+## 2026-09-21 -- bounded V8 realm pooling
+
+Restored Pages now use independent V8 contexts in a Browser-owned pool, with a
+default bound of eight realms per isolate. Realm teardown releases only that
+Page's context and roots; isolate teardown occurs after the final realm. The
+isolate-wide string-code-generation callback is rebound across nested realm
+entries so Trusted Types and `eval` policy remain Page-local. Pool capacity can
+be overridden with `MIMIC_REALMS_PER_ISOLATE` for diagnostics.
+
+The compiled replay binary `d482e32` (SHA-256
+`65C72ED39867C4E6E7B47425EBDFEDE007E75300096E8B0B8C74A3C2B2A90C2C`)
+measured median **1239.81 MiB private / 1005.24 ms** across three default-pool
+runs at 10 concurrent Pages. The same binary with pooling disabled by capacity
+one measured **1426.84 MiB / 957.21 ms**, a **13.1% private-memory reduction**
+at a one-sample **5.0% wall-time cost**. Capacity 16 reached 1209.93 MiB in an
+earlier run but saved little beyond capacity eight and increases serialization.
+
+DOM nodes now allocate attribute maps only after the first attribute while host
+style projections continue to expose empty attribute objects. This removes a
+per-node allocation without changing DOM state or JavaScript observations.
+V8 `--optimize-for-size` and tighter heap constraints were measured and rejected:
+both increased memory and/or CPU on the same workload. Pooling therefore remains
+an incremental layer, not the claimed 50% solution; most remaining marginal
+cost is per-realm native/context state and navigation allocation pressure.
