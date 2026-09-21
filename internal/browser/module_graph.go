@@ -19,19 +19,10 @@ type moduleGraph struct {
 	callbacks []func(context.Context, error) error
 }
 
-func moduleDependency(specifier, referrer string) (*url.URL, *url.URL, error) {
-	base, err := url.Parse(referrer)
-	if err != nil {
-		return nil, nil, err
-	}
-	target, err := base.Parse(specifier)
-	return target, base, err
-}
-
 // Linking's resolver only reads completed graph fetches. A missing edge is a
 // useful diagnostic, never an implicit blocking network request inside V8.
 func (r *Realm) loadedModule(specifier, referrer string) (string, string, error) {
-	target, _, err := moduleDependency(specifier, referrer)
+	target, _, err := r.resolveModuleSpecifier(specifier, referrer)
 	if err != nil {
 		return "", "", err
 	}
@@ -94,7 +85,7 @@ func (r *Realm) prepareModuleGraph(ctx context.Context, source, name string) *mo
 		}
 		r.preparedModules[resourceName] = true
 		for _, specifier := range imports {
-			target, base, err := moduleDependency(specifier, resourceName)
+			target, base, err := r.resolveModuleSpecifier(specifier, resourceName)
 			if err != nil {
 				return err
 			}
@@ -171,7 +162,7 @@ func (r *Realm) enableAsyncModules() {
 			if base, err := url.Parse(referrer); err == nil && !base.IsAbs() {
 				referrer = r.documentURL().String()
 			}
-			target, base, err := moduleDependency(specifier, referrer)
+			target, base, err := r.resolveModuleSpecifier(specifier, referrer)
 			if err != nil {
 				return complete(ctx, "", "", nil, err)
 			}

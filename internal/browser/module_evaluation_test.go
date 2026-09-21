@@ -51,6 +51,47 @@ func TestModuleThrowIsTracedWithoutStoppingOtherScripts(t *testing.T) {
 	}
 }
 
+func TestParserImportMapResolvesBareAndPrefixSpecifiers(t *testing.T) {
+	parallelBrowserTest(t)
+	var requested []string
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requested = append(requested, r.URL.Path)
+		switch r.URL.Path {
+		case "/":
+			fmt.Fprint(w, `<script type="importmap">{"imports":{"pkg":"/vendor/pkg.js","lib/":"/vendor/lib/"}}</script><script type="module">import value from 'pkg';import {suffix} from 'lib/part.js';globalThis.importMapResult=value+suffix</script>`)
+		case "/vendor/pkg.js":
+			fmt.Fprint(w, `export default 'mapped-'`)
+		case "/vendor/lib/part.js":
+			fmt.Fprint(w, `export const suffix='prefix'`)
+		default:
+			w.WriteHeader(http.StatusNotFound)
+		}
+	}))
+	defer server.Close()
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := p.Navigate(context.Background(), server.URL); err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `globalThis.importMapResult`)
+	if err != nil || value != "mapped-prefix" {
+		t.Fatalf("mapped module result: %v %v (requests %v)", value, err, requested)
+	}
+	for _, path := range requested {
+		if path == "/pkg" || path == "/lib/part.js" {
+			t.Fatalf("bare specifier fetched without mapping: %v", requested)
+		}
+	}
+}
+
 func TestImportMetaResolveUsesImmutableModuleBaseWithoutFetching(t *testing.T) {
 	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())

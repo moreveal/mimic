@@ -682,6 +682,13 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 		realm.preloadModules()
 		realm.preloadResources()
 		stylesheets := realm.startParserStylesheets()
+		if strings.EqualFold(strings.TrimSpace(s.Attributes["type"]), "importmap") {
+			doc.MarkScriptStarted(s.ID)
+			if err := realm.installImportMap(doc.TextContent(s.ID)); err != nil {
+				p.trace.Add(trace.Exception, "script", map[string]any{"url": u.String(), "error": err.Error(), "importMap": true})
+			}
+			return nil
+		}
 		kind := scriptExecutionKind(s.Attributes["type"], s.Attributes["language"])
 		if kind == "" {
 			return nil

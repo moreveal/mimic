@@ -158,6 +158,7 @@ type Realm struct {
 	moduleFetches            map[string]*scriptFetch
 	moduleGraphs             map[string]*moduleGraph
 	preparedModules          map[string]bool
+	importMap                map[string]string
 	preloadedModuleLinks     map[int64]bool
 	imageLoads               map[int64]*imageLoad
 	mediaLoads               map[int64]*mediaLoad
