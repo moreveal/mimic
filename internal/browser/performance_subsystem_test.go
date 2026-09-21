@@ -143,8 +143,10 @@ func TestPerformanceClearedEntriesReleaseRuntimeRoots(t *testing.T) {
 		t.Fatalf("retained identity/detail: %v", result)
 	}
 	timeline := p.Top.Realm.performance
-	if len(timeline.records) > 4 {
-		t.Errorf("cleared entries retained %d runtime roots", len(timeline.records))
+	for _, record := range timeline.records {
+		if record.data["entryType"] == "mark" {
+			t.Errorf("cleared entry retained runtime root: %v", record.data["name"])
+		}
 	}
 	for _, observer := range timeline.observers {
 		if !observer.active && observer.callback != nil {
