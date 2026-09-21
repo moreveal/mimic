@@ -4,8 +4,8 @@ package gov8
 
 import (
 	"fmt"
-	"sync"
 	syscall "github.com/maclof/gov8/internal/native"
+	"sync"
 	"unsafe"
 )
 
@@ -630,6 +630,11 @@ func (i *Isolate) NewFunction(s *Scope, c *Context, cb FunctionCallback, opts *F
 		dropHostCallback(handle)
 		return nil, shimError("Function.New", 0)
 	}
+	// Direct functions are owned by their creation context. Once that context
+	// is disposed V8 cannot invoke them, so release the Go closure and native
+	// dispatch context instead of retaining every closed realm until the whole
+	// isolate is destroyed.
+	c.hostCallbacks = append(c.hostCallbacks, handle)
 	return &Function{Value: Value{iso: i, sc: s, h: r1}, ctx: c}, nil
 }
 

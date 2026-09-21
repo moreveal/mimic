@@ -2882,3 +2882,28 @@ Mimic totals of **2734 / 2753 / 2841 ms**, peak RAM of
 9593.75 ms baseline, the median is **32.5% less wall time (1.48x throughput),
 49.6% less peak RAM, and 43.3% less CPU**. All three runs completed 50/50, and
 the full repository test suite passed.
+
+## 2026-09-21 -- context-owned V8 callback lifetime
+
+Pooled isolates previously retained every direct native-function registration
+until the entire isolate was destroyed. Closing a Page disposed its V8 context
+and all JavaScript functions, but the gov8 host registry still held their Go
+closures and native dispatch contexts. Sequential short-lived Pages therefore
+accumulated unreachable realm, DOM and binding state in the intentionally hot
+isolate.
+
+Direct native functions are now registered to their creation context and their
+host registrations are released only after successful native context disposal.
+Isolate-owned template and shared callbacks keep their existing lifetime. This
+is teardown correctness rather than collection policy: no callback reachable
+from a live context is changed, and the hot isolate and bootstrap snapshot stay
+available for the next Page. A regression test creates and closes 32 contexts
+and verifies that the isolate callback registry returns to its baseline after
+every close.
+
+Three compiled 100-run Campfire measurements produced **243.57 / 222.17 /
+230.76 MiB** peak RAM and **5661 / 5778 / 5916 ms** official totals. Against
+the immediately preceding compiled control (**335.16 MiB / 5925 ms**), median
+peak RAM falls **31.1%** while median wall time improves **2.5%**. The rejected
+alternative of forcing V8 collection on every closed realm reached 294.59 MiB
+but regressed wall time to 6575 ms; it was fully removed.

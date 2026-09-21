@@ -21,6 +21,7 @@ func TestHTMLDDA(t *testing.T) {
 	defer scope.Close()
 	defer ctx.Close()
 	checkNativeNumberABI(t, iso, scope, ctx)
+	gov8.CheckContextCloseReleasesDirectFunctionCallbacks(t, iso)
 	ot, err := iso.NewObjectTemplate(scope)
 	if err != nil {
 		t.Fatal(err)

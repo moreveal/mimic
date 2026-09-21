@@ -4,8 +4,8 @@ package gov8
 
 import (
 	"fmt"
-	"sync"
 	syscall "github.com/maclof/gov8/internal/native"
+	"sync"
 	"unsafe"
 )
 
@@ -185,6 +185,7 @@ type Context struct {
 	handle         uintptr
 	closed         bool
 	microtaskQueue *MicrotaskQueue
+	hostCallbacks  []uint64
 }
 
 // NewContext creates a default context on the isolate. A context is
@@ -255,6 +256,10 @@ func (c *Context) Close() error {
 	if int64(r1) < 0 {
 		return shimError("Context.Close", r1)
 	}
+	for _, handle := range c.hostCallbacks {
+		dropHostCallback(handle)
+	}
+	c.hostCallbacks = nil
 	return nil
 }
 
