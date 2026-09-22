@@ -161,12 +161,19 @@ func (s *bootstrapDiskStore) cleanup(now time.Time) {
 	}
 }
 
-// PrepareBootstrap ensures the default profile's immutable startup artifact is
-// available before the browser starts accepting protocol clients.
-func (b *Browser) PrepareBootstrap(ctx context.Context, dir string) error {
+// ConfigureBootstrapCache opens the persistent store without creating a Page.
+// The first Page can use an existing artifact while cold-cache preparation runs
+// independently of protocol listener startup.
+func (b *Browser) ConfigureBootstrapCache(dir string) error {
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		return nil
 	}
+	b.bootstrapSnapshots.mu.Lock()
+	if b.bootstrapSnapshots.disk != nil {
+		b.bootstrapSnapshots.mu.Unlock()
+		return nil
+	}
+	b.bootstrapSnapshots.mu.Unlock()
 	store, err := newBootstrapDiskStore(dir, b.factory)
 	if err != nil || store == nil {
 		return err
@@ -174,6 +181,18 @@ func (b *Browser) PrepareBootstrap(ctx context.Context, dir string) error {
 	b.bootstrapSnapshots.mu.Lock()
 	b.bootstrapSnapshots.disk = store
 	b.bootstrapSnapshots.mu.Unlock()
+	return nil
+}
+
+// PrepareBootstrap ensures the default profile's immutable startup artifact is
+// available. Callers may run it after opening a protocol listener.
+func (b *Browser) PrepareBootstrap(ctx context.Context, dir string) error {
+	if err := b.ConfigureBootstrapCache(dir); err != nil {
+		return err
+	}
+	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
+		return nil
+	}
 	c := b.NewContext()
 	defer c.Close()
 	for i := 0; i < 2; i++ {

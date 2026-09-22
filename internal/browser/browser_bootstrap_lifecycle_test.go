@@ -5,6 +5,7 @@ package browser
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -45,6 +46,80 @@ func TestBrowserBootstrapSnapshotKeySeparatesContextProfiles(t *testing.T) {
 	}
 	if q.Top.Realm.bootstrapSource().key == firstKey {
 		t.Fatal("distinct Context profiles shared a bootstrap snapshot key")
+	}
+}
+
+func TestBootstrapDiskSnapshotRestoresAcrossBrowserWallOrigins(t *testing.T) {
+	serialBrowserTest(t)
+	dir := t.TempDir()
+	first, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	if err := first.PrepareBootstrap(ctx, dir); err != nil {
+		first.Close()
+		t.Fatal(err)
+	}
+	firstOrigin := first.env.Time.WallOrigin
+	if err := first.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	second, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer second.Close()
+	second.env.Time.WallOrigin = firstOrigin.Add(2 * time.Hour)
+	if err := second.PrepareBootstrap(ctx, dir); err != nil {
+		t.Fatal(err)
+	}
+	files, err := os.ReadDir(dir)
+	if err != nil || len(files) != 1 {
+		t.Fatalf("second Browser did not reuse the same disk artifact: files=%d err=%v", len(files), err)
+	}
+	c := second.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.ClosePage(p.ID)
+	value, err := p.Evaluate(ctx, `Math.abs(Date.now()-performance.timeOrigin)<1000`)
+	if err != nil || value != true || !p.Top.Realm.bootstrapRestored {
+		t.Fatalf("disk restore must use the new Page clock: value=%v restored=%t err=%v", value, p.Top.Realm.bootstrapRestored, err)
+	}
+	origin, err := p.Evaluate(ctx, `performance.timeOrigin`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, ok := origin.(float64)
+	if !ok || got < float64(firstOrigin.Add(2*time.Hour).UnixMilli()) {
+		t.Fatalf("restored runtime retained the old wall origin: %v", origin)
+	}
+}
+
+func TestConfigureBootstrapCacheDoesNotCreatePages(t *testing.T) {
+	serialBrowserTest(t)
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer b.Close()
+	if err := b.ConfigureBootstrapCache(t.TempDir()); err != nil {
+		t.Fatal(err)
+	}
+	b.mu.RLock()
+	contexts := len(b.contexts)
+	b.mu.RUnlock()
+	b.bootstrapSnapshots.mu.Lock()
+	entries := len(b.bootstrapSnapshots.entries)
+	configured := b.bootstrapSnapshots.disk != nil
+	b.bootstrapSnapshots.mu.Unlock()
+	if contexts != 0 || entries != 0 || !configured {
+		t.Fatalf("cache setup did bootstrap work: contexts=%d entries=%d configured=%t", contexts, entries, configured)
 	}
 }
 

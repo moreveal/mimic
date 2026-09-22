@@ -141,13 +141,16 @@ func (r *Realm) bootstrapSource() *bootstrapSource {
 		plan.source = webapi.WithDevPreview(plan.source)
 	}
 	// Context profile values select an artifact because they can affect the
-	// bootstrap graph. Later Page-local changes are rebound through callbacks
-	// and therefore must not fragment the cache.
+	// bootstrap graph. The wall origin is Page runtime state, supplied by host
+	// callbacks after restore; including it would give every process a unique
+	// disk key for an otherwise identical bootstrap graph.
+	profileEnvironment := r.agent.Page().ctx.env
+	profileEnvironment.Time.WallOrigin = time.Time{}
 	profile, _ := json.Marshal(struct {
 		Environment                                          state.Environment
 		Secure, Isolated, Credentialless, OriginAgentCluster bool
 		DevPreview                                           bool
-	}{r.agent.Page().ctx.env, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
+	}{profileEnvironment, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
 	hash := sha256.New()
 	for _, part := range []string{plan.source, plan.exposureJSON, plan.catalogJSON, string(profile)} {
 		hash.Write([]byte(part))

@@ -1,5 +1,50 @@
 # Performance architecture pass
 
+## 2026-09-22: persistent bootstrap reuse and deferred preparation
+
+The persistent V8 bootstrap cache was keyed by the complete environment,
+including `Time.WallOrigin`, which changes on every process launch. Each launch
+therefore missed the disk cache, rebuilt an approximately 8.8 MB artifact and
+waited for its durable write before opening the CDP listener. The key now omits
+only this Page-owned clock value. A regression test gives a second Browser a
+wall origin two hours later, verifies reuse of the same disk artifact, and
+checks that restored `Date` and `performance.timeOrigin` use the second clock.
+
+The CLI now opens the disk store before listening and prepares the bootstrap in
+the background after opening the listener. A cached artifact can be loaded by
+the first Page; a cold store is built for later Pages and process launches.
+Browser-owned `PrepareBootstrap` remains available to callers that explicitly
+need a ready snapshot before serving.
+
+On the Obscura `obstacle-course` static stage, five fresh-process measurements
+with a verified existing disk artifact gave median HTTP readiness **111.0 ms**
+and completion **381.0 ms**, versus the earlier unchanged pre-listen path at
+about **641 ms** and **790 ms**. An empty-store series gave medians of **115.8
+ms** readiness and **396.6 ms** completion; its first host-cold sample was
+654.8/1005.9 ms and is retained rather than silently discarded. These are
+same-machine diagnostic
+measurements, not a frozen suite baseline. A persistent-process nine-Page probe
+kept later static Pages at approximately **14–15 ms** and DOM-build Pages at
+**166–170 ms**. The frozen fast gate passed all six workload checks, static
+concurrency waves at 10 and 25 Pages, and memory checks. Its warm medians were
+DOM **276.8 ms**, static **28.3 ms**, React **84.2 ms**. Full browser, CDP and
+textmetrics tests passed.
+
+The other Obscura comparison gaps remain. In a 5000-row DOM probe, Mimic spends
+roughly 61–79 ms creating detached elements and 50–56 ms setting text and
+attributes; connected append is only about 11 ms. These synchronous DOM calls
+return canonical nodes and expose immediate mutations, so their work cannot be
+postponed as a group. In a 5000-node geometry probe, the first correct rect read
+still takes roughly 300–383 ms, while repeated and irrelevant-attribute reads
+take about 1–2 ms. Obscura's render-enabled first read was about 124–128 ms;
+its no-render mode returned a fabricated width of 100 instead of the fixture's
+123. Deferring Mimic's first layout read would change the synchronous result.
+The system font catalog also remains eagerly warmed at Browser construction;
+the earlier cold-start CPU profile attributed about 30 ms to that scan. Moving
+it behind the listener would transfer that work to the first synchronous text
+measurement if the background scan has not finished. No DOM, geometry or font
+semantic path was changed in this batch.
+
 ## 2026-09-20: final Blitz production result
 
 The [final production checkpoint](blitz-production-final-2026-09-20.md)

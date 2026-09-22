@@ -74,11 +74,9 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if cacheDir := bootstrapCacheDir(); cacheDir != "" {
-		prepare, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
-		err = b.PrepareBootstrap(prepare, cacheDir)
-		cancel()
-		if err != nil {
+	cacheDir := bootstrapCacheDir()
+	if cacheDir != "" {
+		if err := b.ConfigureBootstrapCache(cacheDir); err != nil {
 			_ = b.Close()
 			log.Fatal(err)
 		}
@@ -106,6 +104,24 @@ func Run() {
 	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+	if cacheDir != "" {
+		go func() {
+			// Give protocol discovery and an immediate first request the scheduler
+			// before cold-cache compilation starts consuming a V8 worker.
+			timer := time.NewTimer(2 * time.Second)
+			defer timer.Stop()
+			select {
+			case <-timer.C:
+			case <-ctx.Done():
+				return
+			}
+			prepare, cancel := context.WithTimeout(ctx, 2*time.Minute)
+			defer cancel()
+			if err := b.PrepareBootstrap(prepare, cacheDir); err != nil && ctx.Err() == nil {
+				log.Printf("bootstrap preparation: %v", err)
+			}
+		}()
+	}
 	if parentExited := parentExitSignal(); parentExited != nil {
 		go func() {
 			select {
