@@ -101,6 +101,7 @@ func (r *Realm) preloadResource(id int64, attributes map[string]string) {
 	}
 	r.preloadedLinks[id] = true
 	request := r.elementRequest(u, attributes, initiator)
+	request.Mechanism = "preload"
 	request.PerformanceInitiatorType = "link"
 	if r.preloadContext == nil {
 		r.preloadContext, r.cancelPreloads = context.WithCancel(r.resourceContext)
@@ -184,8 +185,10 @@ func (r *Realm) loadResource(ctx context.Context, request network.Request) (netw
 	if err := ctx.Err(); err != nil {
 		return network.Response{}, err
 	}
-	if pending := r.consumePreload(request); pending != nil {
-		return pending.wait(ctx)
+	if r.agent.Page().loader.ResourceReuseAllowed(request) {
+		if pending := r.consumePreload(request); pending != nil {
+			return pending.wait(ctx)
+		}
 	}
 	return r.agent.Page().loader.Load(ctx, r.withResourceTiming(request))
 }

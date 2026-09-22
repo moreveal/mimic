@@ -23,6 +23,7 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 			return promise.Value, nil
 		}
 		request := fetchRequest(w.parent.agent.ContextID(), target, w.url, args)
+		request.Owner = "worker"
 		request.OmitClientHints = true
 		request.ClientIsWorker = true
 		request.PerformanceOwner = fmt.Sprintf("%s/worker/%d", w.parent.ID, w.id)

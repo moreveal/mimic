@@ -7,7 +7,6 @@
     sets = new WeakMap(),
     owners = new WeakMap(),
     cssFaces = new WeakMap(),
-    nativeFetch = globalThis.fetch,
     encodeBase64 = globalThis.btoa;
   const syntax = () => new DOMException('Invalid font descriptor', 'SyntaxError');
   const requireFace = (value) => {
@@ -325,13 +324,16 @@
           }
           continue;
         }
-        nativeFetch(source.value, { mode: 'cors', credentials: 'same-origin' })
-          .then((response) => {
-            if (!response.ok) throw new Error('Font response failed');
-            return response.arrayBuffer();
+        host
+          .fetch(source.value, 'GET', {}, [], '', {
+            mode: 'cors',
+            credentials: 'same-origin',
+            resourceKind: 'font',
           })
-          .then((buffer) => {
-            const result = loadBinary(new Uint8Array(buffer));
+          .then((response) => {
+            if (response.status < 200 || response.status >= 300)
+              throw new Error('Font response failed');
+            const result = loadBinary(new Uint8Array(response.bodyBytes));
             if (!result.id) throw new Error('Invalid font data');
             s.id = result.id;
             complete(s);

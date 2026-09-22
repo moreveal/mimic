@@ -61,6 +61,7 @@ func (r *Realm) updateMedia(id int64, explicit bool) {
 		}
 		current.currentSrc = u.String()
 		request := r.elementRequest(u, node.Attributes, network.Other)
+		request.Kind = "media"
 		loadContext, cancel := context.WithCancel(r.resourceContext)
 		current.cancel = cancel
 		r.resourceWG.Add(1)

@@ -12,11 +12,12 @@ import (
 // Windows and workers project the same Fetch request/response contract onto
 // the shared loader; the owning agent supplies URL resolution and task lifetime.
 func fetchRequest(contextID string, target, source *url.URL, args []engine.Value) network.Request {
-	request := network.Request{ContextID: contextID, URL: target, Referrer: source, SourceURL: source, Method: strarg(args, 1), Headers: headerMap(arg(args, 2)), Body: byteSlice(arg(args, 3)), Initiator: network.Fetch, Credentials: "same-origin"}
+	request := network.Request{ContextID: contextID, URL: target, Referrer: source, SourceURL: source, Method: strarg(args, 1), Headers: headerMap(arg(args, 2)), Body: byteSlice(arg(args, 3)), Initiator: network.Fetch, Credentials: "same-origin", Mechanism: "api"}
 	if options, ok := arg(args, 5).(map[string]any); ok {
 		request.Mode, _ = options["mode"].(string)
 		request.Credentials, _ = options["credentials"].(string)
 		request.Redirect, _ = options["redirect"].(string)
+		request.Kind, _ = options["resourceKind"].(string)
 	}
 	return request
 }

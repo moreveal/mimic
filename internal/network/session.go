@@ -186,6 +186,10 @@ func (s *SessionState) GetCached(req Request, now time.Time) (Response, bool) {
 }
 
 func (s *SessionState) getCached(req Request, now time.Time) (Response, bool, error) {
+	return s.getCachedLimited(req, now, -1)
+}
+
+func (s *SessionState) getCachedLimited(req Request, now time.Time, limit int64) (Response, bool, error) {
 	if req.Method != http.MethodGet {
 		return Response{}, false, nil
 	}
@@ -215,9 +219,12 @@ func (s *SessionState) getCached(req Request, now time.Time) (Response, bool, er
 	}
 	defer response.sharedBody.release()
 	var err error
-	response.Body, err = response.sharedBody.copyBytes()
+	response.Body, err = response.sharedBody.copyPrefix(limit)
 	if err != nil {
 		return Response{}, false, err
+	}
+	if limit >= 0 && int64(len(response.Body)) < response.sharedBody.size {
+		response.Partial = true
 	}
 	response.Headers = response.Headers.Clone()
 	return response, true, nil

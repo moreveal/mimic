@@ -483,7 +483,9 @@ func (s *session) traceEvent(e trace.Event) {
 			s.event("Network.requestWillBeSent", map[string]any{"requestId": e.Data["id"], "loaderId": loaderID, "documentURL": e.Data["url"], "request": request, "timestamp": float64(e.Time.UnixMilli()) / 1000, "wallTime": float64(e.Time.Unix()), "initiator": map[string]any{"type": "other"}, "type": resourceTypeFromTrace(e.Data["initiator"]), "frameId": frameID})
 		} else if e.Name == "response" {
 			s.event("Network.responseReceived", map[string]any{"requestId": e.Data["id"], "loaderId": loaderID, "timestamp": float64(e.Time.UnixMilli()) / 1000, "type": resourceTypeFromTrace(e.Data["initiator"]), "response": map[string]any{"url": e.Data["url"], "status": e.Data["status"], "statusText": "", "headers": e.Data["headers"], "mimeType": e.Data["mimeType"], "connectionReused": e.Data["connectionReused"], "connectionId": e.Data["connectionId"], "protocol": cdpProtocol(e.Data["protocol"]), "timing": cdpResourceTiming(e.Data["transportTiming"]), "encodedDataLength": e.Data["encodedDataLength"], "securityState": "unknown"}, "frameId": frameID})
-			s.event("Network.loadingFinished", map[string]any{"requestId": e.Data["id"], "timestamp": float64(e.Time.UnixMilli()) / 1000, "encodedDataLength": e.Data["encodedDataLength"]})
+			if partial, _ := e.Data["partial"].(bool); !partial {
+				s.event("Network.loadingFinished", map[string]any{"requestId": e.Data["id"], "timestamp": float64(e.Time.UnixMilli()) / 1000, "encodedDataLength": e.Data["encodedDataLength"]})
+			}
 		} else if e.Name == "failed" {
 			canceled, _ := e.Data["canceled"].(bool)
 			errorText := e.Data["error"]
@@ -507,6 +509,10 @@ func (s *session) handle(m message) {
 // A command may defer its reply until browser work completes. That wait stays
 // in the original transport worker, after the session and Page locks unwind.
 func (s *session) handleCommand(m message) (afterUnlock func()) {
+	if value, handled, err := s.handleResourcePolicy(m); handled {
+		s.reply(m.ID, value, err)
+		return
+	}
 	if value, handled, err := s.handleProfile(m); handled {
 		s.reply(m.ID, value, err)
 		return

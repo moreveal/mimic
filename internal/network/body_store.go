@@ -9,8 +9,9 @@ import (
 )
 
 // Retained cache and inspector bodies share immutable storage. Retention still
-// follows the existing HTTP cache rules and 128-entry request history policy;
-// this store does not introduce a byte budget or file-backed storage.
+// follows the existing HTTP cache rules and 128-entry request history policy.
+// An opt-in Context budget can cap this shared immutable body storage; runtime
+// resource state and the caller's delivered Response.Body are separate owners.
 type BodyStorageStats struct {
 	ResidentBytes int64 `json:"resident_bytes"`
 	StoredBytes   int64 `json:"stored_bytes"`
@@ -28,17 +29,19 @@ type bodyStore struct {
 	mu       sync.Mutex
 	writers  sync.WaitGroup
 	resident int64
+	reserved int64
 	bodies   map[*storedBody]struct{}
 	closed   bool
 }
 
 type storedBody struct {
-	mu    sync.RWMutex
-	store *bodyStore
-	refs  int
-	data  []byte
-	size  int64
-	text  bool
+	mu          sync.RWMutex
+	store       *bodyStore
+	refs        int
+	data        []byte
+	size        int64
+	text        bool
+	policyOwner *ResourcePolicyState
 }
 
 func newBodyStore() *bodyStore {
@@ -46,18 +49,46 @@ func newBodyStore() *bodyStore {
 }
 
 func (s *bodyStore) put(data []byte) (*storedBody, error) {
+	return s.putWithPolicy(data, nil, nil)
+}
+
+func (s *bodyStore) putWithPolicy(data []byte, owner *ResourcePolicyState, policy *compiledResourcePolicy) (*storedBody, error) {
+	if policy == nil {
+		owner = nil
+	}
+	size := int64(len(data))
 	s.mu.Lock()
 	if s.closed {
 		s.mu.Unlock()
 		return nil, errors.New("response body storage is closed")
 	}
+	if policy != nil {
+		limit := policy.config.Budgets.MaxRetainedBytes
+		if limit > 0 && size > limit-s.resident-s.reserved {
+			owner.recordBudgetExceeded()
+			if !policy.config.ReportOnly {
+				s.mu.Unlock()
+				return nil, errRetainedBudget
+			}
+		}
+	}
+	s.reserved += size
 	s.writers.Add(1)
 	s.mu.Unlock()
 	defer s.writers.Done()
+	if owner != nil {
+		if err := owner.reserveRetained(policy, int64(len(data))); err != nil {
+			s.mu.Lock()
+			s.reserved -= size
+			s.mu.Unlock()
+			return nil, err
+		}
+	}
 	// Copy without holding a Context-wide lock. Public Response.Body and legacy
 	// interceptors remain free to mutate their independent representation.
-	body := &storedBody{store: s, refs: 1, data: bytes.Clone(data), size: int64(len(data)), text: utf8.Valid(data)}
+	body := &storedBody{store: s, refs: 1, data: bytes.Clone(data), size: int64(len(data)), text: utf8.Valid(data), policyOwner: owner}
 	s.mu.Lock()
+	s.reserved -= size
 	s.bodies[body] = struct{}{}
 	s.resident += body.size
 	closed := s.closed
@@ -102,6 +133,9 @@ func (b *storedBody) drop(force bool) {
 	delete(b.store.bodies, b)
 	b.store.resident -= b.size
 	b.store.mu.Unlock()
+	if b.policyOwner != nil {
+		b.policyOwner.releaseRetained(b.size)
+	}
 }
 
 // A legacy After interceptor may mutate bytes in place. Compare its final
@@ -114,12 +148,19 @@ func (b *storedBody) matches(data []byte) bool {
 }
 
 func (b *storedBody) copyBytes() ([]byte, error) {
+	return b.copyPrefix(-1)
+}
+
+func (b *storedBody) copyPrefix(limit int64) ([]byte, error) {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
 	if b.refs == 0 {
 		return nil, errors.New("response body storage was released")
 	}
-	return bytes.Clone(b.data), nil
+	if limit < 0 || limit > int64(len(b.data)) {
+		limit = int64(len(b.data))
+	}
+	return bytes.Clone(b.data[:limit]), nil
 }
 
 // protocolBody projects directly to CDP's required wire value instead of first
@@ -158,5 +199,5 @@ func (s *bodyStore) retainResponse(res Response) (*storedBody, error) {
 	if res.sharedBody != nil && res.sharedBody.store == s && res.sharedBody.retain() {
 		return res.sharedBody, nil
 	}
-	return s.put(res.Body)
+	return s.putWithPolicy(res.Body, res.policyOwner, res.policySnapshot)
 }

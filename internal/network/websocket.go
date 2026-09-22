@@ -2,6 +2,7 @@ package network
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -29,6 +30,27 @@ func websocketHeaders(headers http.Header) fhttp.Header {
 }
 
 func (l *Loader) DialWebSocket(ctx context.Context, rawURL string, headers http.Header) (WebSocketConn, error) {
+	if l.resourcePolicy != nil {
+		if snapshot := l.resourcePolicy.Capture(); snapshot != nil {
+			target, err := url.Parse(rawURL)
+			if err != nil {
+				return nil, err
+			}
+			decision := snapshot.decide(Request{URL: target, Kind: "websocket"})
+			l.resourcePolicy.recordDecision(decision, false)
+			if decision.Work.Network != nil && !*decision.Work.Network {
+				l.resourcePolicy.recordBlocked(decision.ReportOnly)
+				if !decision.ReportOnly {
+					return nil, fmt.Errorf("net::ERR_BLOCKED_BY_CLIENT: resource policy rule %q", decision.RuleID)
+				}
+			}
+			release, err := l.resourcePolicy.beginAcquisition(snapshot)
+			if err != nil {
+				return nil, err
+			}
+			defer release()
+		}
+	}
 	if target, err := url.Parse(rawURL); err == nil {
 		cookies := l.cookies.ForURL(target)
 		if len(cookies) > 0 {

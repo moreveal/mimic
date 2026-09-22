@@ -167,6 +167,7 @@ func newPage(c *Context) (*Page, error) {
 	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}, pageFocused: true}
 	p.eventLoopWake = make(chan struct{}, 1)
 	p.loader = network.NewLoaderWithSession(func() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }, c.cookies, c.network, p.trace)
+	p.loader.SetResourcePolicy(c.resourcePolicy)
 	if c.transport != nil {
 		p.loader.SetTransport(c.transport)
 	}
@@ -510,6 +511,7 @@ func (p *Page) beginNavigationRequestWithCommit(ctx context.Context, raw, loader
 	// Puppeteer/Pyppeteer use this equality (together with type=Document) to
 	// recognize the navigation request and return its Response from goto().
 	request.ID, request.ContextID, request.URL, request.Initiator = loaderID, p.Top.ID, u, network.Navigation
+	request.Owner, request.TopLevelURL = "frame", u
 	if request.Method == "" {
 		request.Method = http.MethodGet
 	}
@@ -858,6 +860,7 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 			favicon := favicon
 			realm.scheduler.Post(scheduler.ResourceLow, 0, func(taskContext context.Context) error {
 				request := network.Request{ContextID: p.Top.ID, URL: favicon, Referrer: u, SourceURL: u, Initiator: network.Other, PerformanceInitiatorType: iconInitiatorType}
+				request.Kind = "favicon"
 				realm.applyClientHints(&request)
 				realm.resourceWG.Add(1)
 				go func() {

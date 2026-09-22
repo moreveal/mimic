@@ -33,6 +33,7 @@ func Run() {
 	engineName := flag.String("engine", "v8", "ECMAScript engine adapter: v8, quickjs, or goja")
 	browserMode := flag.String("browser-mode", "headful", "selected environment profile: headful or headless")
 	profilePath := flag.String("profile", "", "JSON environment profile for new contexts")
+	resourcePolicyPath := flag.String("resource-policy", "", "JSON resource policy for new contexts")
 	devPreview := flag.Bool("dev-preview", false, "enable the visual debug viewer at /debug/preview/")
 	flag.Parse()
 	var cpuProfile *os.File
@@ -64,13 +65,20 @@ func Run() {
 		log.Fatalf("unsupported JavaScript engine %q", *engineName)
 	}
 	var profileJSON []byte
+	var resourcePolicyJSON []byte
 	if *profilePath != "" {
 		profileJSON, err = os.ReadFile(*profilePath)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	b, err := browser.NewWithOptions(factory, bundle, browser.Options{ProfileJSON: profileJSON, DevPreview: *devPreview})
+	if *resourcePolicyPath != "" {
+		resourcePolicyJSON, err = os.ReadFile(*resourcePolicyPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	b, err := browser.NewWithOptions(factory, bundle, browser.Options{ProfileJSON: profileJSON, ResourcePolicyJSON: resourcePolicyJSON, DevPreview: *devPreview})
 	if err != nil {
 		log.Fatal(err)
 	}

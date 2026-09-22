@@ -40,6 +40,8 @@ type DecodedImage struct {
 // Metadata, validation and pixels are monotonic capabilities; consumers cannot
 // observe or retain a partially materialized bitmap.
 type Resource struct {
+	decodeBudget      func(int64) error
+	metadataOnly      bool
 	compressedBytes   []byte
 	contentType       string
 	metadataOnce      sync.Once
@@ -60,12 +62,36 @@ func New(data []byte, contentType string) *Resource {
 	return &Resource{compressedBytes: owned, contentType: contentType}
 }
 
+// NewWithDecodeBudget charges logical RGBA pixel work immediately before each
+// raster decode. The ordinary constructor keeps the original path unchanged.
+func NewWithDecodeBudget(data []byte, contentType string, budget func(int64) error) *Resource {
+	r := New(data, contentType)
+	r.decodeBudget = budget
+	return r
+}
+
+// MetadataOnly parses intrinsic dimensions without retaining the encoded
+// representation. It is used only by an explicit resource policy which denies
+// later image decoding; ordinary image resources retain their existing path.
+func MetadataOnly(data []byte, contentType string) (*Resource, error) {
+	metadata, format, err := decodeMetadata(data, contentType)
+	if err != nil {
+		return nil, err
+	}
+	r := &Resource{contentType: contentType, metadata: metadata, metadataFormat: format, metadataOnly: true}
+	r.metadataOnce.Do(func() {})
+	return r, nil
+}
+
 func (r *Resource) RequireMetadata() (Metadata, error) {
 	r.metadataOnce.Do(func() { r.metadata, r.metadataFormat, r.metadataErr = decodeMetadata(r.compressedBytes, r.contentType) })
 	return r.metadata, r.metadataErr
 }
 
 func (r *Resource) RequireValidatedImage() (Metadata, error) {
+	if r.metadataOnly {
+		return Metadata{}, fmt.Errorf("image body not retained by resource policy")
+	}
 	metadata, err := r.RequireMetadata()
 	if err != nil {
 		return Metadata{}, err
@@ -73,6 +99,12 @@ func (r *Resource) RequireValidatedImage() (Metadata, error) {
 	r.validationOnce.Do(func() {
 		if metadata.Vector {
 			return
+		}
+		if r.decodeBudget != nil {
+			if err := r.decodeBudget(int64(metadata.Width) * int64(metadata.Height) * 4); err != nil {
+				r.validationErr = err
+				return
+			}
 		}
 		_, unavailable, err := decodeRaster(r.compressedBytes, r.metadataFormat)
 		r.pixelsUnavailable, r.validationErr = unavailable, err
@@ -91,6 +123,12 @@ func (r *Resource) RequireDecodedImage() (*DecodedImage, error) {
 		if metadata.Vector || metadata.PixelsUnavailable {
 			r.decoded = result
 			return
+		}
+		if r.decodeBudget != nil {
+			if err := r.decodeBudget(int64(metadata.Width) * int64(metadata.Height) * 4); err != nil {
+				r.decodeErr = err
+				return
+			}
 		}
 		decoded, _, decodeErr := decodeRaster(r.compressedBytes, r.metadataFormat)
 		if decodeErr != nil {

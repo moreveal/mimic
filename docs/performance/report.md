@@ -1,5 +1,118 @@
 # Performance architecture pass
 
+## 2026-09-23: ResourcePolicy on the external Wikipedia AB scraper
+
+The default scenario of `C:/Users/moreveal/Desktop/ab-scripts/run.ps1` runs
+50 isolated BrowserContexts concurrently, one Page each, against a captured
+Wikipedia Main Page replay from 2026-09-20. Both engines receive the same
+Playwright `route.fulfill` fixture; the scraper compares title, link and
+heading counts, body text length, first heading and first href. This is not a
+live-site or physical-wire-traffic benchmark. An optional `--resource-policy`
+argument was added to the external `benchmark.mjs` solely to pass a JSON
+policy to Mimic; omitting it preserves the default scenario. The tested policy
+(`C:/Users/moreveal/Desktop/ab-scripts/resource-policy-scrape.json`) admits
+the main document, blocks all other resource kinds and skips HTTP/CDP body
+retention for the document. That intentional fidelity reduction is valid for
+this specific server-rendered scrape, not a general Wikipedia policy.
+
+Fresh binary `.build/mimic-resource-policy-ab.exe` had SHA-256
+`7B08ADB26C03146C455D3F8256C81F6ECD8B20D9915F187D49C064B541D190C6`.
+An independent one-Page probe (`resource-policy-probe.mjs` in `ab-scripts`)
+observed **26 resource decisions: 1 document fulfilled, 25 non-document
+requests blocked before the Playwright route handler**. Its route handler
+fulfilled exactly one request, aborted none; Context statistics reported zero
+network acquisitions and zero retained response-body bytes. That is CDP replay
+admission evidence, not a measured count of bytes on a physical connection.
+Three alternating fresh-process pairs (default→policy, policy→default,
+default→policy) all passed exact Mimic/Chrome scraper-result equality 50/50.
+Raw JSON receipts, in execution order, are in the external `ab-scripts/results`
+directory: `run-2026-09-22T21-35-44-778Z.json`,
+`run-2026-09-22T21-36-06-968Z.json`,
+`run-2026-09-22T21-36-35-707Z.json`,
+`run-2026-09-22T21-37-00-976Z.json`,
+`run-2026-09-22T21-37-27-197Z.json`, and
+`run-2026-09-22T21-37-49-535Z.json`.
+
+| Pair | Mimic default | Mimic policy | Paired reduction | Chrome default (policy run) |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 3375.31 ms | 2113.08 ms | 37.40% | 11519.44 ms |
+| 2 | 3960.50 ms | 2073.01 ms | 47.66% | 11322.68 ms |
+| 3 | 3632.31 ms | 2265.27 ms | 37.64% | 11444.08 ms |
+
+Medians across the three Mimic samples were **3632.31 → 2113.08 ms**
+(41.83% reduction of medians); the median paired reduction was **37.64%**.
+Throughput medians were **13.77 → 23.66 Pages/s**. Peak process-tree working
+set medians were **3024.70 → 2450.02 MB** (19.0% lower), private memory
+**3202.54 → 2620.77 MB** (18.2% lower), and CPU time **59843.75 →
+33296.88 ms** (44.4% lower). The median Chrome batch in the policy runs was
+**11444.08 ms**, so policy-enabled Mimic's median batch was about **5.4×**
+shorter for this exact scrape. Chrome was deliberately not given an equivalent
+resource-blocking policy. The replay harness does not measure physical network
+traffic; do not treat these results as wire-byte savings.
+
+## 2026-09-23: opt-in ResourcePolicy, preliminary checkpoint
+
+The default/no-policy path passed the unchanged six-workload fast gate from a
+fresh build (`.build/resource-policy-fast-gate-20260923`): warm medians were DOM
+299.62 ms, static 35.69 ms, and React 90.28 ms; static concurrency waves and
+memory checks passed. These numbers are a regression gate, not a matched
+policy-on/off performance comparison. One initial full browser-suite run ended
+with a V8 access violation; an immediate independent full browser-suite rerun
+passed. A subsequent `go test ./... -count=1` passed all packages, including
+the browser suite (449.797 s). Focused ResourcePolicy tests and race checks
+passed.
+
+After the streaming budget and retention work, the unchanged fast gate was
+rerun from a fresh build (`.build/resource-policy-fast-gate-final-20260923`)
+and passed. Warm medians were DOM 288.77 ms, static 31.03 ms, React 82.59 ms;
+the static concurrency waves at 10 and 25 Pages passed. A full `go test ./...
+-count=1` passed at that checkpoint (browser package 273.907 s). After the
+last admission/retention fixes, the full suite passed again (browser package
+314.303 s), as did focused race checks.
+
+A local 256 KiB image-response benchmark (100 iterations per case) measured
+full 262144 body bytes/op and 932717 allocated bytes/op; headers-only 0 body
+bytes/op and 50822 allocated bytes/op; 4096-byte prefix 4096 body bytes/op and
+62347 allocated bytes/op; network block 0 requests/op and 10718 allocated
+bytes/op. Full, headers-only and prefix each made 1 request/op. This is a
+controlled loader benchmark, not a browser workload or a direct measurement of
+wire bytes, RSS, throughput, or teardown retention. Transport buffering can
+exceed the intentional body-read boundary.
+
+Subsequent work added streaming Context body-byte reservations, logical image
+pixel-work and shared response-body retention limits, plus known logical
+avoided-body-read accounting. A second local 256 KiB benchmark (200 iterations
+per mode) measured policy off at 400810 ns/929082 allocated bytes per op,
+reportOnly at 362435 ns/931594 bytes, full policy at 325060 ns/930527 bytes,
+headers-only at 448920 ns/48998 bytes, prefix at 466324 ns/62398 bytes,
+and block at 10274 ns/10666 bytes. Timings are noisy: headers/prefix close
+connections early and were slower than full in this local fixture, despite
+lower allocations. They do not establish a throughput benefit.
+
+A warm, controlled BrowserContext page with 20 no-store SVG images, ten
+iterations per mode, observed approximately 21 requests/page with policy off
+or reportOnly and 1 request/page with active image blocking. Shared retained
+HTTP/CDP body storage averaged 1676 bytes before teardown in off/reportOnly
+and 436 bytes with active blocking; it was zero after Context teardown in all
+cases. Measured times were 81.5 ms off, 50.2 ms reportOnly and 52.7 ms active
+per Context, but fixed scenario order and host noise make these unsuitable as
+causal throughput comparisons. Allocations were approximately 7.37, 5.60 and
+4.79 MB/op respectively, likewise subject to cold-order bias. These are
+process-allocation/owned-storage measurements, not RSS or physical traffic.
+
+The policy remains incomplete for production: exact transport wire-byte
+measurement and enforcement, matched browser-workload policy-on/off RSS and
+throughput comparisons, and comprehensive decoded/runtime memory accounting
+are not complete. Known avoided body reads are not claimed as wire savings.
+The public validator rejects a nonzero unsupported wire budget rather than
+silently ignoring it. Do not interpret this checkpoint as the full
+ResourcePolicy completion gate.
+
+The synthetic-fulfillment admission fix used for the external AB replay passed
+focused policy race tests and a subsequent full `go test ./... -count=1`
+(browser package 382.093 s). The default no-policy test expectations remained
+unchanged.
+
 ## 2026-09-22: persistent bootstrap reuse and deferred preparation
 
 The persistent V8 bootstrap cache was keyed by the complete environment,

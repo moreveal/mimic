@@ -25,11 +25,11 @@ func (r *Realm) installImageResources(host map[string]any) {
 				width, height = metadata.Width, metadata.Height
 			}
 		}
-		return r.val(map[string]any{"decoded": state != nil && state.resource != nil && present && src != "", "complete": complete, "width": width, "height": height, "currentSrc": current}), nil
+		return r.val(map[string]any{"decoded": state != nil && state.resource != nil && !state.decodeDisallowed && present && src != "", "complete": complete, "width": width, "height": height, "currentSrc": current}), nil
 	})
 	host["imagePixels"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		state := r.imageLoads[int64(numarg(args, 0))]
-		if state == nil || state.resource == nil {
+		if state == nil || state.resource == nil || state.decodeDisallowed {
 			return nil, nil
 		}
 		decoded, err := state.resource.RequireDecodedImage()

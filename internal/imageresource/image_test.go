@@ -3,6 +3,7 @@ package imageresource
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"testing"
 )
 
@@ -69,5 +70,41 @@ func TestResourceDefersPixelsAndSharesMaterialization(t *testing.T) {
 	}
 	if resource.RetainedBytes() != before+cap(first.Pixels) {
 		t.Fatal("decoded pixels not accounted")
+	}
+}
+
+func TestMetadataOnlyDoesNotRetainBodyOrDecode(t *testing.T) {
+	data, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAADklEQVR4nGP4z8DwHwQBEPgD/U6VwW8AAAAASUVORK5CYII=")
+	resource, err := MetadataOnly(data, "image/png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	metadata, err := resource.RequireMetadata()
+	if err != nil || metadata.Width != 2 || metadata.Height != 1 {
+		t.Fatalf("metadata: %+v %v", metadata, err)
+	}
+	if resource.RetainedBytes() != 0 {
+		t.Fatalf("retained %d bytes", resource.RetainedBytes())
+	}
+	if _, err := resource.RequireDecodedImage(); err == nil {
+		t.Fatal("decoded without body")
+	}
+}
+
+func TestDecodeBudgetChecksBeforeValidationAndLatePixels(t *testing.T) {
+	data, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAADklEQVR4nGP4z8DwHwQBEPgD/U6VwW8AAAAASUVORK5CYII=")
+	var charged int64
+	resource := NewWithDecodeBudget(data, "image/png", func(n int64) error {
+		if charged+n > 8 {
+			return fmt.Errorf("decode budget")
+		}
+		charged += n
+		return nil
+	})
+	if _, err := resource.RequireValidatedImage(); err != nil || charged != 8 {
+		t.Fatalf("validation charged %d: %v", charged, err)
+	}
+	if _, err := resource.RequireDecodedImage(); err == nil || charged != 8 {
+		t.Fatalf("late pixels charged %d: %v", charged, err)
 	}
 }

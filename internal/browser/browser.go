@@ -18,23 +18,26 @@ import (
 )
 
 type Browser struct {
-	devPreview         bool
-	defaultProfile     *profile.Document
-	speechProvider     speech.Provider
-	mu                 sync.RWMutex
-	lifetime           context.Context
-	cancel             context.CancelFunc
-	closed             bool
-	closeDone          chan struct{}
-	closeErr           error
-	factory            engine.Factory
-	env                state.Environment
-	compat             compatibility.Bundle
-	contexts           map[string]*Context
-	bootstrapSnapshots bootstrapSnapshotCache
+	defaultResourcePolicy *network.ResourcePolicy
+	devPreview            bool
+	defaultProfile        *profile.Document
+	speechProvider        speech.Provider
+	mu                    sync.RWMutex
+	lifetime              context.Context
+	cancel                context.CancelFunc
+	closed                bool
+	closeDone             chan struct{}
+	closeErr              error
+	factory               engine.Factory
+	env                   state.Environment
+	compat                compatibility.Bundle
+	contexts              map[string]*Context
+	bootstrapSnapshots    bootstrapSnapshotCache
 }
 
 type Options struct {
+	// ResourcePolicy supplies an opt-in template for newly created Contexts.
+	ResourcePolicyJSON []byte
 	// DevPreview enables private debug observations and the CDP preview routes.
 	DevPreview  bool
 	ProfileJSON []byte
@@ -63,6 +66,13 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 	textmetrics.WarmSystemCatalog()
 	lifetime, cancel := context.WithCancel(context.Background())
 	b := &Browser{devPreview: options.DevPreview, speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}, lifetime: lifetime, cancel: cancel}
+	if len(options.ResourcePolicyJSON) != 0 {
+		policy, err := network.ParseResourcePolicy(options.ResourcePolicyJSON)
+		if err != nil {
+			return nil, fmt.Errorf("resource policy: %w", err)
+		}
+		b.defaultResourcePolicy = &policy
+	}
 	if len(options.ProfileJSON) > 0 {
 		d, err := b.ValidateProfile(options.ProfileJSON)
 		if err != nil {
@@ -80,6 +90,10 @@ func (b *Browser) newContext(d *profile.Document) *Context {
 	defer b.mu.Unlock()
 	lifetime, cancel := context.WithCancel(context.Background())
 	c := &Context{lifetime: lifetime, cancel: cancel, ID: uuid.NewString(), browser: b, cookies: network.NewCookieStore(), network: network.NewSessionState(), storage: map[string]map[string]string{}, pages: map[string]*Page{}}
+	c.resourcePolicy = &network.ResourcePolicyState{}
+	if b.defaultResourcePolicy != nil {
+		_, _ = c.resourcePolicy.Update(*b.defaultResourcePolicy)
+	}
 	if b.closed {
 		cancel()
 		return c
@@ -100,6 +114,7 @@ func (b *Browser) Environment() state.Environment {
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
+	resourcePolicy   *network.ResourcePolicyState
 	env              state.Environment
 	proxy            profile.Proxy
 	files            map[string]*opfsStore

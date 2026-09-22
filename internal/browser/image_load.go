@@ -11,14 +11,15 @@ import (
 )
 
 type imageLoad struct {
-	complete    bool
-	currentSrc  string
-	resource    *imageresource.Resource
-	originClean bool
-	queued      bool
-	waiting     bool
-	cancel      context.CancelFunc
-	blocks      bool
+	decodeDisallowed bool
+	complete         bool
+	currentSrc       string
+	resource         *imageresource.Resource
+	originClean      bool
+	queued           bool
+	waiting          bool
+	cancel           context.CancelFunc
+	blocks           bool
 }
 
 // A document's available images are distinct from the HTTP cache: Chrome 152
@@ -107,10 +108,11 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		}
 		request := r.elementRequest(u, node.Attributes, network.Image)
 		key := preloadRequestKey(request)
-		if available, ok := r.availableImages.get(key); ok {
+		if available, ok := r.availableImages.get(key); ok && r.agent.Page().loader.ResourceReuseAllowed(request) {
 			current.currentSrc = u.String()
 			current.resource = available.resource
 			current.originClean = available.originClean
+			current.decodeDisallowed = !r.agent.Page().loader.ResourceDecodeAllowed(request)
 			return finish(ctx, "load")
 		}
 		// Detached lazy images cannot intersect a viewport. Already available
@@ -136,6 +138,14 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			var resource *imageresource.Resource
 			kind := "load"
 			originClean, corsErr := resourceResponseOrigin(request, response)
+			if response.Partial && len(response.Body) != 0 {
+				candidate := imageresource.New(response.Body, response.Headers.Get("Content-Type"))
+				if metadata, metadataErr := candidate.RequireMetadata(); metadataErr == nil {
+					r.agent.Page().trace.Add(trace.Resource, "policyMetadata", map[string]any{"url": u.String(), "capability": "intrinsicImageDimensions", "source": "prefix", "width": metadata.Width, "height": metadata.Height})
+				} else {
+					r.agent.Page().trace.Add(trace.Resource, "policyMetadata", map[string]any{"url": u.String(), "capability": "intrinsicImageDimensions", "source": "prefix", "unavailable": metadataErr.Error()})
+				}
+			}
 			if err == nil {
 				err = corsErr
 			}
@@ -144,8 +154,16 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			if err != nil {
 				kind = "error"
 			} else {
-				resource = imageresource.New(response.Body, response.Headers.Get("Content-Type"))
-				_, err = resource.RequireValidatedImage()
+				if response.DecodeDisallowed {
+					resource, err = imageresource.MetadataOnly(response.Body, response.Headers.Get("Content-Type"))
+				} else {
+					if response.DecodedPixelBudgetEnabled() {
+						resource = imageresource.NewWithDecodeBudget(response.Body, response.Headers.Get("Content-Type"), response.ReserveDecodedPixelBytes)
+					} else {
+						resource = imageresource.New(response.Body, response.Headers.Get("Content-Type"))
+					}
+					_, err = resource.RequireValidatedImage()
+				}
 				if err != nil {
 					kind = "error"
 					resource = nil
@@ -158,6 +176,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 				}
 				current.currentSrc = u.String()
 				current.resource = resource
+				current.decodeDisallowed = response.DecodeDisallowed
 				current.originClean = originClean
 				if resource != nil {
 					if r.availableImages == nil {

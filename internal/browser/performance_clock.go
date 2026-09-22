@@ -3,6 +3,7 @@ package browser
 import (
 	"crypto/rand"
 	"encoding/binary"
+	"net/url"
 	"time"
 
 	"github.com/moreveal/mimic/internal/network"
@@ -11,6 +12,12 @@ import (
 // Bind once to the initiating realm, not whichever document occupies its
 // frame when the response arrives. No runtime handle escapes to the loader.
 func (r *Realm) withResourceTiming(request network.Request) network.Request {
+	if request.Owner == "" {
+		request.Owner = "frame"
+	}
+	if request.TopLevelURL == nil {
+		request.TopLevelURL, _ = url.Parse(r.agent.Page().URL())
+	}
 	if request.PerformanceOwner == "" {
 		request.PerformanceOwner = r.ID
 		request.PerformanceStart = r.performanceClockNow()

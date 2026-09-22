@@ -3,6 +3,8 @@ package cdp
 import (
 	"encoding/json"
 
+	"github.com/moreveal/mimic/internal/browser"
+	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/profile"
 )
 
@@ -16,6 +18,7 @@ func (s *session) handleProfile(m message) (any, bool, error) {
 		allowed["profile"] = "object"
 	case "Mimic.createContext":
 		allowed["profile"] = "object"
+		allowed["resourcePolicy"] = "object"
 		allowed["disposeOnDetach"] = "boolean"
 	case "Mimic.getProfile":
 		allowed["browserContextId"] = "string"
@@ -65,7 +68,7 @@ func (s *session) handleProfile(m message) (any, bool, error) {
 	}
 	if m.Method == "Mimic.validateProfile" || m.Method == "Mimic.createContext" {
 		value, ok := params["profile"]
-		if !ok {
+		if !ok && m.Method == "Mimic.validateProfile" {
 			return bad("profile", "required")
 		}
 		raw, _ := json.Marshal(value)
@@ -76,9 +79,26 @@ func (s *session) handleProfile(m message) (any, bool, error) {
 			}
 			return map[string]any{"profile": d.Public(), "diagnostics": profile.Limitations()}, true, nil
 		}
-		c, err := b.NewContextWithProfile(raw)
-		if err != nil {
-			return nil, true, err
+		var c *browser.Context
+		if ok {
+			c, err = b.NewContextWithProfile(raw)
+			if err != nil {
+				return nil, true, err
+			}
+		} else {
+			c = b.NewContext()
+		}
+		if input, exists := params["resourcePolicy"]; exists {
+			encoded, _ := json.Marshal(input)
+			policy, policyErr := network.ParseResourcePolicy(encoded)
+			if policyErr != nil {
+				_ = c.Close()
+				return nil, true, policyErr
+			}
+			if _, policyErr = c.UpdateResourcePolicy(policy); policyErr != nil {
+				_ = c.Close()
+				return nil, true, policyErr
+			}
 		}
 		dispose, _ := params["disposeOnDetach"].(bool)
 		s.transport.mu.Lock()
