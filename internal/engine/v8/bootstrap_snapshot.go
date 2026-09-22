@@ -282,7 +282,9 @@ func (p *bootstrapRuntimePool) release(lane *bootstrapRuntimeLane) error {
 	if lane.active > 0 {
 		lane.active--
 	}
-	dispose := p.closed && lane.active == 0
+	// The snapshot remains cached, but an idle isolate retains Page memory.
+	// Release the owner as soon as its last realm closes.
+	dispose := lane.active == 0
 	if dispose {
 		for i, candidate := range p.lanes {
 			if candidate == lane {

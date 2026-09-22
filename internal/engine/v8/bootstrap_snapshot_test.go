@@ -200,6 +200,51 @@ func TestBootstrapRuntimePoolSharesIsolateAndIsolatesRealms(t *testing.T) {
 	}
 }
 
+func TestBootstrapRuntimePoolDisposesIdleIsolate(t *testing.T) {
+	snapshot, err := (Factory{}).BuildBootstrapSnapshot(context.Background(), `globalThis.seed=42`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer snapshot.Close()
+	pool := snapshot.(*bootstrapSnapshot).NewRuntimePool(1).(*bootstrapRuntimePool)
+	defer pool.Close()
+
+	first, err := pool.NewRuntime()
+	if err != nil {
+		t.Fatal(err)
+	}
+	owner := first.(*adapter).owner
+	if err := first.Close(); err != nil {
+		t.Fatal(err)
+	}
+	select {
+	case <-owner.done:
+	default:
+		t.Fatal("last realm closed but its isolate is still alive")
+	}
+	pool.mu.Lock()
+	lanes := len(pool.lanes)
+	pool.mu.Unlock()
+	if lanes != 0 {
+		t.Fatalf("pool retained %d idle isolates", lanes)
+	}
+
+	second, err := pool.NewRuntime()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if second.(*adapter).owner == owner {
+		t.Fatal("reused disposed isolate")
+	}
+	value, err := second.Eval(context.Background(), `seed`, "new-page-after-close")
+	if err != nil || value.String() != "42" {
+		t.Fatalf("snapshot restore after isolate disposal: %v %v", value, err)
+	}
+	if err := second.Close(); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestBootstrapSnapshotWasmIntrinsics(t *testing.T) {
 	s, err := (Factory{}).BuildBootstrapSnapshot(context.Background(), `globalThis.seedWasm=typeof WebAssembly; globalThis.WebAssembly={}`, `delete globalThis.WebAssembly`)
 	if err != nil {

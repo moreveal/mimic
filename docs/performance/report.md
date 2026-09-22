@@ -2972,3 +2972,24 @@ is a checked-in input; all displayed measurements come from the checkpoint's
 integrity-checked `raw.json` and `summary.json`. The full report remains the
 authoritative view, including mutation-heavy and cold workloads where Chrome is
 faster.
+
+## 2026-09-22 -- release idle bootstrap isolates after Page closure
+
+The memory attribution probe found that the bootstrap runtime pool retained an
+isolate after its final realm closed, until Browser.Close. The pool now removes
+and disposes that owner on the last realm close. The immutable bootstrap
+snapshot stays cached and restores subsequent Pages; live sibling realms remain
+valid until they close.
+
+On the local CDP static fixture, six successive waves of 25 concurrent Pages
+all passed. Process-tree RSS two seconds after closing each wave was **174,
+223, 265, 279, 284, 306 MiB**, compared with the preceding binary's **475,
+205, 888, 1204, 1353, 1390 MiB** on the same diagnostic. The final wave thus
+retained about **1.08 GiB less**. Three React waves of 25 Pages and one React
+wave of 100 Pages also passed. In the 100-Page wave, RSS fell from **4.82 GiB
+active to 548 MiB** two seconds after closure. Teardown median for static
+25-Page waves was **40-86 ms** versus **17-80 ms** before; disposing idle
+isolates can make close slower, especially once the old pool was fully warm.
+These figures are diagnostic snapshots, not a replacement for the frozen public
+benchmark. Native snapshot consumer copies and active-Page memory were not
+changed.
