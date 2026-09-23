@@ -204,7 +204,10 @@ const cssComputedValue = (element, name) => {
         checkpointForeignDocumentBatch =
           selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128;
       }
-      const documentBatch = selectorTarget === 0 && checkpointForeignDocumentBatch,
+      // A foreign read can invalidate retention for this observation. In that
+      // state, a document-wide transfer on every scalar read is quadratic.
+      const documentBatch =
+          styleReadCache.retainable && selectorTarget === 0 && checkpointForeignDocumentBatch,
         foreign = foreignCSSObservation(
           element,
           documentBatch ? 'documentValues' : 'values',

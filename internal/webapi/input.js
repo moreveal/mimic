@@ -758,16 +758,14 @@
         y < box.y + box.height;
       const acceptsPointer = (element) => {
         if (blitzSkippedContent(element)) return false;
-        const nativeVisibility = blitzStyleValue(element, 'visibility');
-        if (nativeVisibility !== null)
-          return (
-            nativeVisibility !== 'hidden' &&
-            nativeVisibility !== 'collapse' &&
-            blitzStyleValue(element, 'pointer-events') !== 'none'
-          );
-        const entries = computedCSSDeclarations(element),
-          get = (name) => entries.find((e) => e.name === name)?.value;
-        return get('visibility') !== 'hidden' && get('pointer-events') !== 'none';
+        // Both properties inherit. Checking only declarations on this element
+        // lets a child of a hidden or pointer-inert overlay intercept clicks.
+        const visibility = cssComputedValue(element, 'visibility');
+        return (
+          visibility !== 'hidden' &&
+          visibility !== 'collapse' &&
+          cssComputedValue(element, 'pointer-events') !== 'none'
+        );
       };
       const hits = [];
       // Recent geometry reads provide a lower paint-order bound. They never

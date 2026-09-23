@@ -59,3 +59,38 @@ func TestInputStackingContextHitTargetsMatchChrome152(t *testing.T) {
 		}
 	})
 }
+
+func TestHitTestingUsesInheritedVisibilityAndPointerEvents(t *testing.T) {
+	parallelBrowserTest(t)
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		navigateCapabilityFixture(t, p)
+		reducedMotion := true
+		p.SetMediaPreferences("", &reducedMotion)
+		result, err := p.Evaluate(context.Background(), `(() => {
+  document.body.style.margin = '0';
+  document.body.innerHTML =
+    '<button id="target" style="position:fixed;left:0;top:0;width:100px;height:100px"></button>' +
+    '<div id="overlay" style="position:fixed;left:0;top:0;width:200px;height:100px;z-index:5;visibility:hidden">' +
+      '<div id="scrim" style="position:absolute;left:0;top:0;width:100px;height:100px"></div>' +
+      '<button id="visible" style="position:absolute;left:120px;top:0;width:60px;height:60px;visibility:visible"></button>' +
+    '</div>';
+  const overlay = document.getElementById('overlay');
+  const scrim = document.getElementById('scrim');
+  const hit = (x, y) => document.elementFromPoint(x, y)?.id;
+  const hiddenInherited = getComputedStyle(scrim).visibility === 'hidden' && hit(30, 30) === 'target';
+  const visibleOverride = hit(140, 30) === 'visible';
+  overlay.style.visibility = 'visible';
+  overlay.style.pointerEvents = 'none';
+  const pointerInherited = getComputedStyle(scrim).pointerEvents === 'none' && hit(30, 30) === 'target';
+  scrim.style.pointerEvents = 'auto';
+  const pointerOverride = hit(30, 30) === 'scrim';
+  return JSON.stringify({ hiddenInherited, visibleOverride, pointerInherited, pointerOverride });
+})()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if result != `{"hiddenInherited":true,"visibleOverride":true,"pointerInherited":true,"pointerOverride":true}` {
+			t.Fatalf("inherited hit testing: %v", result)
+		}
+	})
+}

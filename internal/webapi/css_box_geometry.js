@@ -636,6 +636,14 @@ const cssBoxModel = (() => {
     return value;
   };
   const containingWidth = (element) => {
+    if (['absolute', 'fixed'].includes(state(element).position)) {
+      const container = positionedContainer(element);
+      if (!container) return host.viewport().width;
+      const width = layoutWidthFor(container),
+        edges = state(container).edges(width);
+      // An absolutely positioned box uses its containing block's padding box.
+      return Math.max(0, width - edges.bleft - edges.bright);
+    }
     const parent = geometryParent(element);
     if (!parent) return host.viewport().width;
     const width = layoutWidthFor(parent),
@@ -674,9 +682,19 @@ const cssBoxModel = (() => {
       } else if (s.display === 'table') {
         content = tableColumns(element).width - extra;
       } else {
+        if (['absolute', 'fixed'].includes(s.position) && !replacedGeometryTags.has(tag(element))) {
+          const left = s.length(s.get('left'), basis),
+            right = s.length(s.get('right'), basis);
+          if (left !== null && right !== null)
+            content = Math.max(
+              0,
+              basis - left - right - e.mleft - e.mright - (borderBox ? 0 : extra),
+            );
+        }
         const parent = geometryParent(element),
           p = parent && state(parent);
         if (
+          content === null &&
           parent &&
           /^(?:inline-)?flex$/.test(p.display) &&
           !(p.get('flex-direction') || 'row').startsWith('column')
@@ -696,10 +714,12 @@ const cssBoxModel = (() => {
           for (const item of items) {
             const itemState = state(item),
               itemEdges = itemState.edges(basis),
+              flexBasis = itemState.length(itemState.get('flex-basis'), basis),
               specified = itemState.length(itemState.get('width'), basis),
               itemBase =
-                (specified === null ? intrinsic(item) : specified) +
-                (specified !== null && itemState.get('box-sizing') === 'border-box'
+                (flexBasis ?? specified ?? intrinsic(item)) +
+                ((flexBasis !== null || specified !== null) &&
+                itemState.get('box-sizing') === 'border-box'
                   ? 0
                   : itemEdges.pleft + itemEdges.pright + itemEdges.bleft + itemEdges.bright),
               outer = itemBase + itemEdges.mleft + itemEdges.mright,
@@ -754,6 +774,16 @@ const cssBoxModel = (() => {
       plans = styleReadCache.sizePlans || (styleReadCache.sizePlans = new WeakMap()),
       active = plans.get(element);
     if (active?.state === 'computing') return active.value;
+    // A width dependency may request this box before its flex allocation is
+    // complete. Return a cycle value without publishing it as a finished box.
+    if (styleReadCache.widthPlans?.get(element)?.state === 'computing')
+      return {
+        width: 0,
+        height: 0,
+        edges: state(element).edges(0),
+        positions: new Map(),
+        contentHeight: 0,
+      };
     for (let parent = geometryParent(element); parent; parent = geometryParent(parent))
       if (state(parent).display === 'table') {
         if (!cache.has(parent)) size(parent);

@@ -13,6 +13,130 @@ func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) {
 	testCSSObservation(t, "css_box_geometry")
 }
 
+func TestCSSOpposingInsetsStretchAutoPositionedBoxes(t *testing.T) {
+	parallelBrowserTest(t)
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		reducedMotion := true
+		page.SetMediaPreferences("", &reducedMotion)
+		// The reduced-motion profile uses the supported geometry fallback.
+		result, err := page.Evaluate(context.Background(), `(() => {
+  document.body.style.margin = '0';
+  document.body.innerHTML =
+    '<div id="root" style="position:absolute;left:0;right:0">' +
+      '<div id="row" style="display:flex"><div id="item" style="flex:1 1 0%">content</div></div>' +
+    '</div>' +
+    '<div id="container" style="position:relative;width:300px;padding:10px;border:5px solid">' +
+      '<div id="nested" style="position:absolute;left:20px;right:30px"></div>' +
+    '</div>' +
+    '<div id="fixed" style="position:fixed;left:15px;right:25px"></div>';
+  const width = (id) => document.getElementById(id).getBoundingClientRect().width;
+  return JSON.stringify({
+    root: width('root'),
+    row: width('row'),
+    item: width('item'),
+    nested: width('nested'),
+    containerClient: document.getElementById('container').clientWidth,
+    fixed: width('fixed'),
+    viewport: innerWidth,
+  });
+})()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var got struct {
+			Root            float64 `json:"root"`
+			Row             float64 `json:"row"`
+			Item            float64 `json:"item"`
+			Nested          float64 `json:"nested"`
+			ContainerClient float64 `json:"containerClient"`
+			Fixed           float64 `json:"fixed"`
+			Viewport        float64 `json:"viewport"`
+		}
+		if err := json.Unmarshal([]byte(result.(string)), &got); err != nil {
+			t.Fatal(err)
+		}
+		if got.Root != got.Viewport || got.Row != got.Viewport || got.Item != got.Viewport || got.Nested != got.ContainerClient-50 || got.Fixed != got.Viewport-40 {
+			t.Fatalf("opposing inset geometry: %+v", got)
+		}
+	})
+}
+
+func TestCSSFlexBasisZeroSharesSpaceIndependentOfContent(t *testing.T) {
+	parallelBrowserTest(t)
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		reducedMotion := true
+		page.SetMediaPreferences("", &reducedMotion)
+		result, err := page.Evaluate(context.Background(), `(() => {
+  document.body.innerHTML =
+    '<div style="display:flex;width:300px">' +
+      '<div id="short" style="flex:1 1 0%;width:40px">a</div>' +
+      '<div id="long" style="flex:1 1 0%;width:140px">long content</div>' +
+      '<div id="zero" style="flex:0 0 0%;min-width:0;width:40px"></div>' +
+    '</div>' +
+    '<div style="display:flex;width:300px">' +
+      '<div id="host" style="flex:1 1 0%;min-width:0"><div style="width:600px"></div></div>' +
+      '<div style="width:72px;flex:none"></div>' +
+    '</div>';
+  return JSON.stringify([
+    document.getElementById('short').getBoundingClientRect().width,
+    document.getElementById('long').getBoundingClientRect().width,
+    document.getElementById('zero').getBoundingClientRect().width,
+    document.getElementById('host').getBoundingClientRect().width,
+  ]);
+})()`)
+		if err != nil || result != `[150,150,0,228]` {
+			t.Fatalf("zero flex basis: %v %v", result, err)
+		}
+	})
+}
+
+func TestCSSFallbackFlexWidthSurvivesFocusReflow(t *testing.T) {
+	parallelBrowserTest(t)
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		reducedMotion := true
+		page.SetMediaPreferences("", &reducedMotion)
+		result, err := page.Evaluate(context.Background(), `(() => {
+  document.body.style.margin = '0';
+  document.head.innerHTML = '<style>.box:focus-within { padding-left: 32px } #host:focus-within #popup { display: block }</style>';
+  document.body.innerHTML =
+    '<div style="display:flex;width:500px;align-items:center">' +
+      '<div id="host" style="display:flex;flex:1 1 0%;min-width:0;position:relative">' +
+        '<div style="width:100%"><div class="box" style="display:flex;align-items:center">' +
+          '<form style="display:flex;flex:1 1 0%"><input id="field" style="min-width:0;flex:1 1 0%"></form>' +
+        '</div></div>' +
+        '<div id="popup" style="display:none;position:absolute;left:0;right:0;top:40px;height:200px"></div>' +
+      '</div>' +
+      '<div style="width:72px;flex:none"></div>' +
+    '</div>';
+  const host = document.getElementById('host');
+  const field = document.getElementById('field');
+  const read = () => [host.getBoundingClientRect().width, field.getBoundingClientRect().width];
+  const before = read();
+  field.focus();
+  return JSON.stringify({ before, focused: read(), again: read() });
+})()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var got struct {
+			Before  []float64 `json:"before"`
+			Focused []float64 `json:"focused"`
+			Again   []float64 `json:"again"`
+		}
+		if err := json.Unmarshal([]byte(result.(string)), &got); err != nil {
+			t.Fatal(err)
+		}
+		if len(got.Before) != 2 || len(got.Focused) != 2 || len(got.Again) != 2 ||
+			got.Before[0] != 428 || got.Focused[0] != 428 || got.Again[0] != 428 ||
+			got.Before[1] <= 0 || got.Focused[1] <= 0 || got.Again[1] != got.Focused[1] {
+			t.Fatalf("focus reflow width: %+v", got)
+		}
+	})
+}
+
 func TestCSSFlowRootFlexItemMeasuresNestedInlineContent(t *testing.T) {
 	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {

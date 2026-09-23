@@ -122,6 +122,55 @@ func TestIsolatedStyleBatchesLargeStableDocument(t *testing.T) {
 	})
 }
 
+func TestIsolatedStyleUsesElementReadsWhenRetentionIsDisabled(t *testing.T) {
+	parallelBrowserTest(t)
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		d := NewDebugger(p)
+		defer d.Close()
+		debuggerEval(t, d, `
+document.body.innerHTML = Array.from({ length: 160 }, (_, i) => '<div class="item">' + i + '</div>').join('');
+globalThis.effect = document.querySelector('.item').animate({ opacity: [0, 1] }, { duration: 1000 });
+`, DebuggerOptions{})
+		world, err := p.IsolatedWorld(context.Background(), p.Top.ID, "unretained-style")
+		if err != nil {
+			t.Fatal(err)
+		}
+		owner := p.Top.Realm
+		original := owner.computedStyleFlatRead
+		if err := owner.runtime.Set("originalStyleReadForTest", original); err != nil {
+			t.Fatal(err)
+		}
+		owner.computedStyleFlatRead, err = owner.runtime.Eval(context.Background(), `
+globalThis.styleReadScopesForTest = {};
+(id, kind, name) => {
+  styleReadScopesForTest[kind] = (styleReadScopesForTest[kind] || 0) + 1;
+  return originalStyleReadForTest(id, kind, name);
+}`, "style-read-scopes")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { owner.computedStyleFlatRead = original }()
+		result, err := d.Evaluate(context.Background(), p.Top.ID, world, `(() => {
+  const displays = Array.from(document.querySelectorAll('.item'), (e) => getComputedStyle(e).display);
+  return displays.length === 160 && displays.every((value) => value === 'block');
+})()`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != true {
+			t.Fatalf("unretained styles: %#v %v", result, err)
+		}
+		counts, err := owner.runtime.Eval(context.Background(), `JSON.stringify(styleReadScopesForTest)`, "style-read-scope-counts")
+		if err != nil {
+			t.Fatal(err)
+		}
+		var reads map[string]int
+		if err := json.Unmarshal([]byte(counts.Export().(string)), &reads); err != nil {
+			t.Fatal(err)
+		}
+		if reads["documentValues"] != 0 || (owner.styleProjections.dynamic && reads["values"] == 0) {
+			t.Fatalf("unretained style read scopes: %#v", reads)
+		}
+	})
+}
+
 func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
 	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
