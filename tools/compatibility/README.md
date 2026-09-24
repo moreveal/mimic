@@ -1,5 +1,11 @@
 # Private native captures
 
+The [Blazor Server Interactive probe](blazor_server_probe/README.md) runs a
+local .NET app through frozen Chrome 152 and Mimic. Its Playwright journey
+covers SignalR circuit startup, server DOM patches, forms, JS interop, and
+navigation, and reports observed differences without joining the full Go test
+suite.
+
 ## Shared differential corpus
 
 `differential.py` executes `compatibility/corpus/index.json` in both runtimes.

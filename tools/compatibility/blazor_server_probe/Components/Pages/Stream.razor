@@ -1,0 +1,15 @@
+@page "/stream"
+@attribute [StreamRendering]
+
+<h1>Stream probe</h1>
+<p id="stream-state">@state</p>
+<a id="back-link" href="/probe">Back to probe</a>
+
+@code {
+    private string state = "loading";
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(250);
+        state = "ready";
+    }
+}

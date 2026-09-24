@@ -1,0 +1,98 @@
+@page "/probe"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@implements IDisposable
+@inject IJSRuntime JS
+
+<h1>Interactive probe</h1>
+<p id="count">Count: @count</p>
+<button id="increment" @onclick="Increment">Increment</button>
+<button id="double" @onclick="DoubleAsync">Double async</button>
+<p id="busy">Busy: @busy</p>
+
+<input id="name" @bind="name" @bind:event="oninput" />
+<button id="add" @onclick="Add">Add</button>
+<p id="mirror">Name: @name</p>
+<ul id="items">
+@foreach (var item in items)
+{
+    <li @key="item.Id" data-id="@item.Id"><span>@item.Label</span><button @onclick="() => Remove(item.Id)">Remove</button></li>
+}
+</ul>
+<button id="reverse" @onclick="Reverse">Reverse</button>
+@if (items.Count == 0)
+{
+    <p id="empty">Empty</p>
+}
+
+<select id="choice" @bind="choice">
+    <option value="one">One</option>
+    <option value="two">Two</option>
+</select>
+<input id="enabled" type="checkbox" @bind="enabled" />
+<p id="selection">Selection: @choice/@enabled</p>
+
+<EditForm Model="form" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <InputText id="email" @bind-Value="form.Email" />
+    <ValidationMessage For="() => form.Email" />
+    <button id="save" type="submit">Save</button>
+</EditForm>
+<p id="saved">Saved: @saved</p>
+
+<button id="js" @onclick="ReadJs">Read JS</button>
+<p id="js-result">JS: @jsResult</p>
+<button id="js-callback" @onclick="CallDotNet">Call .NET from JS</button>
+<p id="callback-result">Callback: @jsInbound</p>
+<a id="stream-link" href="/stream">Stream page</a>
+
+@code {
+    private int count;
+    private bool busy;
+    private string name = "";
+    private string choice = "one";
+    private bool enabled;
+    private string saved = "";
+    private string jsResult = "";
+    private string jsInbound = "";
+    private int nextId = 1;
+    private List<Item> items = [];
+    private FormModel form = new();
+    private DotNetObjectReference<Probe>? reference;
+    private record Item(int Id, string Label);
+    private sealed class FormModel
+    {
+        [Required, EmailAddress]
+        public string Email { get; set; } = "";
+    }
+
+    private void Increment() => count++;
+    private async Task DoubleAsync()
+    {
+        busy = true;
+        await Task.Delay(150);
+        count *= 2;
+        busy = false;
+    }
+    private void Add()
+    {
+        if (!string.IsNullOrWhiteSpace(name)) items.Add(new(nextId++, name));
+        name = "";
+    }
+    private void Remove(int id) => items.RemoveAll(item => item.Id == id);
+    private void Reverse() => items.Reverse();
+    private void Save() => saved = form.Email;
+    private async Task ReadJs() => jsResult = await JS.InvokeAsync<string>("probe.read", "ok");
+    private async Task CallDotNet()
+    {
+        reference ??= DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("probe.callDotNet", reference, "pong");
+    }
+    [JSInvokable]
+    public Task Receive(string value)
+    {
+        jsInbound = value;
+        return InvokeAsync(StateHasChanged);
+    }
+    public void Dispose() => reference?.Dispose();
+}
