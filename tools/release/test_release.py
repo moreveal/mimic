@@ -2,11 +2,18 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from prepare import digest, resolve_unbundled_links, validate_document_links
+from unittest.mock import patch
+from prepare import digest, resolve_unbundled_links, run, validate_document_links
 from publish import CHECKS, verified_archive
 
 
 class PublicationGateTests(unittest.TestCase):
+    def test_release_commands_decode_utf8_independent_of_host_locale(self):
+        with patch('prepare.subprocess.run') as execute:
+            execute.return_value.stdout = 'Mimic — verified'
+            self.assertEqual(run('go', 'list', capture=True), 'Mimic — verified')
+            self.assertEqual(execute.call_args.kwargs['encoding'], 'utf-8')
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

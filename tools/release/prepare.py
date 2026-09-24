@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def run(*args, cwd=ROOT, capture=False):
-    return subprocess.run(args, cwd=cwd, check=True, text=True,
+    return subprocess.run(args, cwd=cwd, check=True, text=True, encoding='utf-8',
                           stdout=subprocess.PIPE if capture else None).stdout
 
 
