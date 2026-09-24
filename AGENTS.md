@@ -50,6 +50,10 @@ the current behavioral reference.
 - When fixing a compatibility issue, add or extend a focused regression test
   whenever practical.
 
+- Fix the shared semantic cause across related APIs and value types. If a
+  failure appears through one entry point, check the underlying boundary and
+  its other callers before adding a local conversion or workaround.
+
 - Distinguish unsupported behavior from incorrectly implemented behavior.
   Prefer an explicit unsupported boundary over plausible but incorrect browser
   behavior.
