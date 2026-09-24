@@ -53,18 +53,38 @@ func TestWebSocketTextBinaryAndCloseLifecycle(t *testing.T) {
 		t.Fatalf("WebSocket surface = %v, want %s", surface, wantSurface)
 	}
 	wsURL := "ws" + strings.TrimPrefix(server.URL, "http")
-	value, err := p.Evaluate(ctx, `new Promise((resolve,reject)=>{
-		const events=[], socket=new WebSocket(`+strconv.Quote(wsURL)+`);
-		socket.binaryType='arraybuffer';
-		socket.onerror=()=>reject(Error('websocket error'));
-		socket.onopen=()=>{events.push(['open',socket.readyState]);socket.send('hello')};
-		socket.onmessage=e=>{events.push(['message',typeof e.data,e.data instanceof ArrayBuffer]);if(typeof e.data==='string')socket.send(new Uint8Array([1,2,255]));else socket.close(1000,'done')};
-		socket.onclose=e=>resolve(JSON.stringify({events,code:e.code,reason:e.reason,clean:e.wasClean,state:socket.readyState,url:socket.url,constants:[WebSocket.CONNECTING,socket.OPEN,socket.CLOSED]}));
+	value, err := p.Evaluate(ctx, `new Promise((resolve, reject) => {
+		const events = [];
+		const socket = new WebSocket(`+strconv.Quote(wsURL)+`);
+		socket.binaryType = 'arraybuffer';
+		socket.onerror = () => reject(Error('websocket error'));
+		socket.onopen = () => {
+			events.push(['open', socket.readyState]);
+			socket.send('hello');
+		};
+		socket.onmessage = (event) => {
+			events.push(['message', typeof event.data, event.data instanceof ArrayBuffer]);
+			if (typeof event.data === 'string') {
+				socket.send(new Uint8Array([1, 2, 255]));
+			} else {
+				events.push(['bytes', ...new Uint8Array(event.data)]);
+				socket.close(1000, 'done');
+			}
+		};
+		socket.onclose = (event) => resolve(JSON.stringify({
+			events,
+			code: event.code,
+			reason: event.reason,
+			clean: event.wasClean,
+			state: socket.readyState,
+			url: socket.url,
+			constants: [WebSocket.CONNECTING, socket.OPEN, socket.CLOSED],
+		}));
 	})`)
 	if err != nil {
 		t.Fatalf("%v trace=%v", err, p.Trace().Events())
 	}
-	want := `{"events":[["open",1],["message","string",false],["message","object",true]],"code":1000,"reason":"done","clean":true,"state":3,"url":"` + wsURL + `/","constants":[0,1,3]}`
+	want := `{"events":[["open",1],["message","string",false],["message","object",true],["bytes",1,2,255]],"code":1000,"reason":"done","clean":true,"state":3,"url":"` + wsURL + `/","constants":[0,1,3]}`
 	if value != want {
 		t.Fatalf("WebSocket lifecycle = %v, want %s", value, want)
 	}

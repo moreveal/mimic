@@ -3082,7 +3082,7 @@
         invalidateDOMCollections();
         return node;
       }
-      const target = elementSlot(this),
+      const target = this === document ? { nodeId: realmDocumentRootID } : elementSlot(this),
         child = elementSlot(node);
       if (!target || !child)
         throw new DOMException('The operation is not supported for this node.', 'NotFoundError');

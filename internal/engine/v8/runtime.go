@@ -1717,7 +1717,11 @@ func (a *adapter) export(value *runtimeValue) any {
 		}
 		exported = exportLocalPrimitive(local, realm)
 		if _, opaque := exported.(opaqueValue); opaque {
-			exported = exportJSON(scope, realm, local, value)
+			if binary, ok := exportBinaryBuffer(local); ok {
+				exported = binary
+			} else {
+				exported = exportJSON(scope, realm, local, value)
+			}
 		}
 		return nil, nil
 	})
@@ -2000,6 +2004,9 @@ func exportCallback(value gov8.Value, callback *callbackContext) any {
 	primitive := exportLocalPrimitive(value, callback.ctx)
 	if _, opaque := primitive.(opaqueValue); !opaque {
 		return primitive
+	}
+	if binary, ok := exportBinaryBuffer(value); ok {
+		return binary
 	}
 	global, err := callback.scope.CurrentContextGlobal()
 	if err != nil {
