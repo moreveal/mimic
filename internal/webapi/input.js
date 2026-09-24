@@ -855,6 +855,7 @@
     pointerY = 0,
     mouseButtons = 0;
   const pressed = new Map(),
+    pressPositions = new Map(),
     buttons = { none: -1, left: 0, middle: 1, right: 2, back: 3, forward: 4 },
     buttonMasks = { left: 1, middle: 4, right: 2, back: 8, forward: 16 };
   const click = (target, init, trusted = true) => {
@@ -925,8 +926,11 @@
   const mouseCommand = (params, hintedTarget) => {
     const x = Number(params.x),
       y = Number(params.y),
+      buttonName = params.button || 'none',
+      button = buttons[buttonName] ?? -1,
+      press = pressPositions.get(button),
       hintRect = hintedTarget?.isConnected ? clientRectFor(hintedTarget) : null,
-      target =
+      hit =
         hintRect &&
         x >= hintRect.x &&
         x < hintRect.x + hintRect.width &&
@@ -934,8 +938,18 @@
         y < hintRect.y + hintRect.height
           ? hintedTarget
           : pointTarget(x, y),
-      buttonName = params.button || 'none',
-      button = buttons[buttonName] ?? -1,
+      // CDP sends a press and release separately. Keep an unmoved pointer on
+      // its pressed control if a later task patched the layout between them.
+      // Mutations made during mousedown are already reflected in the stored
+      // version and still receive the ordinary release hit test.
+      target =
+        params.type === 'mouseReleased' &&
+        press?.target.isConnected &&
+        press.x === x &&
+        press.y === y &&
+        press.version !== pointObservationVersion()
+          ? press.target
+          : hit,
       mask = buttonMasks[buttonName] || 0;
     if (params.type === 'mousePressed') mouseButtons |= mask;
     else if (params.type === 'mouseReleased') mouseButtons &= ~mask;
@@ -1005,12 +1019,14 @@
           if (error?.name !== 'SecurityError') throw error;
         }
       }
+      pressPositions.set(button, { target, x, y, version: pointObservationVersion() });
       return;
     }
     emit(target, 'PointerEvent', 'pointerup', init);
     if (!disabled) emit(target, 'MouseEvent', 'mouseup', init);
     if (!disabled && button === 0 && pressed.get(button) === target) click(target, init);
     pressed.delete(button);
+    pressPositions.delete(button);
   };
   const legacy = globalThis.__mimicDispatchInput;
   globalThis.__mimicDispatchInput = (id, operation, raw) => {

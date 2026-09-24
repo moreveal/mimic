@@ -183,7 +183,7 @@ func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
-		if _, err := page.Evaluate(ctx, `document.body.innerHTML='<select id="choice"><option value="a">A</option><option value="b">B</option></select><button id="button" type="button" onclick="window.clicks=(window.clicks||0)+1">Go</button>';`); err != nil {
+		if _, err := page.Evaluate(ctx, `document.body.innerHTML='<select id="choice"><option value="a">A</option><option value="b">B</option></select><button id="button" type="button" onclick="window.clicks=(window.clicks||0)+1">Go</button>';globalThis.changes=[];document.addEventListener('change',e=>changes.push([e.target.id,e.target.value,e.isTrusted]));`); err != nil {
 			t.Fatal(err)
 		}
 		world, err := page.isolatedWorld(ctx, page.Top.Realm, "form-test")
@@ -192,12 +192,12 @@ func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
 		}
 		d := NewDebugger(page)
 		defer d.Close()
-		result, err := d.Evaluate(ctx, "", world.ID, `(()=>{const select=document.querySelector('#choice');select.value=undefined;for(const option of select.options){option.selected=option.value==='b';if(option.selected&&!select.multiple)break}document.querySelector('#button').click();return JSON.stringify({value:select.value,selected:Array.from(select.selectedOptions,option=>option.value)})})()`, DebuggerOptions{ReturnByValue: true})
+		result, err := d.Evaluate(ctx, "", world.ID, `(()=>{const select=document.querySelector('#choice');select.value=undefined;for(const option of select.options){option.selected=option.value==='b';if(option.selected&&!select.multiple)break}select.dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('#button').click();return JSON.stringify({value:select.value,selected:Array.from(select.selectedOptions,option=>option.value)})})()`, DebuggerOptions{ReturnByValue: true})
 		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != `{"value":"b","selected":["b"]}` {
 			t.Fatalf("isolated selection: %#v %v", result, err)
 		}
-		value, err := page.Evaluate(ctx, `JSON.stringify({value:document.querySelector('#choice').value,clicks:window.clicks,handler:typeof document.querySelector('#button').onclick})`)
-		if err != nil || value != `{"value":"b","clicks":1,"handler":"function"}` {
+		value, err := page.Evaluate(ctx, `JSON.stringify({value:document.querySelector('#choice').value,clicks:window.clicks,handler:typeof document.querySelector('#button').onclick,changes})`)
+		if err != nil || value != `{"value":"b","clicks":1,"handler":"function","changes":[["choice","b",false]]}` {
 			t.Fatalf("main canonical selection/content handler: %v %v", value, err)
 		}
 		point, err := page.Evaluate(ctx, `(()=>{const r=document.querySelector('#button').getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]})()`)
@@ -213,6 +213,37 @@ func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
 		value, err = page.Evaluate(ctx, `window.clicks`)
 		if err != nil || numberValue(value) != 2 {
 			t.Fatalf("trusted pointer did not use same content handler: %v %v", value, err)
+		}
+	})
+}
+
+func TestProtocolMouseReleaseAfterInterveningLayoutPatch(t *testing.T) {
+	parallelBrowserTest(t)
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		ctx := context.Background()
+		if _, err := page.Evaluate(ctx, `document.body.innerHTML='<div id="spacer" style="height:40px"></div><button id="one">One</button><button id="two">Two</button>';window.clicks=[];for(const button of document.querySelectorAll('button'))button.addEventListener('click',()=>clicks.push(button.id));`); err != nil {
+			t.Fatal(err)
+		}
+		point, err := page.Evaluate(ctx, `(()=>{const r=document.querySelector('#one').getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]})()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		coordinates := point.([]any)
+		for _, kind := range []string{"mouseMoved", "mousePressed"} {
+			if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", map[string]any{"type": kind, "x": coordinates[0], "y": coordinates[1], "button": "left", "clickCount": 1}); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if _, err := page.Evaluate(ctx, `document.querySelector('#spacer').remove()`); err != nil {
+			t.Fatal(err)
+		}
+		if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", map[string]any{"type": "mouseReleased", "x": coordinates[0], "y": coordinates[1], "button": "left", "clickCount": 1}); err != nil {
+			t.Fatal(err)
+		}
+		value, err := page.Evaluate(ctx, `JSON.stringify(clicks)`)
+		if err != nil || value != `["one"]` {
+			t.Fatalf("unmoved pointer lost pressed control after a later layout patch: %v %v", value, err)
 		}
 	})
 }

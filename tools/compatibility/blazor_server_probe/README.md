@@ -48,4 +48,8 @@ page. Two compatibility issues appeared:
   blurring the email before clicking Save makes the submission succeed. This
   points to input event ordering while the server applies the validation patch.
 
-These are observations from this workload, not site-specific fixes.
+Both issues were fixed in the shared event and input paths. Script-created DOM
+events now reach listeners in the document's other JavaScript worlds. An
+unmoved pointer keeps its pressed control through a later layout patch during
+the same CDP press/release sequence. The focused regression tests and the
+13-step Chrome 152/Mimic comparison pass; the full test suite was not run.

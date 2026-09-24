@@ -477,6 +477,38 @@
     }
     return !state.defaultPrevented;
   };
+  member(EventTarget.prototype, 'dispatchEvent', function (event) {
+    const allowed = dispatchEventCore(this, event, false);
+    const slot = elementSlot(this);
+    if (slot?.nodeId) {
+      const state = stateOf(event);
+      const kind =
+        event instanceof PointerEvent
+          ? 'PointerEvent'
+          : event instanceof MouseEvent
+            ? 'MouseEvent'
+            : event instanceof InputEvent
+              ? 'InputEvent'
+              : 'Event';
+      const others = host.broadcastInputEvent(
+        slot.nodeId,
+        JSON.stringify({
+          kind,
+          type: state.type,
+          init: {
+            bubbles: state.bubbles,
+            cancelable: state.cancelable,
+            composed: state.composed,
+          },
+          canceled: !allowed,
+          trusted: false,
+          native: false,
+        }),
+      );
+      if (!others) event.preventDefault();
+    }
+    return !stateOf(event).defaultPrevented;
+  });
   const uiSlots = new WeakMap(),
     mouseSlots = new WeakMap(),
     pointerSlots = new WeakMap();
