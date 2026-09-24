@@ -478,8 +478,9 @@
     return !state.defaultPrevented;
   };
   member(EventTarget.prototype, 'dispatchEvent', function (event) {
-    const allowed = dispatchEventCore(this, event, false);
-    const slot = elementSlot(this);
+    const target = this == null ? window : this;
+    const allowed = dispatchEventCore(target, event, false);
+    const slot = elementSlot(target);
     if (slot?.nodeId) {
       const state = stateOf(event);
       const kind =
