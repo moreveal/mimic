@@ -25,7 +25,6 @@ type webGLRecipe struct {
 
 type gpuFontRecipe struct {
 	ID                string                 `json:"ID"`
-	Source            string                 `json:"Source"`
 	SourceSHA256      string                 `json:"SourceSHA256"`
 	SourceChromeMajor int                    `json:"SourceChromeMajor"`
 	Graphics          state.Graphics         `json:"Graphics"`

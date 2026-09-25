@@ -111,16 +111,17 @@ Credentials are omitted from profile reads and errors.
 
 ## Current diversity and RAM limits
 
-The generated recipe selects among the installed graphics/font baseline and four
-paired GPU/font recipes, then varies viewport dimensions, window position, theme,
-reduced motion and output-device sample rate (44.1 or 48 kHz). The four added
-recipes derive jointly observed WebGL identity, parameters, extensions, shader
-precision, WebGPU adapter/features/limits and CSS system fonts from Windows
-Chrome 142–145 records. Browser identity, network wire recipe, hardware,
-display and locale stay at the Chrome 152 baseline. Window insets and the audio
+The generated recipe selects among the installed graphics/font baseline and 47
+paired GPU/font recipes (40 distinct WebGL renderers), then varies viewport
+dimensions, window position, theme, reduced motion and output-device sample
+rate (44.1 or 48 kHz). The added recipes derive jointly observed WebGL identity,
+parameters, extensions, shader precision, WebGPU adapter/features/limits and CSS
+system fonts from Windows Chrome 140–145 records. Browser identity, network
+wire recipe, hardware, display and locale stay at the Chrome 152 baseline.
+Window insets and the audio
 latency recipe remain coupled to their installed defaults. On the current
-2560×1440 screen, the Cartesian upper bound is **18,064,903,197,640
-configurations (~44.0 bits)**: five paired graphics/font choices times the sum
+2560×1440 screen, the Cartesian upper bound is **173,423,070,697,344
+configurations (~47.3 bits)**: 48 paired graphics/font choices times the sum
 of 1..1753 legal horizontal placements times the sum of 1..766 vertical
 placements times eight preference/audio choices. The 256-bit random seed makes random generation
 unpredictable; it does not imply 2^256 observable fingerprints. Different seeds

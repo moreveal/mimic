@@ -9,6 +9,9 @@ import (
 
 func TestGeneratedProfileRoundtripAndDiversity(t *testing.T) {
 	base := testBase()
+	if len(gpuFontRecipes) < 40 {
+		t.Fatalf("GPU/font catalog unexpectedly small: %d", len(gpuFontRecipes))
+	}
 	seen := map[string]bool{}
 	seenGPU := map[string]bool{}
 	seenFont := map[string]bool{}
@@ -55,7 +58,7 @@ func TestGeneratedProfileRoundtripAndDiversity(t *testing.T) {
 			t.Fatal("unsupported audio device rate")
 		}
 	}
-	if len(seenGPU) < 3 || len(seenFont) < 2 {
+	if len(seenGPU) < 30 || len(seenFont) < 3 {
 		t.Fatalf("generated corpus lacks GPU/font diversity: %d GPUs, %d font recipes", len(seenGPU), len(seenFont))
 	}
 	_, a, err := Generate([]byte(`{}`), base)
@@ -68,6 +71,27 @@ func TestGeneratedProfileRoundtripAndDiversity(t *testing.T) {
 	}
 	if a.Seed == b.Seed || len(a.Seed) != 64 {
 		t.Fatal("random seed generation")
+	}
+}
+
+func TestGPUFontRecipeCatalog(t *testing.T) {
+	base := testBase()
+	ids := map[string]bool{}
+	renderers := map[string]bool{}
+	for _, recipe := range gpuFontRecipes {
+		if ids[recipe.ID] {
+			t.Fatalf("duplicate recipe ID %q", recipe.ID)
+		}
+		ids[recipe.ID] = true
+		d := FromEnvironment(base, base.ProfileID, Proxy{})
+		recipe.apply(&d)
+		if err := d.Validate(base); err != nil {
+			t.Fatalf("%s: %v", recipe.ID, err)
+		}
+		renderers[d.Graphics.Renderer] = true
+	}
+	if len(ids) != 47 || len(renderers) != 40 {
+		t.Fatalf("unexpected recipe coverage: %d recipes, %d renderers", len(ids), len(renderers))
 	}
 }
 

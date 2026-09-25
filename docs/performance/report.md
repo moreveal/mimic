@@ -3169,3 +3169,11 @@ earlier final profile build's single 100-Page sanity sample was **2978 MiB**;
 these nearby single samples suggest no large density regression, but they are
 not a matched A/B measurement. The temporary measurement probe was removed
 after the run.
+
+Expanding that catalog to 47 paired recipes (40 distinct WebGL renderers) and
+repeating the same single-sample 100-live-Context fixture gave **2960 MiB**
+live RSS (private bytes **3163 MiB**, Go heap **95 MiB**) and **384 MiB** RSS
+two seconds after closing all Contexts. The 100 sampled profiles selected 37
+different renderers. Compared with the four-recipe sample, the larger catalog
+did not materially change process RSS; both results are diagnostic snapshots,
+not a controlled A/B peak-memory comparison. The temporary probe was removed.

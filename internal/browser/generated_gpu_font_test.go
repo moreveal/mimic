@@ -26,7 +26,7 @@ func TestGeneratedGPUFontRecipesAgreeAcrossRealms(t *testing.T) {
 	}))
 	defer fixture.Close()
 	profiles := map[string]profile.Document{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 1000; i++ {
 		raw := []byte(fmt.Sprintf(`{"seed":"gpu-realm-%d"}`, i))
 		d, _, err := profile.Generate(raw, b.Environment())
 		if err != nil {
