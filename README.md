@@ -82,8 +82,8 @@ await browser.close();
 ### Advanced example: 100 separate identities
 
 The [runnable profile example](examples/profile-contexts.mjs) processes 100 URLs
-through separate Contexts. Each job gets a deterministic generated profile and
-can use its own proxy; it closes its Context as soon as extraction finishes.
+through separate Contexts. Each job gets a freshly generated profile, its own
+cookies and optionally its own proxy; it closes its Context as soon as extraction finishes.
 Eight live Pages is the default. Set `CONCURRENCY=100 HOLD_ALL_LIVE=1` to hold all
 100 Pages simultaneously until every extraction finishes; this requires much
 more RAM.
@@ -92,24 +92,23 @@ more RAM.
 // Inside a CDP browser connection; see examples/profile-contexts.mjs for the
 // complete connection, navigation, extraction and error-handling code.
 const jobs = Array.from({ length: 100 }, (_, index) => ({
-  seed: `account-${index}`,
+  cookie: { name: "session", value: accountSessions[index], url: targetURL },
   proxy: proxies[index], // { server: "socks5://host:1080", username, password }
 }));
-let next = 0;
-await Promise.all(Array.from({ length: 8 }, async () => {
-  while (next < jobs.length) {
-    const job = jobs[next++];
+await Promise.all(jobs.map(async (job) => {
     const { browserContextId, profileId } = await cdp.send("Mimic.createContext", {
-      profile: { generate: { browser: "chrome", version: 152, platform: "windows", seed: job.seed } },
       proxy: job.proxy,
       disposeOnDetach: true,
     });
     try {
+      await cdp.send("Storage.setCookies", {
+        browserContextId,
+        cookies: [job.cookie],
+      });
       await scrapeInContext(cdp, browserContextId, profileId);
     } finally {
       await cdp.send("Target.disposeBrowserContext", { browserContextId });
     }
-  }
 }));
 ```
 

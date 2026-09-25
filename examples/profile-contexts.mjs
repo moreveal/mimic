@@ -17,6 +17,24 @@ if (
 ) {
   throw new Error('PROXIES_JSON must be an array of {server, username?, password?} objects');
 }
+// Optional: 100 arrays of CDP CookieParam objects, one array per task.
+// Without this input the example installs a distinct demonstration cookie.
+const cookieSets = JSON.parse(process.env.COOKIES_JSON || 'null');
+if (
+  cookieSets !== null &&
+  (!Array.isArray(cookieSets) ||
+    cookieSets.length !== 100 ||
+    cookieSets.some(
+      (set) =>
+        !Array.isArray(set) ||
+        set.some(
+          (cookie) =>
+            !cookie || typeof cookie.name !== 'string' || typeof cookie.value !== 'string',
+        ),
+    ))
+) {
+  throw new Error('COOKIES_JSON must contain 100 arrays of {name, value, url?} cookies');
+}
 if (process.env.RESOURCE_POLICY && process.env.RESOURCE_POLICY !== 'dataExtraction') {
   throw new Error('RESOURCE_POLICY currently accepts dataExtraction');
 }
@@ -90,6 +108,7 @@ let next = 0;
 let failed = 0;
 let allLiveResolve;
 let allLiveCount = 0;
+const usedProfileIds = new Set();
 const allLive = new Promise((resolve) => {
   allLiveResolve = resolve;
 });
@@ -110,23 +129,39 @@ try {
         const index = next++;
         let browserContextId;
         try {
-          const context = await send('Mimic.createContext', {
-            // Omission generates a fresh Context identity; an optional seed
-            // prefix makes a run reproducible when that is useful.
-            ...(manual
-              ? { profile: manual.profile }
-              : process.env.FINGERPRINT_SEED_PREFIX
-                ? {
-                    profile: {
-                      generate: { seed: `${process.env.FINGERPRINT_SEED_PREFIX}-${index}` },
-                    },
-                  }
-                : {}),
-            ...(proxies.length ? { proxy: proxies[index % proxies.length] } : {}),
-            ...(resourcePolicy ? { resourcePolicy } : {}),
-            disposeOnDetach: true,
-          });
+          let context;
+          for (let attempt = 0; attempt < 8; attempt++) {
+            context = await send('Mimic.createContext', {
+              // Omission generates a fresh Context identity. A seed prefix
+              // makes the same 100 identities reproducible across runs.
+              ...(manual
+                ? { profile: manual.profile }
+                : process.env.FINGERPRINT_SEED_PREFIX
+                  ? {
+                      profile: {
+                        generate: {
+                          seed: `${process.env.FINGERPRINT_SEED_PREFIX}-${index}-${attempt}`,
+                        },
+                      },
+                    }
+                  : {}),
+              ...(proxies.length ? { proxy: proxies[index % proxies.length] } : {}),
+              ...(resourcePolicy ? { resourcePolicy } : {}),
+              disposeOnDetach: true,
+            });
+            if (manual || !usedProfileIds.has(context.profileId)) break;
+            await send('Target.disposeBrowserContext', {
+              browserContextId: context.browserContextId,
+            });
+            context = undefined;
+          }
+          if (!context) throw new Error('Could not generate a distinct profile after 8 attempts');
+          usedProfileIds.add(context.profileId);
           browserContextId = context.browserContextId;
+          const cookies = (
+            cookieSets?.[index] || [{ name: 'mimic_task', value: `task-${index}` }]
+          ).map((cookie) => ({ ...cookie, url: cookie.url || targetURL }));
+          await send('Storage.setCookies', { browserContextId, cookies });
           const { targetId } = await send('Target.createTarget', {
             browserContextId,
             url: 'about:blank',
