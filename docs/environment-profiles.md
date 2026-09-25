@@ -23,6 +23,11 @@ Treat it as opaque; use export/import to inspect or store JSON.
 Omitting profile means random generation. Omitting seed uses 256 random bits;
 explicit empty seeds, unknown selectors/fields, null and wrong types fail.
 Version/platform filter the installed bundle; they do not install a browser.
+`Target.createTarget` without `browserContextId` keeps ordinary CDP behavior:
+the new Page belongs to the default Context and shares its cookies and storage.
+For separate accounts or machines, create one Mimic Context per identity and
+pass its `browserContextId` when creating the Page. Closing the Page alone does
+not dispose that Context; dispose it explicitly when the task finishes.
 
 ```javascript
 const generated = await cdp.send("Mimic.generateProfile", { seed: "account-1842" });

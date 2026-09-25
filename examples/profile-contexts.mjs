@@ -111,7 +111,17 @@ try {
         let browserContextId;
         try {
           const context = await send('Mimic.createContext', {
-            profile: manual?.profile || { generate: { seed: `example-${index}` } },
+            // Omission generates a fresh Context identity; an optional seed
+            // prefix makes a run reproducible when that is useful.
+            ...(manual
+              ? { profile: manual.profile }
+              : process.env.FINGERPRINT_SEED_PREFIX
+                ? {
+                    profile: {
+                      generate: { seed: `${process.env.FINGERPRINT_SEED_PREFIX}-${index}` },
+                    },
+                  }
+                : {}),
             ...(proxies.length ? { proxy: proxies[index % proxies.length] } : {}),
             ...(resourcePolicy ? { resourcePolicy } : {}),
             disposeOnDetach: true,
