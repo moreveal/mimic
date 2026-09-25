@@ -824,6 +824,8 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(source), nil
 	})
+	_, supportsInternalEvalCodeObjects := r.runtime.(engine.EvalSourceRuntime)
+	host["internalEvalCodeObjects"] = supportsInternalEvalCodeObjects
 	r.installBlitzProducer(host)
 	host["layoutTaffy"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		output, err := r.document.FlatLayoutState().PublishJSON(r.document.Revision(), strarg(args, 0))

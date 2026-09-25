@@ -36,6 +36,17 @@ const trustedValue = (Ctor, text) => {
   );
   return value;
 };
+// Only a source fetched from the embedded host can enter this private map.
+// Author-created TrustedScript values still go through document CSP checks.
+const internalEvalSources = new WeakMap();
+const internalEvalGet = Function.prototype.call.bind(WeakMap.prototype.get);
+const internalEvalHas = Function.prototype.call.bind(WeakMap.prototype.has);
+const internalEvalSet = Function.prototype.call.bind(WeakMap.prototype.set);
+const internalEvalCode = (source) => {
+  const value = trustedValue(TrustedScript, source);
+  internalEvalSet(internalEvalSources, value, source);
+  return value;
+};
 class TrustedHTML {
   constructor() {
     throw new TypeError('Illegal constructor');
@@ -399,6 +410,11 @@ const trustedConvert = (value, kind, sink, prefix, owner = null) => {
 // The engine invokes this for native eval and every dynamic Function kind.
 // Non-string eval preserves identity, including boxed strings and wrong kinds.
 const evalSourceResolver = (value, isCodeLike = false, debuggerUnsafeEval = false) => {
+  // Lazy WebAPI implementations are browser code, not author eval. Their
+  // private brand preserves direct-eval scope without granting CSP bypass to
+  // page-created TrustedScript values.
+  if (internalEvalHas(internalEvalSources, value))
+    return internalEvalGet(internalEvalSources, value);
   // Chrome's inspector compilation scope also skips Trusted Types string-code
   // checks. This does not change DOM sinks or later author tasks.
   if (debuggerUnsafeEval && typeof value === 'string') return value;

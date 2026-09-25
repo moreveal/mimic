@@ -15,6 +15,7 @@
   const lazyDomainState = new Map();
   const lazyBehaviorCells = new Map();
   const lazySingletons = new Map();
+  const nativeEval = globalThis.eval;
   const lazyKey = (interfaceName, member, side = 'value') =>
     interfaceName + '\0' + member + '\0' + side;
   const defineLazyDomain = (name, interfaces) => {
@@ -28,9 +29,13 @@
     // Re-entry sees the cells already published and never a partial public
     // shape. Implementations which recurse during installation fail clearly.
     if (state.status === 'loading') return;
+    // A page can replace eval. Never hand its replacement a privileged code
+    // object; leave the domain cold so restoring the intrinsic can recover.
+    if (globalThis.eval !== nativeEval) throw new TypeError('Browser eval was replaced');
     state.status = 'loading';
     try {
-      eval(host.lazyDomainSource(name));
+      const source = host.lazyDomainSource(name);
+      eval(host.internalEvalCodeObjects ? internalEvalCode(source) : source);
       state.status = 'ready';
     } catch (error) {
       state.error = error;
