@@ -35,6 +35,34 @@ func TestComputedStyleDoesNotInvokeAuthorGeometryGetters(t *testing.T) {
 	}
 }
 
+func TestComputedStyleEnumerationTracksMutations(t *testing.T) {
+	parallelBrowserTest(t)
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const element=document.createElement('div');document.body.appendChild(element);
+ const style=getComputedStyle(element);
+ const keys=Reflect.ownKeys(style);
+ if(!keys.includes('epubCaptionSide')||Object.getOwnPropertyDescriptor(style,'epubCaptionSide')!==undefined)return 'legacy keys';
+ element.style.color='rgb(1, 2, 3)';
+ const first=JSON.parse(JSON.stringify(style));
+ element.style.color='rgb(4, 5, 6)';
+ const second=JSON.parse(JSON.stringify(style));
+ return first.color==='rgb(1, 2, 3)'&&second.color==='rgb(4, 5, 6)'?'ok':JSON.stringify([first.color,second.color]);
+ })()`)
+	if err != nil || value != "ok" {
+		t.Fatalf("computed style enumeration: %v %v", value, err)
+	}
+}
+
 func TestScalarComputedValuesPreserveInheritanceAndMutation(t *testing.T) {
 	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())

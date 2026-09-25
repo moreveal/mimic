@@ -180,6 +180,25 @@ func (owner *Realm) observeBlitz(id int64, kind, property string) (any, error) {
 		}
 		return value, nil
 	}
+	if kind == "styles" {
+		var names []string
+		if err := json.Unmarshal([]byte(property), &names); err != nil {
+			return nil, fmt.Errorf("blitz: invalid style batch: %w", err)
+		}
+		values, err := native.StyleBatch(uint64(id), names)
+		if err != nil {
+			return nil, err
+		}
+		// Match the scalar observation contract: an empty native serialization
+		// asks the JS compatibility oracle for that property.
+		result := make([]any, len(values))
+		for i, value := range values {
+			if value != "" || strings.HasPrefix(names[i], "--") {
+				result[i] = value
+			}
+		}
+		return result, nil
+	}
 	box, err := native.Rect(uint64(id))
 	if err != nil {
 		return nil, err

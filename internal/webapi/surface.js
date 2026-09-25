@@ -2051,6 +2051,7 @@
       decoder,
       nodeStyles: new Map(),
       scalarValues: new Map(),
+      batchedStyles: new Set(),
       transforms: new Map(),
       retainedBytes: 0,
     };
@@ -2299,6 +2300,21 @@
   };
   const cssSlots = new WeakMap(),
     cssState = (value) => cssSlots.get(value),
+    cssComputedEnumerationAvailable = (state) => {
+      // Enumeration reads hundreds of numeric keys. Revalidate the epoch
+      // without repeating the style availability walk for every key.
+      const version =
+        host.observationVersion() +
+        ':' +
+        compatibilityElementState.observationVersion() +
+        ':' +
+        host.documentActive();
+      if (state.availabilityVersion !== version) {
+        state.available = computedStyleDocumentAvailable(state.element);
+        state.availabilityVersion = version;
+      }
+      return state.available;
+    },
     cssEntries = (value) => {
       const state = cssState(value);
       if (!state.computed) return inlineCSSDeclarations(state.element);
@@ -2335,6 +2351,9 @@
       cssSlots.set(this, { element, computed });
     }
     get length() {
+      const state = cssState(this);
+      if (state.computed)
+        return cssComputedEnumerationAvailable(state) ? cssComputedNames.length : 0;
       return cssEntries(this).length;
     }
     get cssText() {
@@ -2344,7 +2363,11 @@
       writeCSSEntries(this, parseCSS(String(v)));
     }
     item(i) {
-      return cssEntries(this)[Number(i)]?.name || '';
+      const state = cssState(this),
+        index = Number(i);
+      if (state.computed)
+        return cssComputedEnumerationAvailable(state) ? cssComputedNames[index] || '' : '';
+      return cssEntries(this)[index]?.name || '';
     }
     getPropertyValue(name) {
       name = cssName(name);
@@ -2403,7 +2426,48 @@
       return shorthand || cssShorthandComponents[name] ? '' : old;
     }
   }
+  // Blink exposes these legacy names during CSSStyleDeclaration key
+  // enumeration although they have no property descriptor or value.
+  const cssEnumeratedNames = Object.keys(cssNamedProperties)
+    .concat([
+      'epubCaptionSide',
+      'epubTextCombine',
+      'epubTextEmphasis',
+      'epubTextEmphasisColor',
+      'epubTextEmphasisStyle',
+      'epubTextOrientation',
+      'epubTextTransform',
+      'epubWordBreak',
+      'epubWritingMode',
+    ])
+    .sort();
+  const cssScalarBatchNames = Array.from(new Set(Object.values(cssNamedProperties))).filter(
+    (name) => !blitzProperties.includes(name),
+  );
   const cssDeclaration = (element, computed = false) => {
+    const prefetchComputedNames = () => {
+      if (!computed) return;
+      withStyleReadCache(() => {
+        const record = blitzPackedRecord(element);
+        if (!record || record.packed.batchedStyles.has(record.at)) return;
+        // Empty native serializers retain the ordinary JS fallback per name.
+        const values = host.blitzObserve(
+          elementSlot(element).nodeId,
+          'styles',
+          JSON.stringify(cssScalarBatchNames),
+        );
+        if (!Array.isArray(values) || values.length !== cssScalarBatchNames.length) return;
+        const { packed, at } = record;
+        for (let i = 0; i < cssScalarBatchNames.length; i++) {
+          const value = values[i];
+          const bytes = typeof value === 'string' ? value.length * 2 : 0;
+          if (packed.retainedBytes + bytes >= 64 * 1024 * 1024) break;
+          packed.scalarValues.set(at + ':' + cssScalarBatchNames[i], value);
+          packed.retainedBytes += bytes;
+        }
+        packed.batchedStyles.add(at);
+      });
+    };
     const target = new CSSStyleDeclaration(hostToken, element, computed),
       proxy = new Proxy(target, {
         get(t, p, r) {
@@ -2434,11 +2498,12 @@
           );
         },
         ownKeys(t) {
+          prefetchComputedNames();
           return Array.from(
             new Set([
               ...Array.from({ length: t.length }, (_, i) => String(i)),
               ...Reflect.ownKeys(t),
-              ...Object.keys(cssNamedProperties),
+              ...cssEnumeratedNames,
             ]),
           );
         },
