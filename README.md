@@ -83,7 +83,7 @@ await browser.close();
 
 The [runnable profile example](examples/profile-contexts.mjs) processes 100 URLs
 through separate Contexts. Each job gets a freshly generated profile, its own
-cookies and optionally its own proxy; it closes its Context as soon as extraction finishes.
+cookies and optionally its own proxy. It closes its Context after extraction.
 Eight live Pages is the default. Set `CONCURRENCY=100 HOLD_ALL_LIVE=1` to hold all
 100 Pages simultaneously until every extraction finishes; this requires much
 more RAM.
@@ -96,19 +96,19 @@ const jobs = Array.from({ length: 100 }, (_, index) => ({
   proxy: proxies[index], // { server: "socks5://host:1080", username, password }
 }));
 await Promise.all(jobs.map(async (job) => {
-    const { browserContextId, profileId } = await cdp.send("Mimic.createContext", {
-      proxy: job.proxy,
-      disposeOnDetach: true,
+  const { browserContextId, profileId } = await cdp.send("Mimic.createContext", {
+    ...(job.proxy ? { proxy: job.proxy } : {}),
+    disposeOnDetach: true,
+  });
+  try {
+    await cdp.send("Storage.setCookies", {
+      browserContextId,
+      cookies: [job.cookie],
     });
-    try {
-      await cdp.send("Storage.setCookies", {
-        browserContextId,
-        cookies: [job.cookie],
-      });
-      await scrapeInContext(cdp, browserContextId, profileId);
-    } finally {
-      await cdp.send("Target.disposeBrowserContext", { browserContextId });
-    }
+    await scrapeInContext(cdp, browserContextId, profileId);
+  } finally {
+    await cdp.send("Target.disposeBrowserContext", { browserContextId });
+  }
 }));
 ```
 
@@ -116,8 +116,8 @@ Provide one proxy per job if every route must differ. `profile` is an opaque,
 portable token that can be saved and reused; manual settings require explicit
 `Mimic.importProfile` with `mode: "manual"`. See the
 [profile contract and limits](docs/environment-profiles.md). GPU and fonts remain
-the installed measured recipe, so unique seeds do not imply unique GPU or font
-observations.
+the installed measured recipe, so distinct generated profiles do not imply
+different GPU or font observations.
 
 See the [runnable examples](examples/README.md),
 [supported CDP surface](docs/cdp-compatibility.md), and
