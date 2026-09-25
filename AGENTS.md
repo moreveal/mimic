@@ -10,6 +10,12 @@ the current behavioral reference.
   against frozen Chrome 152 rather than guessing from specifications or other
   browser implementations.
 
+- Preserve each successful frozen Chrome 152 capture and its provenance before
+  changing instrumentation or testing another hypothesis. Reuse the saved trace
+  and offline replay for iterative analysis; do not repeatedly launch live
+  Chrome 152 for the same case. Run it again only when the saved evidence cannot
+  answer a specific remaining question, and retain the new capture.
+
 - Prefer behavioral compatibility over superficial API coverage. An API that
   exists but behaves incorrectly is not considered implemented.
 
