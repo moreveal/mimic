@@ -513,6 +513,7 @@ const canvasCompatibilityState = (() => {
       alpha: d.globalAlpha,
       composite: d.globalCompositeOperation,
       clips: d.clipPaths || [],
+      shadow: shadowSnapshot(d, c.surface),
     });
     if (pending.length >= 256) {
       ensurePixels(c.surface);
@@ -567,6 +568,17 @@ const canvasCompatibilityState = (() => {
             if (px >= x && px < x + w && py >= y && py < y + h)
               coverage[yy * s.width + xx] = Math.max(coverage[yy * s.width + xx], glyph.coverage);
           }
+      }
+      if (run.shadow) {
+        const source = new Float32Array(s.width * s.height);
+        for (let yy = top; yy < bottom; yy++)
+          for (let xx = left; xx < right; xx++) {
+            const i = yy * s.width + xx;
+            if (coverage[i])
+              source[i] =
+                (coverage[i] * paintColor(run.paint, xx + 0.5, yy + 0.5)[3]) / (255 * 255);
+          }
+        materializeShadow(s, source, run.shadow, run.alpha, run.composite, run.clips);
       }
       if (
         ['copy', 'source-in', 'source-out', 'destination-in', 'destination-atop'].includes(
@@ -913,8 +925,7 @@ const canvasCompatibilityState = (() => {
         sh < 0 ||
         dw < 0 ||
         dh < 0 ||
-        (c.draw.globalCompositeOperation !== 'source-over' &&
-          c.draw.globalCompositeOperation !== 'copy')
+        !supportedComposite.has(c.draw.globalCompositeOperation)
       ) {
         record(c, 'drawImage', args);
         return;
@@ -930,6 +941,10 @@ const canvasCompatibilityState = (() => {
             ? new Uint8ClampedArray(image.pixels)
             : image.pixels.slice(),
         ga = c.draw.globalAlpha;
+      const grayscale = /^grayscale\(\s*((?:\d+(?:\.\d*)?|\.\d+))(%)?\s*\)$/.exec(c.draw.filter);
+      const grayscaleAmount = grayscale
+        ? Math.min(1, Number(grayscale[1]) / (grayscale[2] ? 100 : 1))
+        : 0;
       for (let yy = Math.max(0, Math.ceil(dy)); yy < Math.min(destination.height, dy + dh); yy++)
         for (let xx = Math.max(0, Math.ceil(dx)); xx < Math.min(destination.width, dx + dw); xx++) {
           if (!clipContains(c.draw.clipPaths, xx + 0.5, yy + 0.5)) continue;
@@ -949,6 +964,10 @@ const canvasCompatibilityState = (() => {
               ],
               destination.colorSpace || 'srgb',
             );
+          if (grayscaleAmount) {
+            const gray = rgba[0] * 0.2126 + rgba[1] * 0.7152 + rgba[2] * 0.0722;
+            for (let k = 0; k < 3; k++) rgba[k] += (gray - rgba[k]) * grayscaleAmount;
+          }
           compositePixel(p, j, rgba, ga, c.draw.globalCompositeOperation, destination.opaque);
         }
       destination.unmodeled ||= image.unmodeled;

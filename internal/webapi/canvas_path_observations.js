@@ -326,6 +326,74 @@ const supportedComposite = new Set([
   'screen',
   ...canvasBlendModes,
 ]);
+const shadowSnapshot = (d, s) => {
+  const rgba = paintSnapshot(d.shadowColor, s.colorSpace || 'srgb', canvasColorScheme(s));
+  if (!Array.isArray(rgba) || !rgba[3]) return null;
+  return { rgba, blur: d.shadowBlur, x: d.shadowOffsetX, y: d.shadowOffsetY };
+};
+// Blur the source alpha before painting the source. Keep this in the canonical
+// pixel buffer so crops, copies and later overlapping draws see the same shadow.
+const materializeShadow = (s, source, shadow, alpha, composite, clips) => {
+  if (!shadow || !source.some((v) => v > 0)) return;
+  const w = s.width,
+    h = s.height,
+    sigma = shadow.blur / 2,
+    radius = Math.min(Math.ceil(3 * sigma), Math.max(w, h));
+  let mask = source;
+  if (radius) {
+    const weights = new Float64Array(radius + 1);
+    let total = 1;
+    weights[0] = 1;
+    for (let k = 1; k <= radius; k++) {
+      weights[k] = Math.exp((-k * k) / (2 * sigma * sigma));
+      total += 2 * weights[k];
+    }
+    for (let k = 0; k <= radius; k++) weights[k] /= total;
+    for (const horizontal of [true, false]) {
+      const next = new Float32Array(w * h);
+      for (let y = 0; y < h; y++)
+        for (let x = 0; x < w; x++) {
+          let value = mask[y * w + x] * weights[0];
+          for (let k = 1; k <= radius; k++) {
+            const a = horizontal ? x - k : y - k,
+              b = horizontal ? x + k : y + k;
+            if (a >= 0) value += mask[(horizontal ? y : a) * w + (horizontal ? a : x)] * weights[k];
+            if (b < (horizontal ? w : h))
+              value += mask[(horizontal ? y : b) * w + (horizontal ? b : x)] * weights[k];
+          }
+          next[y * w + x] = value;
+        }
+      mask = next;
+    }
+  }
+  for (let y = 0; y < h; y++)
+    for (let x = 0; x < w; x++) {
+      const sx = x - shadow.x,
+        sy = y - shadow.y;
+      if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue;
+      const ix = Math.floor(sx),
+        iy = Math.floor(sy),
+        nx = Math.min(ix + 1, w - 1),
+        ny = Math.min(iy + 1, h - 1),
+        fx = sx - ix,
+        fy = sy - iy,
+        coverage =
+          mask[iy * w + ix] * (1 - fx) * (1 - fy) +
+          mask[iy * w + nx] * fx * (1 - fy) +
+          mask[ny * w + ix] * (1 - fx) * fy +
+          mask[ny * w + nx] * fx * fy;
+      if (coverage > 0 && clipContains(clips, x + 0.5, y + 0.5))
+        compositePixel(
+          s.pixels,
+          (y * w + x) * 4,
+          shadow.rgba,
+          alpha,
+          composite,
+          s.opaque,
+          coverage,
+        );
+    }
+};
 const queuePath = (c, path, rule, stroke = false, clear = false) => {
   const d = c.draw;
   if (!supportedComposite.has(d.globalCompositeOperation) && !clear) {
@@ -358,6 +426,7 @@ const queuePath = (c, path, rule, stroke = false, clear = false) => {
     composite: clear ? 'copy' : d.globalCompositeOperation,
     clear,
     clips: d.clipPaths || [],
+    shadow: clear ? null : shadowSnapshot(d, c.surface),
   });
   // Long-lived animations need bounded deferred state even when they never
   // clear the full canvas. Folding a batch into the canonical pixel model
@@ -462,6 +531,16 @@ const materializePath = (s, op) => {
     bottom = unbounded
       ? s.height
       : Math.min(s.height, Math.ceil(Math.max(...ps.map((p) => p[1])) + pad));
+  if (op.shadow) {
+    const source = new Float32Array(s.width * s.height);
+    for (let y = top; y < bottom; y++)
+      for (let x = left; x < right; x++) {
+        const coverage = pathPixelCoverage(op, x, y);
+        if (coverage)
+          source[y * s.width + x] = (coverage * paintColor(op.paint, x + 0.5, y + 0.5)[3]) / 255;
+      }
+    materializeShadow(s, source, op.shadow, op.alpha, op.composite, op.clips);
+  }
   for (let y = top; y < bottom; y++)
     for (let x = left; x < right; x++) {
       const coverage = pathPixelCoverage(op, x, y);

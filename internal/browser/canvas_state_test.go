@@ -41,6 +41,53 @@ func TestCanvasFullTurnArcsInBothDirections(t *testing.T) {
 	}
 }
 
+func TestCanvasShadowsMaterializeForPathsAndText(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{
+  const canvas=new OffscreenCanvas(40,24),ctx=canvas.getContext('2d');
+  const alpha=(x,y)=>ctx.getImageData(x,y,1,1).data[3];
+  ctx.fillStyle='red';ctx.shadowColor='blue';ctx.shadowBlur=0;ctx.shadowOffsetX=8;
+  ctx.fillRect(2,2,3,3);
+  if(alpha(10,3)===0||alpha(20,3)!==0)return 'path offset';
+  ctx.clearRect(0,0,40,24);
+  ctx.shadowOffsetX=0;ctx.shadowBlur=8;ctx.fillRect(18,8,2,2);
+  if(alpha(15,8)===0||alpha(18,8)===0)return 'path blur';
+  ctx.clearRect(0,0,40,24);
+  ctx.font='12px sans-serif';ctx.shadowBlur=6;ctx.fillText('A',18,12);
+  if(alpha(14,8)===0)return 'text blur';
+  ctx.clearRect(0,0,40,24);
+  if(ctx.getImageData(0,0,40,24).data.some(v=>v))return 'clear';
+  canvas.width=40;
+  if(ctx.getImageData(0,0,40,24).data.some(v=>v))return 'reset';
+  return 'ok';
+})()`)
+	if err != nil || value != "ok" {
+		t.Fatalf("canvas shadows: %v %v", value, err)
+	}
+}
+
+func TestCanvasDrawImageBlendAndGrayscale(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{
+  const source=new OffscreenCanvas(2,2),s=source.getContext('2d');
+  s.fillStyle='#ff0000';s.fillRect(0,0,2,2);
+  const canvas=new OffscreenCanvas(2,2),ctx=canvas.getContext('2d');
+  ctx.drawImage(source,0,0);
+  ctx.globalCompositeOperation='difference';ctx.drawImage(source,0,0);
+  const same=ctx.getImageData(0,0,2,2).data;
+  if(same[0]||same[1]||same[2]||same[3]!==255)return 'difference';
+  ctx.globalCompositeOperation='copy';ctx.filter='grayscale(100%)';ctx.drawImage(source,0,0);
+  const gray=ctx.getImageData(0,0,1,1).data;
+  if(Math.abs(gray[0]-54)>1||gray[0]!==gray[1]||gray[1]!==gray[2]||gray[3]!==255)return 'grayscale';
+  return 'ok';
+})()`)
+	if err != nil || value != "ok" {
+		t.Fatalf("drawImage blend/filter: %v %v", value, err)
+	}
+}
+
 func TestCanvasZeroImageDataDimensionMessage(t *testing.T) {
 	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
