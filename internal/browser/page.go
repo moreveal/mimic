@@ -492,7 +492,8 @@ func (p *Page) beginNavigationRequestWithCommit(ctx context.Context, raw, loader
 	if err != nil {
 		return err
 	}
-	if u.Scheme != "http" && u.Scheme != "https" {
+	blank := u.Scheme == "about" && u.Opaque == "blank"
+	if !blank && u.Scheme != "http" && u.Scheme != "https" {
 		return fmt.Errorf("unsupported navigation scheme %q", u.Scheme)
 	}
 	p.CancelNavigation()
@@ -510,6 +511,12 @@ func (p *Page) beginNavigationRequestWithCommit(ctx context.Context, raw, loader
 	p.performanceOrigin = performanceOrigin
 	p.loadEventEnded = false
 	p.mu.Unlock()
+	if blank {
+		// about:blank is a document navigation, but has no network request or
+		// response. Commit through the ordinary document/lifecycle pipeline.
+		response := network.Response{URL: u, Body: []byte("<html><head></head><body></body></html>"), Headers: make(http.Header), Synthetic: true}
+		return p.commitNavigationResponse(ctx, ctx, u, loaderID, performanceOrigin, response, historyTarget, false, committed, replace...)
+	}
 	// CDP defines the main resource request id as the navigation loader id.
 	// Puppeteer/Pyppeteer use this equality (together with type=Document) to
 	// recognize the navigation request and return its Response from goto().
@@ -789,7 +796,6 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 				defer func() { streamState.insideScript = previous }()
 				evalErr := realm.evaluateClassicScript(taskContext, scriptCode, scriptName, scriptID)
 				if evalErr != nil {
-					p.trace.Add(trace.Exception, "script", map[string]any{"url": scriptName, "error": evalErr.Error()})
 					p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": scriptName, "realm": realm.ID, "error": evalErr.Error()})
 					return evalErr
 				}

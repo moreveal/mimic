@@ -274,11 +274,8 @@ func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
 	previous := s.insideScript
 	r.document.MarkScriptStarted(node.ID)
 	s.insideScript = true
-	err := r.evaluateClassicScript(ctx, code, name, node.ID)
+	_ = r.evaluateClassicScript(ctx, code, name, node.ID)
 	s.insideScript = previous
-	if err != nil {
-		r.agent.Page().trace.Add(trace.Exception, "script", map[string]any{"url": name, "error": err.Error(), "realm": r.ID})
-	}
 	if src != "" {
 		return r.dispatchResourceEvent(ctx, node.ID, "load")
 	}

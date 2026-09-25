@@ -11,6 +11,7 @@ import (
 	"sync"
 
 	gov8 "github.com/maclof/gov8"
+	"github.com/moreveal/mimic/internal/engine"
 )
 
 type HostFunction func(args []string) (any, error)
@@ -105,6 +106,11 @@ func (r *Runtime) loop(ready chan<- error) {
 		return
 	}
 	r.actorTID = currentThreadID() // NewIsolate has locked the OS thread.
+	if err := iso.SetCaptureStackTraceForUncaughtExceptions(true, 32); err != nil {
+		ready <- err
+		close(r.done)
+		return
+	}
 	// Chrome performs Promise jobs at browser event-loop microtask checkpoints,
 	// not whenever an arbitrary embedder call happens to return. Leaving V8's
 	// default kAuto policy enabled lets microtasks run inside Script::Run and
@@ -383,12 +389,42 @@ func exceptionError(catcher *gov8.TryCatch, scope *gov8.Scope, ctx *gov8.Context
 			line, hasLine, lineErr := message.LineNumber(ctx)
 			column, columnErr := message.StartColumn()
 			if resourceErr == nil && resource != "" && resource != "undefined" && hasLine && lineErr == nil && columnErr == nil {
-				return fmt.Errorf("%s: %s (%s:%d:%d)", name, text, resource, line, column+1)
+				location := engine.ExceptionDetails{Message: text, Filename: resource, Line: int(line), Column: int(column) + 1}
+				var frames []engine.NativeStackFrame
+				if stack, captured, stackErr := message.StackTrace(); stackErr == nil && captured {
+					if count, countErr := stack.FrameCount(); countErr == nil {
+						for index := 0; index < min(count, 32); index++ {
+							frame, frameErr := stack.Frame(index)
+							if frameErr != nil {
+								break
+							}
+							function, _, _ := frame.FunctionName()
+							url, _, _ := frame.ScriptNameOrSourceURL()
+							frameLine, _ := frame.LineNumber()
+							frameColumn, _ := frame.Column()
+							frames = append(frames, engine.NativeStackFrame{Function: function, URL: url, Line: frameLine, Column: frameColumn})
+						}
+					}
+				}
+				if len(frames) > 0 && frames[0].URL != "" {
+					location.Filename, location.Line, location.Column = frames[0].URL, int(frames[0].Line), int(frames[0].Column)
+				}
+				return &locatedException{error: fmt.Errorf("%s: %s (%s:%d:%d)", name, text, location.Filename, location.Line, location.Column), location: location, frames: frames}
 			}
 		}
 		return fmt.Errorf("%s: %s", name, text)
 	}
 	return fmt.Errorf("%s: %w", name, cause)
+}
+
+type locatedException struct {
+	error
+	location engine.ExceptionDetails
+	frames   []engine.NativeStackFrame
+}
+
+func (e *locatedException) SourceLocation() (engine.ExceptionDetails, []engine.NativeStackFrame) {
+	return e.location, e.frames
 }
 
 func primitive(scope *gov8.Scope, value any) (gov8.Value, error) {

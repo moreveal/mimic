@@ -207,6 +207,22 @@ const cssPrecisionDeclaration = (entry, input) => {
   return entry;
 };
 cssLonghandParsers.set('transform', parseCSSTransform);
+cssLonghandParsers.set('font-size', (value) =>
+  [
+    'xx-small',
+    'x-small',
+    'small',
+    'medium',
+    'large',
+    'x-large',
+    'xx-large',
+    'xxx-large',
+    'smaller',
+    'larger',
+  ].includes(value.toLowerCase())
+    ? value.toLowerCase()
+    : cssLengthValue(value),
+);
 cssLonghandParsers.set('content-visibility', cssKeywordValue(['visible', 'auto', 'hidden']));
 for (const name of [
   'color',

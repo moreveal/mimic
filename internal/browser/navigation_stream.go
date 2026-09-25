@@ -118,7 +118,7 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 	defer func() { stream.insideScript = previous }()
 	r.agent.Page().trace.Add(trace.JS, "scriptStart", map[string]any{"frameId": navigation.frame.ID, "url": name, "realm": realm.ID})
 	if err := realm.evaluateClassicScript(ctx, code, name, node.ID); err != nil {
-		r.agent.Page().trace.Add(trace.Exception, "frameScript", map[string]any{"frameId": navigation.frame.ID, "url": name, "error": err.Error()})
+		r.agent.Page().trace.Add(trace.Error, "frameScriptTask", map[string]any{"frameId": navigation.frame.ID, "url": name, "error": err.Error()})
 	}
 	return nil
 }

@@ -28,7 +28,15 @@ const cssResolveLength = (input, context) => {
           ? context.rem
           : term.unit === '%'
             ? context.percent / 100
-            : cssAbsoluteLengthScales[term.unit];
+            : term.unit === 'vw'
+              ? innerWidth / 100
+              : term.unit === 'vh'
+                ? innerHeight / 100
+                : term.unit === 'vmin'
+                  ? Math.min(innerWidth, innerHeight) / 100
+                  : term.unit === 'vmax'
+                    ? Math.max(innerWidth, innerHeight) / 100
+                    : cssAbsoluteLengthScales[term.unit];
     return Number.isFinite(scale) ? term.number * scale : null;
   }
   const wrapped = /^calc\(\s*([^()]+)\s*\)$/.exec(value);

@@ -409,11 +409,39 @@ func (s *session) traceEvent(e trace.Event) {
 		s.event("Runtime.consoleAPICalled", map[string]any{"type": e.Name, "args": remoteObjects(e.Data["args"]), "executionContextId": contextID, "timestamp": float64(e.Time.UnixMilli())})
 	case trace.Exception:
 		details := map[string]any{"exceptionId": e.Sequence, "text": stringValue(e.Data["error"]), "lineNumber": intValue(e.Data["lineNumber"], 0), "columnNumber": intValue(e.Data["columnNumber"], 0)}
+		if kind := stringValue(e.Data["valueType"]); kind != "" {
+			object := map[string]any{"type": kind}
+			if e.Data["errorObject"] == true {
+				object["type"] = "object"
+				object["subtype"] = "error"
+				object["className"] = "Error"
+				object["description"] = stringValue(e.Data["errorStack"])
+			} else {
+				object["description"] = stringValue(e.Data["error"])
+			}
+			details["exception"] = object
+		}
 		if contextID, ok := s.contextForRealm(stringValue(e.Data["realm"])); ok {
 			details["executionContextId"] = contextID
 		}
 		if rawURL := stringValue(e.Data["url"]); rawURL != "" {
 			details["url"] = rawURL
+		}
+		if rawURL := stringValue(e.Data["url"]); rawURL != "" {
+			frames := make([]any, 0, 1)
+			if rawFrames, ok := e.Data["stackFrames"].([]any); ok {
+				for _, item := range rawFrames {
+					frame, ok := item.(map[string]any)
+					if !ok {
+						continue
+					}
+					frames = append(frames, map[string]any{"functionName": stringValue(frame["functionName"]), "scriptId": "", "url": stringValue(frame["url"]), "lineNumber": max(intValue(frame["lineNumber"], 1)-1, 0), "columnNumber": max(intValue(frame["columnNumber"], 1)-1, 0)})
+				}
+			}
+			if len(frames) == 0 {
+				frames = append(frames, map[string]any{"functionName": "", "scriptId": "", "url": rawURL, "lineNumber": details["lineNumber"], "columnNumber": details["columnNumber"]})
+			}
+			details["stackTrace"] = map[string]any{"callFrames": frames}
 		}
 		s.event("Runtime.exceptionThrown", map[string]any{"timestamp": float64(e.Time.UnixMilli()), "exceptionDetails": details})
 	case trace.Lifecycle:
@@ -1064,7 +1092,20 @@ func stringValue(v any) string {
 	return ""
 }
 func intValue(v any, d int) int {
-	if n, ok := v.(float64); ok {
+	switch n := v.(type) {
+	case int:
+		return n
+	case int32:
+		return int(n)
+	case int64:
+		return int(n)
+	case uint32:
+		return int(n)
+	case uint64:
+		return int(n)
+	case float32:
+		return int(n)
+	case float64:
 		return int(n)
 	}
 	return d

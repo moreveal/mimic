@@ -572,7 +572,9 @@ const compatibilityElementState = {};
     return fragmentSlots.get(node)?.children[index] || null;
   };
   const canonicalChildren = (node) => {
-    const revision = styleReadCache?.version || domCollectionVersion(),
+    // Mutations from another Window do not advance this realm's JS revision.
+    // The shared DOM arena is the authority for live child collections.
+    const revision = host.domRevision(),
       previous = canonicalChildLists.get(node);
     if (previous?.revision === revision) return previous.values;
     const slot = elementSlot(node),
@@ -737,9 +739,16 @@ const compatibilityElementState = {};
       node = node.nextSibling;
     }
   });
+  const sameDOMNode = (left, right) => {
+    if (left === right) return true;
+    const a = elementSlot(left),
+      b = elementSlot(right);
+    return !!a && !!b && a.nodeId === b.nodeId;
+  };
   member(Node.prototype, 'replaceChild', function (node, child) {
     if (!isDOMNode(node) || !isDOMNode(child)) throw new TypeError('Expected Nodes');
-    if (child.parentNode !== this) throw new DOMException('Not a child', 'NotFoundError');
+    if (!sameDOMNode(child.parentNode, this))
+      throw new DOMException('Not a child', 'NotFoundError');
     if (node === child) return child;
     this.insertBefore(node, child);
     this.removeChild(child);
@@ -748,7 +757,7 @@ const compatibilityElementState = {};
   const removeChildBase = Node.prototype.removeChild;
   member(Node.prototype, 'removeChild', function (node) {
     if (!isDOMNode(node)) throw new TypeError('Expected a Node');
-    if (node.parentNode !== this) throw new DOMException('Not a child', 'NotFoundError');
+    if (!sameDOMNode(node.parentNode, this)) throw new DOMException('Not a child', 'NotFoundError');
     return removeChildBase.call(this, node);
   });
   for (const proto of [Element.prototype, CharacterData.prototype]) {
@@ -881,7 +890,8 @@ const compatibilityElementState = {};
       // any of replaceChild's removal steps. The ordinary insertion path
       // can combine these checks with its canonical mutation in Go.
       if (method === 'removeChild') {
-        if (node.parentNode !== this) throw new DOMException('Not a child', 'NotFoundError');
+        if (!sameDOMNode(node.parentNode, this))
+          throw new DOMException('Not a child', 'NotFoundError');
       } else prepareInsertion(this, node, method === 'appendChild' ? null : reference, true);
       const fragment = node instanceof DocumentFragment,
         children = fragment ? Array.from(node.childNodes) : [node],

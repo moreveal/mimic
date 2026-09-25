@@ -115,6 +115,8 @@ type Realm struct {
 	frameValueRetain         engine.Value
 	frameValueEncoderJSON    bool
 	frameNodeDescribe        engine.Value
+	frameEventDescribe       engine.Value
+	windowErrorReporter      engine.Value
 	frameBindingDescribe     engine.Value
 	frameNativeNameDescribe  engine.Value
 	frameSourceDescribe      engine.Value
@@ -458,7 +460,42 @@ func (r *Realm) evaluateClassicScript(ctx context.Context, source, name string, 
 	previous := r.currentScript
 	r.currentScript = scriptID
 	defer func() { r.currentScript = previous }()
-	_, evalErr := r.Evaluate(ctx, source, name)
+	p := r.agent.Page()
+	if p.userScriptDepth == 0 {
+		p.databaseScriptEpoch++
+	}
+	p.userScriptDepth++
+	var evalErr error
+	if origin, ok := r.runtime.(engine.ScriptOriginRuntime); ok {
+		var lineOffset, columnOffset int32
+		if position, found := r.document.ScriptPosition(scriptID); found && name == r.documentURL().String() {
+			lineOffset, columnOffset = int32(position.Line-1), int32(position.Column-1)
+		}
+		_, evalErr = origin.EvalWithOrigin(ctx, source, name, lineOffset, columnOffset)
+	} else {
+		_, evalErr = r.runtime.Eval(ctx, source, name)
+	}
+	p.userScriptDepth--
+	if evalErr != nil && r.windowErrorReporter != nil {
+		var thrown engine.ThrownValue
+		if errors.As(evalErr, &thrown) {
+			var details engine.ExceptionDetails
+			var frames []engine.NativeStackFrame
+			var located engine.ExceptionLocation
+			if errors.As(evalErr, &located) {
+				details, frames = located.SourceLocation()
+			}
+			var stack []any
+			for _, frame := range frames {
+				stack = append(stack, map[string]any{"functionName": frame.Function, "url": frame.URL, "lineNumber": frame.Line, "columnNumber": frame.Column})
+			}
+			location := map[string]any{"message": "Uncaught " + details.Message, "filename": details.Filename, "lineno": details.Line, "colno": details.Column}
+			_, reportErr := r.runtime.Call(ctx, r.windowErrorReporter, nil, thrown.ThrownValue(), r.val(location), r.val(stack))
+			if reportErr != nil {
+				p.trace.Add(trace.Error, "windowErrorReporting", map[string]any{"url": name, "realm": r.ID, "error": reportErr.Error()})
+			}
+		}
+	}
 	return errors.Join(evalErr, r.checkpoint(ctx))
 }
 

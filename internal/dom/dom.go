@@ -8,20 +8,21 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/moreveal/mimic/internal/htmlstream"
 	"github.com/moreveal/mimic/internal/layoutflat"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
 
 type Node struct {
-	ID             int64  `json:"nodeId"`
-	Type           string `json:"type"`
-	TagName        string `json:"tagName,omitempty"`
-	Namespace      string `json:"namespaceURI,omitempty"`
-	QualifiedName  string `json:"qualifiedName,omitempty"`
-	ContentType    string `json:"contentType,omitempty"`
-	DocumentURL    string `json:"documentURL,omitempty"`
-	Text           string `json:"text,omitempty"`
+	ID            int64  `json:"nodeId"`
+	Type          string `json:"type"`
+	TagName       string `json:"tagName,omitempty"`
+	Namespace     string `json:"namespaceURI,omitempty"`
+	QualifiedName string `json:"qualifiedName,omitempty"`
+	ContentType   string `json:"contentType,omitempty"`
+	DocumentURL   string `json:"documentURL,omitempty"`
+	Text          string `json:"text,omitempty"`
 	// TextJSON preserves DOMString code units that cannot cross a UTF-8 string
 	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
 	TextJSON              string            `json:"-"`
@@ -38,9 +39,9 @@ type Node struct {
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 	// Keep these flags together after pointer-sized fields. On amd64 this
 	// avoids the next Go allocator class for every retained Node.
-	ParsedDocument        bool              `json:"parsedDocument,omitempty"`
-	ScriptAlreadyStarted  bool              `json:"-"`
-	ScriptForceAsync      bool              `json:"-"`
+	ParsedDocument       bool `json:"parsedDocument,omitempty"`
+	ScriptAlreadyStarted bool `json:"-"`
+	ScriptForceAsync     bool `json:"-"`
 }
 
 type arenaMutex struct {
@@ -67,10 +68,18 @@ type nodeArena struct {
 
 type Document struct {
 	*nodeArena
-	root          int64
-	title, source string
-	selectorCache map[selectorCacheKey][]int64
-	selectorMu    sync.Mutex
+	root            int64
+	title, source   string
+	scriptPositions map[int64]htmlstream.ScriptPosition
+	selectorCache   map[selectorCacheKey][]int64
+	selectorMu      sync.Mutex
+}
+
+func (d *Document) ScriptPosition(id int64) (htmlstream.ScriptPosition, bool) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	position, ok := d.scriptPositions[id]
+	return position, ok
 }
 
 type selectorCacheKey struct {

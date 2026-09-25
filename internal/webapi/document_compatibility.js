@@ -184,6 +184,10 @@ function wrapDocumentNode(data) {
       // The host creates nodes in the active canonical document. Its root ID
       // is rebound on bootstrap restoration, so ordinary creation needs no
       // second host lookup or adoption pass.
+      // A borrowed method must construct in the receiver's document realm.
+      // Creation in this realm followed by adoption leaves the wrong prototype.
+      if (this !== document && this.defaultView)
+        return this.defaultView.Document.prototype[name].apply(this, args);
       const node = original.apply(this, args);
       return this === document ? node : adopt(node, this);
     });
@@ -254,7 +258,7 @@ function wrapDocumentNode(data) {
   });
   for (const prototype of [Document.prototype, Element.prototype])
     member(prototype, 'getElementsByTagName', function (name) {
-      if (!(this instanceof Document) && !(this instanceof Element))
+      if (this !== document && !['document', 'element'].includes(elementSlot(this)?.type))
         throw new TypeError('Illegal invocation');
       name = String(name);
       const lower = name.toLowerCase(),

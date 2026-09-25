@@ -218,6 +218,10 @@ func (a *adapter) RunOnOwner(ctx context.Context, operation func(context.Context
 }
 
 func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, error) {
+	return a.EvalWithOrigin(ctx, source, name, 0, 0)
+}
+
+func (a *adapter) EvalWithOrigin(ctx context.Context, source, name string, lineOffset, columnOffset int32) (engine.Value, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -238,7 +242,7 @@ func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, 
 				}
 			}()
 		}
-		value, err := a.evalScoped(isolate, callback.ctx, callback.scope.Scope(), source, name)
+		value, err := a.evalScopedCode(isolate, callback.ctx, callback.scope.Scope(), source, name, false, lineOffset, columnOffset)
 		if finished != nil {
 			close(finished)
 			<-watcherDone
@@ -252,7 +256,7 @@ func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, 
 		return value, err
 	}
 	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
-		return a.evalScoped(s.isolate, realm, scope, source, name)
+		return a.evalScopedCode(s.isolate, realm, scope, source, name, false, lineOffset, columnOffset)
 	})
 }
 
@@ -266,7 +270,7 @@ func (a *adapter) EvalBootstrap(ctx context.Context, source, name string) (engin
 	})
 }
 
-func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope, source, name string, reusable bool) (engine.Value, error) {
+func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope, source, name string, reusable bool, offsets ...int32) (engine.Value, error) {
 	profileThis := false
 	if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" {
 		filter := os.Getenv("MIMIC_V8_CPU_PROFILE_FILTER")
@@ -314,8 +318,12 @@ func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, sco
 		bootstrap, rejected, err = realm.CompileFunctionAdvanced(scope, source+"\n//# sourceURL="+name, nil, data, catcher)
 		cached = data != nil && !rejected
 	} else {
+		var lineOffset, columnOffset int32
+		if len(offsets) >= 2 {
+			lineOffset, columnOffset = offsets[0], offsets[1]
+		}
 		script, err = realm.CompileScriptCompilerSource(scope,
-			gov8.NewScriptCompilerSource(source, &gov8.ScriptCompilerOrigin{ResourceName: resourceName, ScriptID: -1}),
+			gov8.NewScriptCompilerSource(source, &gov8.ScriptCompilerOrigin{ResourceName: resourceName, ScriptID: -1, LineOffset: lineOffset, ColumnOffset: columnOffset}),
 			gov8.OptNoCompileOptions, gov8.NoCacheNoReason, catcher)
 	}
 	if a.profile != nil {

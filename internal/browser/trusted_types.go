@@ -101,7 +101,7 @@ func (r *Realm) installTrustedTypes(host map[string]any) {
 		p.mu.RLock()
 		var target *Realm
 		for _, candidate := range p.realmOwners {
-			if candidate.document != nil && candidate.document.Root().ID == owner && candidate.document.SharesNodeArena(r.document) {
+			if candidate.mainWorld == nil && !candidate.closed && !candidate.inactive && candidate.document != nil && candidate.document.Root().ID == owner && candidate.document.SharesNodeArena(r.document) {
 				target = candidate
 				break
 			}

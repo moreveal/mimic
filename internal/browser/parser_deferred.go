@@ -95,7 +95,6 @@ func (r *Realm) runDeferredParserScripts(s *documentStream, resume func() error)
 			data := map[string]any{"url": script.name, "realm": r.ID, "module": script.module, "deferred": true}
 			if evalErr != nil {
 				data["error"] = evalErr.Error()
-				p.trace.Add(trace.Exception, "script", data)
 			}
 			p.trace.Add(trace.JS, "scriptEnd", data)
 			// A successful external fetch fires load even when its script throws.

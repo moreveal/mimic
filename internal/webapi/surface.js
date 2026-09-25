@@ -1088,7 +1088,7 @@
     }
     get childNodes() {
       const slot = elementSlot(this);
-      if (slot) return nodeList(cachedDOMChildren(this).map((child) => elementSlot(child)));
+      if (slot) return nodeList(() => cachedDOMChildren(this).map((child) => elementSlot(child)));
       const state = fragmentSlots.get(this);
       return state ? nodeList(state.children.map((child) => elementSlot(child))) : nodeList([]);
     }
@@ -2008,6 +2008,7 @@
     return value;
   };
   let blitzProducerEnabled = host.blitzEnabled();
+  let blitzShadowAdmissionDepth = 0;
   let blitzTraceEnabled = host.blitzTracing();
   let checkpointBlitzPacked = null,
     checkpointBlitzEpoch = '';
@@ -2056,7 +2057,44 @@
   };
   const blitzPackedRecord = (element) => {
     if (!blitzProducerEnabled) return null;
+    if (blitzShadowAdmissionDepth) return null;
     if (!styleReadCache) return withStyleReadCache(() => blitzPackedRecord(element));
+    // The native producer consumes the light tree. A shadow host and its
+    // descendants need the composed-tree observer; other branches can keep
+    // their native layout instead of falling back for the whole document.
+    if (shadowHosts.size) {
+      const affected =
+        styleReadCache.blitzShadowAffected || (styleReadCache.blitzShadowAffected = new WeakMap());
+      if (!affected.has(element)) {
+        const visited = [];
+        let node = element;
+        let inShadow = false;
+        while (node) {
+          if (affected.has(node)) {
+            inShadow = affected.get(node);
+            break;
+          }
+          visited.push(node);
+          if (
+            elementShadows.has(node) ||
+            (typeof ShadowRoot === 'function' && node instanceof ShadowRoot)
+          ) {
+            inShadow = true;
+            break;
+          }
+          node = cssObservationParent(node);
+        }
+        for (const visitedNode of visited) affected.set(visitedNode, inShadow);
+      }
+      if (affected.get(element)) return null;
+    }
+    const elementData = elementSlot(element);
+    if (elementData?.tagName === 'INPUT') {
+      const type = (host.getAttribute(elementData.nodeId, 'type') || 'text').toLowerCase();
+      // The native producer does not project the value label into intrinsic
+      // sizing for button-like inputs, including changes made during coercion.
+      if (type === 'button' || type === 'submit' || type === 'reset') return null;
+    }
     // Foreign membranes can refer to another arena with colliding numeric IDs.
     // Local wrappers (including isolated-world wrappers) share the canonical
     // arena; membership in the native snapshot already proves document owner.
@@ -2744,30 +2782,30 @@
       return elementSlot(this).namespaceURI || null;
     }
     get id() {
-      return this.getAttribute('id') || '';
+      return intrinsicGetAttribute.call(this, 'id') || '';
     }
     set id(v) {
-      this.setAttribute('id', String(v));
+      intrinsicSetAttribute.call(this, 'id', String(v));
     }
     get className() {
-      return this.getAttribute('class') || '';
+      return intrinsicGetAttribute.call(this, 'class') || '';
     }
     set className(v) {
-      this.setAttribute('class', String(v));
+      intrinsicSetAttribute.call(this, 'class', String(v));
     }
     get role() {
-      return this.getAttribute('role');
+      return intrinsicGetAttribute.call(this, 'role');
     }
     set role(v) {
-      if (v == null) this.removeAttribute('role');
-      else this.setAttribute('role', String(v));
+      if (v == null) intrinsicRemoveAttribute.call(this, 'role');
+      else intrinsicSetAttribute.call(this, 'role', String(v));
     }
     get ariaLabel() {
-      return this.getAttribute('aria-label');
+      return intrinsicGetAttribute.call(this, 'aria-label');
     }
     set ariaLabel(v) {
-      if (v == null) this.removeAttribute('aria-label');
-      else this.setAttribute('aria-label', String(v));
+      if (v == null) intrinsicRemoveAttribute.call(this, 'aria-label');
+      else intrinsicSetAttribute.call(this, 'aria-label', String(v));
     }
     get classList() {
       let list = elementClassLists.get(this);
@@ -2889,7 +2927,7 @@
       return cachedDOMAttribute(this, String(n));
     }
     hasAttribute(n) {
-      return this.getAttribute(String(n)) !== null;
+      return intrinsicGetAttribute.call(this, String(n)) !== null;
     }
     hasAttributes() {
       return cachedDOMAttributeNames(this).length !== 0;
@@ -2920,12 +2958,12 @@
     }
     toggleAttribute(n, force) {
       n = String(n);
-      const present = this.hasAttribute(n);
+      const present = intrinsicHasAttribute.call(this, n);
       if (force === true || (!present && force !== false)) {
-        this.setAttribute(n, '');
+        intrinsicSetAttribute.call(this, n, '');
         return true;
       }
-      if (present) this.removeAttribute(n);
+      if (present) intrinsicRemoveAttribute.call(this, n);
       return false;
     }
     querySelector(s) {
@@ -2956,6 +2994,12 @@
       if (p) p.removeChild(this);
     }
   }
+  // Internal reflection invokes the captured platform operations. Page code may
+  // override public attribute methods without changing native IDL accessors.
+  const intrinsicGetAttribute = Element.prototype.getAttribute;
+  const intrinsicSetAttribute = Element.prototype.setAttribute;
+  const intrinsicRemoveAttribute = Element.prototype.removeAttribute;
+  const intrinsicHasAttribute = Element.prototype.hasAttribute;
   Object.defineProperty(Element.prototype, 'previousElementSibling', {
     get: function () {
       for (let node = this.previousSibling; node; node = node.previousSibling)
@@ -3148,7 +3192,13 @@
         (before == null || elementSlot(before)) &&
         !isDOMFragment(node) &&
         plainInsertion(slot);
-    if (before != null && (!combined || node === before) && before.parentNode !== parent)
+    if (
+      before != null &&
+      (!combined || node === before) &&
+      (elementSlot(before) && elementSlot(parent)
+        ? host.parentNode(elementSlot(before).nodeId) !== elementSlot(parent).nodeId
+        : !fragmentState(parent).children.includes(before))
+    )
       throw new DOMException('Reference node is not a child.', 'NotFoundError');
     if (!combined && (node === parent || node.contains(parent)))
       throw new DOMException('Insertion would create a cycle.', 'HierarchyRequestError');
@@ -3769,18 +3819,24 @@
       host.elementNonce(elementSlot(this).nodeId, bindingString(v));
     }
     get title() {
-      return this.getAttribute('title') || '';
+      return intrinsicGetAttribute.call(this, 'title') || '';
     }
     set title(v) {
-      this.setAttribute('title', String(v));
+      intrinsicSetAttribute.call(this, 'title', String(v));
+    }
+    get lang() {
+      return intrinsicGetAttribute.call(this, 'lang') || '';
+    }
+    set lang(value) {
+      intrinsicSetAttribute.call(this, 'lang', String(value));
     }
     get hidden() {
-      const value = this.getAttribute('hidden');
+      const value = intrinsicGetAttribute.call(this, 'hidden');
       return value?.toLowerCase() === 'until-found' ? 'until-found' : value !== null;
     }
     set hidden(v) {
       if (typeof v === 'string' && v.toLowerCase() === 'until-found')
-        this.setAttribute('hidden', 'until-found');
+        intrinsicSetAttribute.call(this, 'hidden', 'until-found');
       else this.toggleAttribute('hidden', !!v);
     }
     get innerText() {
@@ -3790,18 +3846,18 @@
       this.textContent = v == null ? '' : String(v);
     }
     get ariaLive() {
-      return this.getAttribute('aria-live');
+      return intrinsicGetAttribute.call(this, 'aria-live');
     }
     set ariaLive(v) {
-      if (v == null) this.removeAttribute('aria-live');
-      else this.setAttribute('aria-live', String(v));
+      if (v == null) intrinsicRemoveAttribute.call(this, 'aria-live');
+      else intrinsicSetAttribute.call(this, 'aria-live', String(v));
     }
     get ariaAtomic() {
-      return this.getAttribute('aria-atomic');
+      return intrinsicGetAttribute.call(this, 'aria-atomic');
     }
     set ariaAtomic(v) {
-      if (v == null) this.removeAttribute('aria-atomic');
-      else this.setAttribute('aria-atomic', String(v));
+      if (v == null) intrinsicRemoveAttribute.call(this, 'aria-atomic');
+      else intrinsicSetAttribute.call(this, 'aria-atomic', String(v));
     }
     get style() {
       let style = styleCache.get(this);
@@ -3892,14 +3948,14 @@
           {
             get: (_target, key) =>
               typeof key === 'string'
-                ? (this.getAttribute('data-' + datasetName(key)) ?? undefined)
+                ? (intrinsicGetAttribute.call(this, 'data-' + datasetName(key)) ?? undefined)
                 : undefined,
             set: (_target, key, next) => {
-              this.setAttribute('data-' + datasetName(key), String(next));
+              intrinsicSetAttribute.call(this, 'data-' + datasetName(key), String(next));
               return true;
             },
             deleteProperty: (_target, key) => {
-              this.removeAttribute('data-' + datasetName(key));
+              intrinsicRemoveAttribute.call(this, 'data-' + datasetName(key));
               return true;
             },
             ownKeys: () =>
@@ -3907,9 +3963,9 @@
                 .filter((name) => name.startsWith('data-'))
                 .map(datasetKey),
             getOwnPropertyDescriptor: (_target, key) =>
-              this.hasAttribute('data-' + datasetName(key))
+              intrinsicHasAttribute.call(this, 'data-' + datasetName(key))
                 ? {
-                    value: this.getAttribute('data-' + datasetName(key)),
+                    value: intrinsicGetAttribute.call(this, 'data-' + datasetName(key)),
                     writable: true,
                     enumerable: true,
                     configurable: true,
@@ -4073,7 +4129,7 @@
       handlersFor(this).error = typeof v === 'function' ? v : null;
     }
     get src() {
-      const value = this.getAttribute('src');
+      const value = intrinsicGetAttribute.call(this, 'src');
       return value === null ? '' : host.urlParts(value).href;
     }
     set src(v) {
@@ -4102,28 +4158,28 @@
     }
     set async(v) {
       host.scriptAsync(elementSlot(this).nodeId, false);
-      if (v) this.setAttribute('async', '');
+      if (v) host.setAttribute(elementSlot(this).nodeId, 'async', '');
       else host.removeAttribute(elementSlot(this).nodeId, 'async');
     }
     get defer() {
-      return this.getAttribute('defer') !== null;
+      return intrinsicGetAttribute.call(this, 'defer') !== null;
     }
     set defer(v) {
-      if (v) this.setAttribute('defer', '');
+      if (v) host.setAttribute(elementSlot(this).nodeId, 'defer', '');
       else host.removeAttribute(elementSlot(this).nodeId, 'defer');
     }
     get crossOrigin() {
-      return this.getAttribute('crossorigin');
+      return intrinsicGetAttribute.call(this, 'crossorigin');
     }
     set crossOrigin(v) {
-      if (v == null) this.removeAttribute('crossorigin');
-      else this.setAttribute('crossorigin', String(v));
+      if (v == null) intrinsicRemoveAttribute.call(this, 'crossorigin');
+      else intrinsicSetAttribute.call(this, 'crossorigin', String(v));
     }
     get referrerPolicy() {
-      return this.getAttribute('referrerpolicy') || '';
+      return intrinsicGetAttribute.call(this, 'referrerpolicy') || '';
     }
     set referrerPolicy(v) {
-      this.setAttribute('referrerpolicy', String(v));
+      intrinsicSetAttribute.call(this, 'referrerpolicy', String(v));
     }
   }
   class HTMLImageElement extends HTMLElement {
@@ -4143,29 +4199,29 @@
       handlersFor(this).error = typeof v === 'function' ? v : null;
     }
     get src() {
-      return host.urlParts(this.getAttribute('src') || '').href;
+      return host.urlParts(intrinsicGetAttribute.call(this, 'src') || '').href;
     }
     set src(v) {
-      this.setAttribute('src', String(v));
+      intrinsicSetAttribute.call(this, 'src', String(v));
     }
     get alt() {
-      return this.getAttribute('alt') || '';
+      return intrinsicGetAttribute.call(this, 'alt') || '';
     }
     set alt(v) {
-      this.setAttribute('alt', String(v));
+      intrinsicSetAttribute.call(this, 'alt', String(v));
     }
     get crossOrigin() {
-      return this.getAttribute('crossorigin');
+      return intrinsicGetAttribute.call(this, 'crossorigin');
     }
     set crossOrigin(v) {
-      if (v == null) this.removeAttribute('crossorigin');
-      else this.setAttribute('crossorigin', String(v));
+      if (v == null) intrinsicRemoveAttribute.call(this, 'crossorigin');
+      else intrinsicSetAttribute.call(this, 'crossorigin', String(v));
     }
     get referrerPolicy() {
-      return this.getAttribute('referrerpolicy') || '';
+      return intrinsicGetAttribute.call(this, 'referrerpolicy') || '';
     }
     set referrerPolicy(v) {
-      this.setAttribute('referrerpolicy', String(v));
+      intrinsicSetAttribute.call(this, 'referrerpolicy', String(v));
     }
   }
   const mediaStates = new WeakMap(),
@@ -4205,11 +4261,11 @@
       this.controlsList.value = String(value);
     }
     get src() {
-      const value = this.getAttribute('src');
+      const value = intrinsicGetAttribute.call(this, 'src');
       return value === null ? '' : host.urlParts(value).href;
     }
     set src(value) {
-      this.setAttribute('src', String(value));
+      intrinsicSetAttribute.call(this, 'src', String(value));
       const state = mediaState(this);
       state.currentSrc = '';
       state.readyState = 0;
@@ -4238,7 +4294,8 @@
       state.paused = true;
       state.readyState = 0;
       state.currentSrc = '';
-      state.networkState = this.hasAttribute('src') || this.querySelector('source') ? 2 : 0;
+      state.networkState =
+        intrinsicHasAttribute.call(this, 'src') || this.querySelector('source') ? 2 : 0;
       host.mediaLoad(elementSlot(this).nodeId);
     }
     play() {
@@ -4278,41 +4335,41 @@
   class HTMLAudioElement extends HTMLMediaElement {}
   class HTMLVideoElement extends HTMLMediaElement {
     get poster() {
-      const value = this.getAttribute('poster');
+      const value = intrinsicGetAttribute.call(this, 'poster');
       return value === null ? '' : host.urlParts(value).href;
     }
     set poster(value) {
-      this.setAttribute('poster', String(value));
+      intrinsicSetAttribute.call(this, 'poster', String(value));
     }
     get width() {
-      return Number(this.getAttribute('width') || 0);
+      return Number(intrinsicGetAttribute.call(this, 'width') || 0);
     }
     set width(value) {
-      this.setAttribute('width', String(Number(value) >>> 0));
+      intrinsicSetAttribute.call(this, 'width', String(Number(value) >>> 0));
     }
     get height() {
-      return Number(this.getAttribute('height') || 0);
+      return Number(intrinsicGetAttribute.call(this, 'height') || 0);
     }
     set height(value) {
-      this.setAttribute('height', String(Number(value) >>> 0));
+      intrinsicSetAttribute.call(this, 'height', String(Number(value) >>> 0));
     }
   }
   const iframeSandboxCache = new WeakMap();
   class HTMLIFrameElement extends HTMLElement {
     get name() {
-      return this.getAttribute('name') || '';
+      return intrinsicGetAttribute.call(this, 'name') || '';
     }
     set name(v) {
-      this.setAttribute('name', String(v));
+      intrinsicSetAttribute.call(this, 'name', String(v));
     }
     get allow() {
-      return this.getAttribute('allow') || '';
+      return intrinsicGetAttribute.call(this, 'allow') || '';
     }
     set allow(v) {
-      this.setAttribute('allow', String(v));
+      intrinsicSetAttribute.call(this, 'allow', String(v));
     }
     get referrerPolicy() {
-      const value = (this.getAttribute('referrerpolicy') || '').toLowerCase();
+      const value = (intrinsicGetAttribute.call(this, 'referrerpolicy') || '').toLowerCase();
       return [
         'no-referrer',
         'no-referrer-when-downgrade',
@@ -4327,31 +4384,31 @@
         : '';
     }
     set referrerPolicy(v) {
-      this.setAttribute('referrerpolicy', String(v));
+      intrinsicSetAttribute.call(this, 'referrerpolicy', String(v));
     }
     get src() {
-      return host.urlParts(this.getAttribute('src') || '').href;
+      return host.urlParts(intrinsicGetAttribute.call(this, 'src') || '').href;
     }
     set src(v) {
-      this.setAttribute('src', String(v));
+      intrinsicSetAttribute.call(this, 'src', String(v));
     }
     get srcdoc() {
-      return this.getAttribute('srcdoc') || '';
+      return intrinsicGetAttribute.call(this, 'srcdoc') || '';
     }
     set srcdoc(v) {
       trustedSetAttributeProperty(this, 'srcdoc', v, 'TrustedHTML', 'HTMLIFrameElement');
     }
     get width() {
-      return this.getAttribute('width') || '';
+      return intrinsicGetAttribute.call(this, 'width') || '';
     }
     set width(v) {
-      this.setAttribute('width', String(v));
+      intrinsicSetAttribute.call(this, 'width', String(v));
     }
     get height() {
-      return this.getAttribute('height') || '';
+      return intrinsicGetAttribute.call(this, 'height') || '';
     }
     set height(v) {
-      this.setAttribute('height', String(v));
+      intrinsicSetAttribute.call(this, 'height', String(v));
     }
     get sandbox() {
       let list = iframeSandboxCache.get(this);
@@ -4375,23 +4432,29 @@
   }
   const anchorRelLists = new WeakMap();
   class HTMLAnchorElement extends HTMLElement {
+    get type() {
+      return intrinsicGetAttribute.call(this, 'type') || '';
+    }
+    set type(value) {
+      host.setAttribute(elementSlot(this).nodeId, 'type', String(value));
+    }
     get href() {
-      return host.urlParts(this.getAttribute('href') || '').href;
+      return host.urlParts(intrinsicGetAttribute.call(this, 'href') || '').href;
     }
     set href(v) {
-      this.setAttribute('href', String(v));
+      intrinsicSetAttribute.call(this, 'href', String(v));
     }
     get target() {
-      return this.getAttribute('target') || '';
+      return intrinsicGetAttribute.call(this, 'target') || '';
     }
     set target(v) {
-      this.setAttribute('target', String(v));
+      intrinsicSetAttribute.call(this, 'target', String(v));
     }
     get rel() {
-      return this.getAttribute('rel') || '';
+      return intrinsicGetAttribute.call(this, 'rel') || '';
     }
     set rel(v) {
-      this.setAttribute('rel', String(v));
+      intrinsicSetAttribute.call(this, 'rel', String(v));
     }
     get relList() {
       let list = anchorRelLists.get(this);
@@ -4434,6 +4497,12 @@
     }
   }
   class HTMLLinkElement extends HTMLElement {
+    get type() {
+      return intrinsicGetAttribute.call(this, 'type') || '';
+    }
+    set type(value) {
+      intrinsicSetAttribute.call(this, 'type', String(value));
+    }
     get onload() {
       return handlersFor(this).load || null;
     }
@@ -4447,44 +4516,44 @@
       handlersFor(this).error = typeof value === 'function' ? value : null;
     }
     get href() {
-      const value = this.getAttribute('href');
+      const value = intrinsicGetAttribute.call(this, 'href');
       return value === null ? '' : host.urlParts(value).href;
     }
     set href(value) {
-      this.setAttribute('href', String(value));
+      intrinsicSetAttribute.call(this, 'href', String(value));
     }
     get rel() {
-      return this.getAttribute('rel') || '';
+      return intrinsicGetAttribute.call(this, 'rel') || '';
     }
     set rel(value) {
-      this.setAttribute('rel', String(value));
+      intrinsicSetAttribute.call(this, 'rel', String(value));
     }
     get as() {
-      return this.getAttribute('as') || '';
+      return intrinsicGetAttribute.call(this, 'as') || '';
     }
     set as(value) {
-      this.setAttribute('as', String(value));
+      intrinsicSetAttribute.call(this, 'as', String(value));
     }
     get crossOrigin() {
-      return this.getAttribute('crossorigin');
+      return intrinsicGetAttribute.call(this, 'crossorigin');
     }
     set crossOrigin(value) {
-      if (value == null) this.removeAttribute('crossorigin');
-      else this.setAttribute('crossorigin', String(value));
+      if (value == null) intrinsicRemoveAttribute.call(this, 'crossorigin');
+      else intrinsicSetAttribute.call(this, 'crossorigin', String(value));
     }
   }
   class HTMLMetaElement extends HTMLElement {
     get httpEquiv() {
-      return this.getAttribute('http-equiv') || '';
+      return intrinsicGetAttribute.call(this, 'http-equiv') || '';
     }
     set httpEquiv(value) {
-      this.setAttribute('http-equiv', String(value));
+      intrinsicSetAttribute.call(this, 'http-equiv', String(value));
     }
     get content() {
-      return this.getAttribute('content') || '';
+      return intrinsicGetAttribute.call(this, 'content') || '';
     }
     set content(value) {
-      this.setAttribute('content', String(value));
+      intrinsicSetAttribute.call(this, 'content', String(value));
     }
   }
   const htmlElementInterfaces = {
@@ -7127,6 +7196,14 @@
     if (kind === 'window') return remoteWindow(result.frame);
     if (kind !== 'object' && kind !== 'function' && kind !== 'undetectable') return result;
     if (result.realm === bridgeRealmID) return host.frameResolve(result.handle, result.realm);
+    // A node owned by this document already has one wrapper in this realm.
+    // Borrowing a getter from another Window must not replace that identity.
+    if (
+      result.nodeId &&
+      host.nodeOwnerDocument(result.nodeId) === realmDocumentRootID &&
+      (result.nodeId === realmDocumentRootID || elementWrappers.has(String(result.nodeId)))
+    )
+      return wrap(result.nodeId);
     const key = id + ':' + String(result.realm || '') + ':' + result.handle;
     if (crossRealmCache.has(key)) return crossRealmCache.get(key);
     const iteratorFields = result.iteratorResult
@@ -7359,7 +7436,8 @@
       const data = host.nodeData(result.nodeId);
       if (data) {
         elementData.set(proxy, data);
-        elementWrappers.set(String(result.nodeId), proxy);
+        if (!elementWrappers.has(String(result.nodeId)))
+          elementWrappers.set(String(result.nodeId), proxy);
       }
     }
     referenceSet(proxy, {
@@ -7376,6 +7454,8 @@
       nativeName: result.nativeName,
     });
     crossRealmCache.set(key, proxy);
+    if (result.eventState)
+      eventSlots.set(proxy, unwrapCrossRealm(result.eventState.frame, result.eventState));
     if (result.document) {
       remoteDocumentCache.set(result.realm, proxy);
       if (result.nodeId) documentWrappers.set(result.nodeId, proxy);
@@ -7428,6 +7508,7 @@
     },
     nativeFunctionNameGet,
     (value) => functionSourceApply(engineFunctionToString, value, []),
+    (value) => bridgeApply(bridgeWeakGet, eventSlots, [value]) || null,
   );
   const postToFrame = (id, args) => {
     if (args.length === 0)
@@ -9300,11 +9381,11 @@
       if (!ctor || !ctor.prototype) return;
       Object.defineProperty(ctor.prototype, property, {
         get() {
-          const value = this.getAttribute(attribute);
+          const value = intrinsicGetAttribute.call(this, attribute);
           return value === null ? defaultValue : value;
         },
         set(value) {
-          this.setAttribute(attribute, String(value));
+          intrinsicSetAttribute.call(this, attribute, String(value));
         },
         enumerable: true,
         configurable: true,
@@ -9315,7 +9396,7 @@
     if (globalThis.HTMLInputElement && globalThis.HTMLInputElement.prototype)
       Object.defineProperty(globalThis.HTMLInputElement.prototype, 'type', {
         get() {
-          const value = (this.getAttribute('type') || 'text').toLowerCase();
+          const value = (intrinsicGetAttribute.call(this, 'type') || 'text').toLowerCase();
           return new Set([
             'hidden',
             'text',
@@ -9344,7 +9425,7 @@
             : 'text';
         },
         set(value) {
-          this.setAttribute('type', String(value));
+          intrinsicSetAttribute.call(this, 'type', String(value));
         },
         enumerable: true,
         configurable: true,

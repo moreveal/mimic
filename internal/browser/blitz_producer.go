@@ -190,7 +190,7 @@ func (owner *Realm) observeBlitz(id int64, kind, property string) (any, error) {
 func (r *Realm) blitzKey() string {
 	environment := r.agent.Page().environmentView()
 	w := environment.Window
-	return fmt.Sprintf("%s:%d:%d:%d:%d:%d:%d:%d:%s:%t:%g:%s", r.ID, r.document.Revision(), r.styleDocumentRevision(), r.styleResourceRevision.Load(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID, environment.Preferences.ColorScheme, environment.Preferences.ReducedMotion, environment.Display.DeviceScaleFactor, r.documentBaseURL())
+	return fmt.Sprintf("%s:%d:%d:%d:%d:%d:%d:%d:%d:%s:%t:%g:%s", r.ID, r.document.Revision(), r.document.ObservationRevision(), r.styleDocumentRevision(), r.styleResourceRevision.Load(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID, environment.Preferences.ColorScheme, environment.Preferences.ReducedMotion, environment.Display.DeviceScaleFactor, r.documentBaseURL())
 }
 
 func (r *Realm) prepareBlitz() (resultErr error) {

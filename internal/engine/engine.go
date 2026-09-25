@@ -39,6 +39,12 @@ type ThrownValue interface {
 	ThrownValue() Value
 }
 
+// ScriptOriginRuntime compiles parser scripts at their document source
+// coordinates. Ordinary eval and dynamically inserted scripts use zero offsets.
+type ScriptOriginRuntime interface {
+	EvalWithOrigin(context.Context, string, string, int32, int32) (Value, error)
+}
+
 type Function func(this Value, args []Value) (Value, error)
 
 type Promise struct {

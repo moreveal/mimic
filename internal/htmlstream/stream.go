@@ -40,6 +40,17 @@ type Stream struct {
 	writes, scripts                         int
 	pausedScript                            int64
 	queued                                  string
+	line, column                            int
+	previousCR                              bool
+	scriptPositions                         map[int64]ScriptPosition
+}
+
+// ScriptPosition is the location of an inline script's first source unit.
+type ScriptPosition struct{ Line, Column int }
+
+func (s *Stream) ScriptPosition(id int64) (ScriptPosition, bool) {
+	position, ok := s.scriptPositions[id]
+	return position, ok
 }
 
 type streamReader struct {
@@ -50,7 +61,7 @@ type streamReader struct {
 }
 
 func New(backend Backend, root int64) *Stream {
-	s := &Stream{events: make(chan streamEvent), input: make(chan streamInput), abort: make(chan struct{}), stopped: make(chan struct{})}
+	s := &Stream{events: make(chan streamEvent), input: make(chan streamInput), abort: make(chan struct{}), stopped: make(chan struct{}), line: 1, column: 1, scriptPositions: make(map[int64]ScriptPosition)}
 	tree := &tree{backend: backend, handles: map[int64]*Node{}}
 	p := &parser{tree: tree, doc: tree.node(root), scripting: true, framesetOK: true, im: initialIM}
 	reader := &streamReader{stream: s}
@@ -173,6 +184,23 @@ func (s *Stream) parse(p *parser, reader *streamReader) {
 		kind := p.tokenizer.Next()
 		reader.partial = nil
 		p.tok = p.tokenizer.Token()
+		for _, character := range string(p.tokenizer.Raw()) {
+			if character == '\n' && s.previousCR {
+				s.previousCR = false
+				continue
+			}
+			if character == '\n' || character == '\r' {
+				s.line++
+				s.column = 1
+				s.previousCR = character == '\r'
+			} else if character > 0xffff {
+				s.column += 2
+				s.previousCR = false
+			} else {
+				s.column++
+				s.previousCR = false
+			}
+		}
 		if kind == ErrorToken {
 			if err := p.tokenizer.Err(); err != nil && err != io.EOF {
 				s.emit(streamEvent{done: true, err: err})
@@ -196,6 +224,11 @@ func (s *Stream) parse(p *parser, reader *streamReader) {
 			}
 		}
 		p.parseCurrentToken()
+		if kind == StartTagToken && p.tok.DataAtom == atom.Script {
+			if node := p.oe.top(); node != nil && node.DataAtom() == atom.Script && node.Namespace() == "" {
+				s.scriptPositions[node.id] = ScriptPosition{Line: s.line, Column: s.column}
+			}
+		}
 		if kind == ErrorToken {
 			s.emit(streamEvent{done: true})
 			return

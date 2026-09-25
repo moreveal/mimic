@@ -479,6 +479,11 @@
   };
   member(EventTarget.prototype, 'dispatchEvent', function (event) {
     const target = this == null ? window : this;
+    const reference = referenceGet(target);
+    if (reference?.nodeId && host.nodeOwnerDocument(reference.nodeId) !== realmDocumentRootID) {
+      const owner = target.ownerDocument || target;
+      return owner.defaultView.EventTarget.prototype.dispatchEvent.call(target, event);
+    }
     const allowed = dispatchEventCore(target, event, false);
     const slot = elementSlot(target);
     if (slot?.nodeId) {

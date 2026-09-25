@@ -173,6 +173,19 @@ const cssComputedShorthand = (element, name) => {
 };
 const cssComputedValue = (element, name) => {
   const native = blitzStyleValue(element, name);
+  if (
+    name === 'font-size' &&
+    native !== null &&
+    native.includes('.') &&
+    host.isConnected(elementSlot(element)?.nodeId || 0) &&
+    host.nodeOwnerDocument(elementSlot(element).nodeId) === realmDocumentRootID &&
+    /(?:rem|v(?:w|h|min|max|i|b))\b/i.test(
+      computedCSSDeclarations(element).find((entry) => entry.name === 'font-size')?.value || '',
+    )
+  ) {
+    const size = cssComputedFontSize(element);
+    if (size !== null) return cssSerializeNumber(size) + 'px';
+  }
   if (native !== null) return native;
   if (styleObservationIsolated) {
     return withStyleReadCache(() => {

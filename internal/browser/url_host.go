@@ -16,7 +16,16 @@ func resolveURL(base *url.URL, raw string) (*url.URL, error) {
 	if !reference.IsAbs() && base.Opaque != "" && !strings.HasPrefix(raw, "#") {
 		return nil, fmt.Errorf("cannot resolve a relative URL against an opaque base")
 	}
-	return base.ResolveReference(reference), nil
+	return normalizedSpecialURL(base.ResolveReference(reference)), nil
+}
+
+// WHATWG special URLs with an authority serialize an empty path as "/".
+// Keep that path on the URL value so every reflection and setter agrees.
+func normalizedSpecialURL(u *url.URL) *url.URL {
+	if u != nil && (u.Scheme == "http" || u.Scheme == "https") && u.Host != "" && u.Path == "" {
+		u.Path = "/"
+	}
+	return u
 }
 
 func installURLHost(host map[string]any, runtime engine.Runtime, baseURL func() *url.URL) {
@@ -52,6 +61,7 @@ func installURLHost(host map[string]any, runtime engine.Runtime, baseURL func() 
 		if err != nil {
 			return nil, err
 		}
+		u = normalizedSpecialURL(u)
 		search, hash := "", ""
 		if u.RawQuery != "" {
 			search = "?" + u.RawQuery
@@ -99,6 +109,6 @@ func installURLHost(host map[string]any, runtime engine.Runtime, baseURL func() 
 		case "hash":
 			u.Fragment = strings.TrimPrefix(value, "#")
 		}
-		return runtime.Value(u.String()), nil
+		return runtime.Value(normalizedSpecialURL(u).String()), nil
 	})
 }

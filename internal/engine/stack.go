@@ -13,6 +13,12 @@ type ExceptionInspector interface {
 	DescribeException(Value) (ExceptionDetails, bool)
 }
 
+// ExceptionLocation preserves V8's own source location after an uncaught
+// evaluation. It does not inspect the script-visible Error.stack property.
+type ExceptionLocation interface {
+	SourceLocation() (ExceptionDetails, []NativeStackFrame)
+}
+
 // NativeStackFrame is diagnostic data copied from the engine, without reading
 // application Error.stack or invoking application formatting hooks.
 type NativeStackFrame struct {

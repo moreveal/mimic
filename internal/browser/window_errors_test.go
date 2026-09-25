@@ -80,6 +80,29 @@ func TestWindowTimerErrorReportingAndCancellation(t *testing.T) {
 	})
 }
 
+func TestParserScriptErrorDispatchesOnce(t *testing.T) {
+	serialBrowserTest(t)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		fmt.Fprint(w, `<!doctype html><script>globalThis.parserErrors=[];addEventListener('error',event=>parserErrors.push(event.message))</script><script>throw new Error('parser-probe')</script>`)
+	}))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		if err := page.Navigate(context.Background(), server.URL); err != nil {
+			t.Fatal(err)
+		}
+		historyEval(t, page, `JSON.stringify(parserErrors)`, `["Uncaught Error: parser-probe"]`)
+		var count int
+		for _, event := range page.Trace().Events() {
+			if event.Kind == trace.Exception {
+				count++
+			}
+		}
+		if count != 1 {
+			t.Fatalf("parser script produced %d uncaught exception records, want one", count)
+		}
+	})
+}
+
 func TestWindowIntervalContinuesAfterErrorAndKeepsCancelableID(t *testing.T) {
 	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {

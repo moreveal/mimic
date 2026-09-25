@@ -34,6 +34,7 @@ func (d *Document) NewStream() (*Stream, error) {
 	root.Children = nil
 	d.title = ""
 	d.source = ""
+	d.scriptPositions = nil
 	id := d.root
 	d.mu.Unlock()
 	s := &Stream{document: d}
@@ -42,6 +43,14 @@ func (d *Document) NewStream() (*Stream, error) {
 }
 func (s *Stream) callback(onScript func(Node) error) func(int64) error {
 	return func(id int64) error {
+		if position, ok := s.parser.ScriptPosition(id); ok {
+			s.document.mu.Lock()
+			if s.document.scriptPositions == nil {
+				s.document.scriptPositions = make(map[int64]htmlstream.ScriptPosition)
+			}
+			s.document.scriptPositions[id] = position
+			s.document.mu.Unlock()
+		}
 		node, ok := s.document.Get(id)
 		if !ok {
 			return fmt.Errorf("stream script %d missing", id)

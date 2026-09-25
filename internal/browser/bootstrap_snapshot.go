@@ -441,6 +441,8 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.frameValueRetain = nil
 	r.frameValueEncoderJSON = false
 	r.frameNodeDescribe = nil
+	r.frameEventDescribe = nil
+	r.windowErrorReporter = nil
 	r.inputDispatcher = nil
 	r.permissionNotifier = nil
 	r.trustedTypesEnforcer = nil

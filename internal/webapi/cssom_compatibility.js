@@ -747,11 +747,31 @@ bootstrapRestoreHooks.push(() => {
   blitzControlMembership = [];
 });
 const readBlitzInputs = () => {
-  if (shadowHosts.size) return JSON.stringify({ unsupported: 'shadow/slot adapter pending' });
   if (document.compatMode === 'BackCompat')
     return JSON.stringify({ unsupported: 'quirks mode adapter pending' });
   if (styleObservationDynamic)
     return JSON.stringify({ unsupported: 'animation lifecycle adapter pending' });
+  // A composed shadow tree can change the host's flow box and the positions
+  // of following siblings. Only a zero-sized host with no light children is
+  // independent of native light-tree flow; all other cases retain the
+  // composed-tree layout path for the whole document.
+  if (shadowHosts.size) {
+    for (const shadowHost of shadowHosts) {
+      const slot = elementSlot(shadowHost);
+      if (!slot || !host.isConnected(slot.nodeId)) continue;
+      if (cssObservationChildren(shadowHost).length)
+        return JSON.stringify({ unsupported: 'shadow host changes document flow' });
+      let box;
+      blitzShadowAdmissionDepth++;
+      try {
+        box = cssBoxModel.rect(shadowHost);
+      } finally {
+        blitzShadowAdmissionDepth--;
+      }
+      if (box.width || box.height)
+        return JSON.stringify({ unsupported: 'shadow host changes document flow' });
+    }
+  }
   const inputs = constructedStyleSheets.nativeSources(document);
   const membershipRevision = host.domRevision();
   if (blitzControlMembershipRevision !== membershipRevision) {
