@@ -79,6 +79,47 @@ console.log(await page.locator("h1").innerText());
 await browser.close();
 ```
 
+### Advanced example: 100 separate identities
+
+The [runnable profile example](examples/profile-contexts.mjs) processes 100 URLs
+through separate Contexts. Each job gets a deterministic generated profile and
+can use its own proxy; it closes its Context as soon as extraction finishes.
+Eight live Pages is the default. Set `CONCURRENCY=100 HOLD_ALL_LIVE=1` to hold all
+100 Pages simultaneously until every extraction finishes; this requires much
+more RAM.
+
+```javascript
+// Inside a CDP browser connection; see examples/profile-contexts.mjs for the
+// complete connection, navigation, extraction and error-handling code.
+const jobs = Array.from({ length: 100 }, (_, index) => ({
+  seed: `account-${index}`,
+  proxy: proxies[index], // { server: "socks5://host:1080", username, password }
+}));
+let next = 0;
+await Promise.all(Array.from({ length: 8 }, async () => {
+  while (next < jobs.length) {
+    const job = jobs[next++];
+    const { browserContextId, profileId } = await cdp.send("Mimic.createContext", {
+      profile: { generate: { browser: "chrome", version: 152, platform: "windows", seed: job.seed } },
+      proxy: job.proxy,
+      disposeOnDetach: true,
+    });
+    try {
+      await scrapeInContext(cdp, browserContextId, profileId);
+    } finally {
+      await cdp.send("Target.disposeBrowserContext", { browserContextId });
+    }
+  }
+}));
+```
+
+Provide one proxy per job if every route must differ. `profile` is an opaque,
+portable token that can be saved and reused; manual settings require explicit
+`Mimic.importProfile` with `mode: "manual"`. See the
+[profile contract and limits](docs/environment-profiles.md). GPU and fonts remain
+the installed measured recipe, so unique seeds do not imply unique GPU or font
+observations.
+
 See the [runnable examples](examples/README.md),
 [supported CDP surface](docs/cdp-compatibility.md), and
 [snapshot/capture guide](docs/getting-started.md).

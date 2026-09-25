@@ -12,15 +12,14 @@ import (
 	"sync/atomic"
 )
 
-// ResourcePolicy is an opt-in, versioned Context contract. Nil policy preserves
+// ResourcePolicy is an opt-in Context contract for the current Mimic release. Nil policy preserves
 // the ordinary loader path. Rules are evaluated in order, with the first match
 // winning; an omitted work field retains the ordinary behavior.
 type ResourcePolicy struct {
-	SchemaVersion int             `json:"schemaVersion"`
-	ReportOnly    bool            `json:"reportOnly,omitempty"`
-	Presets       []string        `json:"presets,omitempty"`
-	Rules         []ResourceRule  `json:"rules,omitempty"`
-	Budgets       ResourceBudgets `json:"budgets,omitempty"`
+	ReportOnly bool            `json:"reportOnly,omitempty"`
+	Presets    []string        `json:"presets,omitempty"`
+	Rules      []ResourceRule  `json:"rules,omitempty"`
+	Budgets    ResourceBudgets `json:"budgets,omitempty"`
 }
 
 type ResourceRule struct {
@@ -139,9 +138,6 @@ func ParseResourcePolicy(raw []byte) (ResourcePolicy, error) {
 }
 
 func (p ResourcePolicy) Validate() error {
-	if p.SchemaVersion != 1 {
-		return fmt.Errorf("resource policy schemaVersion must be 1")
-	}
 	presetSeen := map[string]bool{}
 	for _, preset := range p.Presets {
 		if presetSeen[preset] {
@@ -220,11 +216,10 @@ func ResourcePolicySchema() map[string]any {
 	stringsField := map[string]any{"type": "array", "items": map[string]any{"type": "string"}}
 	return map[string]any{
 		"$schema": "https://json-schema.org/draft/2020-12/schema",
-		"type":    "object", "additionalProperties": false, "required": []string{"schemaVersion"},
+		"type":    "object", "additionalProperties": false,
 		"properties": map[string]any{
-			"schemaVersion": map[string]any{"const": 1},
-			"reportOnly":    boolField,
-			"presets":       map[string]any{"type": "array", "uniqueItems": true, "items": map[string]any{"enum": []string{"noVisualAssets", "headersOnly", "dataExtraction", "noSpeculativeLoads"}}},
+			"reportOnly": boolField,
+			"presets":    map[string]any{"type": "array", "uniqueItems": true, "items": map[string]any{"enum": []string{"noVisualAssets", "headersOnly", "dataExtraction", "noSpeculativeLoads"}}},
 			"rules": map[string]any{"type": "array", "items": map[string]any{"type": "object", "additionalProperties": false, "required": []string{"id"}, "properties": map[string]any{
 				"id":    map[string]any{"type": "string", "minLength": 1},
 				"match": map[string]any{"type": "object", "additionalProperties": false, "properties": map[string]any{"kinds": stringsField, "hosts": stringsField, "origins": stringsField, "urlGlob": map[string]any{"type": "string"}, "owners": stringsField, "mechanisms": stringsField, "topLevelSite": map[string]any{"type": "string"}}},

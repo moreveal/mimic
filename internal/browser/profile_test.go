@@ -64,17 +64,21 @@ func TestProfileInheritanceWorkersAndSnapshots(t *testing.T) {
 	}
 }
 
-func TestDefaultProfileAndConcurrentContextOwnership(t *testing.T) {
+func TestInternalProfileAndConcurrentContextOwnership(t *testing.T) {
 	serialBrowserTest(t)
 	raw := []byte(`{"schemaVersion":1,"baseProfile":"chrome-152-windows-x64-headful-controlled-v1","hardware":{"logicalProcessors":3}}`)
-	b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{ProfileJSON: raw})
+	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
 	}
 	done := make(chan error, 2)
 	for i := 0; i < 2; i++ {
 		go func() {
-			c := b.NewContext()
+			c, err := b.NewContextWithProfile(raw)
+			if err != nil {
+				done <- err
+				return
+			}
 			defer c.Close()
 			p, err := c.NewPage()
 			if err == nil {

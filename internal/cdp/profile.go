@@ -3,23 +3,18 @@ package cdp
 import (
 	"encoding/json"
 
-	"github.com/moreveal/mimic/internal/browser"
-	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/profile"
 )
 
 // Custom commands have their own strict envelope. They do not modify the frozen
 // Chrome schema and never acquire the connection's incidental control Page.
 func (s *session) handleProfile(m message) (any, bool, error) {
+	if result, handled, err := s.handlePortableProfile(m); handled {
+		return result, true, err
+	}
 	allowed := map[string]string{}
 	switch m.Method {
 	case "Mimic.getProfileSchema":
-	case "Mimic.validateProfile":
-		allowed["profile"] = "object"
-	case "Mimic.createContext":
-		allowed["profile"] = "object"
-		allowed["resourcePolicy"] = "object"
-		allowed["disposeOnDetach"] = "boolean"
 	case "Mimic.getProfile":
 		allowed["browserContextId"] = "string"
 		allowed["targetId"] = "string"
@@ -64,47 +59,7 @@ func (s *session) handleProfile(m message) (any, bool, error) {
 	b := s.server.Browser
 	if m.Method == "Mimic.getProfileSchema" {
 		base := b.Environment()
-		return map[string]any{"schema": profile.Schema(base), "baseProfiles": []string{base.ProfileID}, "limitations": profile.Limitations()}, true, nil
-	}
-	if m.Method == "Mimic.validateProfile" || m.Method == "Mimic.createContext" {
-		value, ok := params["profile"]
-		if !ok && m.Method == "Mimic.validateProfile" {
-			return bad("profile", "required")
-		}
-		raw, _ := json.Marshal(value)
-		if m.Method == "Mimic.validateProfile" {
-			d, err := b.ValidateProfile(raw)
-			if err != nil {
-				return nil, true, err
-			}
-			return map[string]any{"profile": d.Public(), "diagnostics": profile.Limitations()}, true, nil
-		}
-		var c *browser.Context
-		if ok {
-			c, err = b.NewContextWithProfile(raw)
-			if err != nil {
-				return nil, true, err
-			}
-		} else {
-			c = b.NewContext()
-		}
-		if input, exists := params["resourcePolicy"]; exists {
-			encoded, _ := json.Marshal(input)
-			policy, policyErr := network.ParseResourcePolicy(encoded)
-			if policyErr != nil {
-				_ = c.Close()
-				return nil, true, policyErr
-			}
-			if _, policyErr = c.UpdateResourcePolicy(policy); policyErr != nil {
-				_ = c.Close()
-				return nil, true, policyErr
-			}
-		}
-		dispose, _ := params["disposeOnDetach"].(bool)
-		s.transport.mu.Lock()
-		s.transport.contexts[c.ID] = dispose
-		s.transport.mu.Unlock()
-		return map[string]any{"browserContextId": c.ID}, true, nil
+		return map[string]any{"schema": profile.ManualSchema(base), "baseProfiles": []string{base.ProfileID}, "limitations": profile.Limitations()}, true, nil
 	}
 	target, _ := params["targetId"].(string)
 	contextID, _ := params["browserContextId"].(string)

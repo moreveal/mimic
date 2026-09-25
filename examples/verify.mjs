@@ -15,22 +15,18 @@ let runtime;
 let exited;
 let log = '';
 try {
-  runtime = spawn(
-    resolve(binary),
-    ['--listen', '127.0.0.1:0', '--profile', resolve(here, 'profile.json')],
-    {
-      cwd: cache,
-      env: {
-        ...process.env,
-        XDG_CACHE_HOME: cache,
-        LOCALAPPDATA: cache,
-        GOV8_SHIM_LIBRARY: '',
-        GOV8_SHIM_DLL: '',
-      },
-      windowsHide: true,
-      stdio: ['ignore', 'pipe', 'pipe'],
+  runtime = spawn(resolve(binary), ['--listen', '127.0.0.1:0'], {
+    cwd: cache,
+    env: {
+      ...process.env,
+      XDG_CACHE_HOME: cache,
+      LOCALAPPDATA: cache,
+      GOV8_SHIM_LIBRARY: '',
+      GOV8_SHIM_DLL: '',
     },
-  );
+    windowsHide: true,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
   exited = once(runtime, 'exit');
   const endpoint = await new Promise((resolveReady, reject) => {
     const timer = setTimeout(() => reject(new Error(`Startup timeout: ${log}`)), 30000);
@@ -54,7 +50,12 @@ try {
       }
     });
   });
-  for (const example of ['puppeteer.mjs', 'playwright.mjs', 'concurrency.mjs']) {
+  for (const example of [
+    'puppeteer.mjs',
+    'playwright.mjs',
+    'concurrency.mjs',
+    'profile-contexts.mjs',
+  ]) {
     const child = spawn(process.execPath, [resolve(here, example)], {
       env: { ...process.env, MIMIC_URL: endpoint, TARGET_URL: fixture.url },
       windowsHide: true,

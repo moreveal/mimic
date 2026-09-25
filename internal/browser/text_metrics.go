@@ -91,7 +91,10 @@ func (p *Page) textMetricsEngine() *textmetrics.Engine {
 // SetGenericFontFamilies applies Page-level generic-family overrides. CDP
 // clients issue this while creating a target, before its first document realm
 // can observe or cache text metrics.
-func (p *Page) SetGenericFontFamilies(serif, sansSerif, monospace string) {
+func (p *Page) SetGenericFontFamilies(serif, sansSerif, monospace string) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	p.mu.Lock()
 	if serif != "" {
 		p.env.Fonts.Serif = serif
@@ -108,6 +111,7 @@ func (p *Page) SetGenericFontFamilies(serif, sansSerif, monospace string) {
 	if metrics != nil {
 		_ = metrics.Close()
 	}
+	return nil
 }
 
 func (r *Realm) installTextMetrics(host map[string]any) {

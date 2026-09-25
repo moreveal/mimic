@@ -187,8 +187,10 @@ func (b *Browser) ConfigureBootstrapCache(dir string) error {
 // PrepareBootstrap ensures the default profile's immutable startup artifact is
 // available. Callers may run it after opening a protocol listener.
 func (b *Browser) PrepareBootstrap(ctx context.Context, dir string) error {
-	if err := b.ConfigureBootstrapCache(dir); err != nil {
-		return err
+	if dir != "" {
+		if err := b.ConfigureBootstrapCache(dir); err != nil {
+			return err
+		}
 	}
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		return nil
@@ -204,12 +206,13 @@ func (b *Browser) PrepareBootstrap(ctx context.Context, dir string) error {
 			_ = c.ClosePage(p.ID)
 			return err
 		}
+		key := p.Top.Realm.bootstrapSource().key
 		if !c.ClosePage(p.ID) {
 			return errors.New("close bootstrap preparation page")
 		}
 		// A disk hit is admitted while constructing the first realm. Only a cold
 		// cache needs the second realm which turns the captured seed into a blob.
-		if b.bootstrapSnapshots.hasSnapshot() {
+		if b.bootstrapSnapshots.hasSnapshotKey(key) {
 			return nil
 		}
 	}

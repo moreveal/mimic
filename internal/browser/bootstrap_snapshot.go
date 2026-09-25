@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
+	"unsafe"
 
 	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/engine"
@@ -93,15 +94,11 @@ type bootstrapSnapshotCache struct {
 	disk      *bootstrapDiskStore
 }
 
-func (c *bootstrapSnapshotCache) hasSnapshot() bool {
+func (c *bootstrapSnapshotCache) hasSnapshotKey(key [32]byte) bool {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	for _, entry := range c.entries {
-		if entry.snapshot != nil {
-			return true
-		}
-	}
-	return false
+	entry := c.entries[key]
+	return entry != nil && entry.snapshot != nil
 }
 
 func (r *Realm) bootstrapSource() *bootstrapSource {
@@ -140,20 +137,23 @@ func (r *Realm) bootstrapSource() *bootstrapSource {
 	if r.agent.Page().ctx.browser.devPreview {
 		plan.source = webapi.WithDevPreview(plan.source)
 	}
-	// Context profile values select an artifact because they can affect the
-	// bootstrap graph. The wall origin is Page runtime state, supplied by host
-	// callbacks after restore; including it would give every process a unique
-	// disk key for an otherwise identical bootstrap graph.
+	// Only exposure-shaping inputs select an artifact. Window, device, locale,
+	// graphics, font and audio observations are supplied by the consumer's host
+	// callbacks after restoration. Including their values here makes each
+	// generated identity build and retain another copy of the same JS graph.
 	profileEnvironment := r.agent.Page().ctx.env
-	profileEnvironment.Time.WallOrigin = time.Time{}
 	profile, _ := json.Marshal(struct {
-		Environment                                          state.Environment
+		Presentation                                         state.Presentation
+		Features                                             map[string]bool
 		Secure, Isolated, Credentialless, OriginAgentCluster bool
 		DevPreview                                           bool
-	}{profileEnvironment, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
+	}{profileEnvironment.Presentation, profileEnvironment.Features, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
 	hash := sha256.New()
 	for _, part := range []string{plan.source, plan.exposureJSON, plan.catalogJSON, string(profile)} {
-		hash.Write([]byte(part))
+		// Bootstrap source is multi-megabyte immutable text. Converting it to
+		// []byte here copied the entire source for every Page (about 300 MiB
+		// for 100 Pages). SHA-256 reads the slice synchronously and never mutates it.
+		hash.Write(unsafe.Slice(unsafe.StringData(part), len(part)))
 		hash.Write([]byte{0})
 	}
 	copy(plan.key[:], hash.Sum(nil))
@@ -172,6 +172,11 @@ func (r *Realm) newRuntime() (engine.Runtime, error) {
 		return c.browser.factory.New(), nil
 	}
 	plan := r.bootstrapSource()
+	if c.profileLocked {
+		if err := c.browser.prepareProfileBootstrap(plan.key, r.securityState()); err != nil {
+			p.trace.Add(trace.Error, "profileBootstrapPreparationFailed", map[string]any{"error": err.Error()})
+		}
+	}
 	snapshot, capture, issue := c.browser.bootstrapSnapshots.selectEntry(c.browser.lifetime, factory, plan.key)
 	r.bootstrapCapture = capture
 	if issue != nil {

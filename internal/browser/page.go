@@ -163,7 +163,7 @@ func (p *Page) schedulePreviewPublish() {
 }
 
 func newPage(c *Context) (*Page, error) {
-	environment := c.env.Clone()
+	environment := c.env.Fork()
 	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}, pageFocused: true}
 	p.eventLoopWake = make(chan struct{}, 1)
 	p.loader = network.NewLoaderWithSession(func() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }, c.cookies, c.network, p.trace)
@@ -386,6 +386,9 @@ func (p *Page) viewportObservationChange(before bool) {
 }
 
 func (p *Page) SetViewport(width, height int) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	p.viewportObservationChange(true)
 	defer p.viewportObservationChange(false)
 	p.mu.Lock()

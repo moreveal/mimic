@@ -30,7 +30,7 @@ func (e *Error) Error() string     { return e.Path + ": " + e.Reason + ": " + e.
 func (e *Error) ProtocolCode() int { return -32602 }
 func (e *Error) ProtocolData() any { return e }
 func Limitations() []string {
-	return []string{"Custom timezone/Intl locale requires the native Intl backend. Custom font resources and unvalidated graphics/device/media backends are unavailable; unchanged baseline values are accepted.", "Graphics observations remain bounded approximations, not arbitrary GPU or Chrome pixel equivalence.", "Proxy routes resource-loader HTTP(S) traffic only; ICE metadata does not route WebRTC or change the public IP.", "Changing identity does not change the installed Chrome implementation; proxy transport disables HTTP/3."}
+	return []string{"Custom timezone/Intl locale requires the native Intl backend. Generated graphics and fonts use the installed captured recipe; unvalidated custom graphics/font/media backends are unavailable.", "Audio output supports modeled 44.1/48 kHz stereo recipes. Graphics observations remain bounded approximations, not arbitrary GPU or Chrome pixel equivalence.", "Proxy routes resource-loader HTTP(S) traffic only; ICE metadata does not route WebRTC or change the public IP.", "Changing identity does not change the installed Chrome implementation; proxy transport disables HTTP/3."}
 }
 func failure(path, reason, message string) error { return &Error{path, reason, message} }
 
@@ -49,6 +49,14 @@ func (p Proxy) URL() string {
 		u.User = url.UserPassword(p.Username, p.Password)
 	}
 	return u.String()
+}
+
+func ParseProxy(raw []byte) (Proxy, error) {
+	var p Proxy
+	if err := strictObject(raw, &p, "server", "username", "password"); err != nil {
+		return Proxy{}, err
+	}
+	return p, nil
 }
 
 type Identity struct {
@@ -80,6 +88,7 @@ type Document struct {
 	Hardware      state.Hardware
 	Locale        state.Locale
 	Graphics      state.Graphics
+	Audio         state.Audio
 	Fonts         state.Fonts
 	Preferences   state.Preferences
 	Network       Network
@@ -145,6 +154,44 @@ func (d Document) Public() map[string]any {
 	return m
 }
 
+// Imported JSON and the installed bundle may represent the same empty
+// collection as []/{} and nil. Canonicalize once so typed profile hashes agree
+// across generated and manual modes without reflecting each field into a map.
+func canonicalizeEmptyCollections(v reflect.Value) {
+	switch v.Kind() {
+	case reflect.Pointer:
+		if !v.IsNil() {
+			canonicalizeEmptyCollections(v.Elem())
+		}
+	case reflect.Struct:
+		for i := 0; i < v.NumField(); i++ {
+			if field := v.Field(i); field.CanSet() {
+				canonicalizeEmptyCollections(field)
+			}
+		}
+	case reflect.Slice:
+		if v.Len() == 0 {
+			v.SetZero()
+			return
+		}
+		for i := 0; i < v.Len(); i++ {
+			canonicalizeEmptyCollections(v.Index(i))
+		}
+	case reflect.Map:
+		if v.Len() == 0 {
+			v.SetZero()
+			return
+		}
+		iter := v.MapRange()
+		for iter.Next() {
+			value := reflect.New(v.Type().Elem()).Elem()
+			value.Set(iter.Value())
+			canonicalizeEmptyCollections(value)
+			v.SetMapIndex(iter.Key(), value)
+		}
+	}
+}
+
 func FromEnvironment(e state.Environment, base string, proxy Proxy) Document {
 	e = e.Clone()
 	s := e.Screen()
@@ -157,15 +204,32 @@ func FromEnvironment(e state.Environment, base string, proxy Proxy) Document {
 	if e.ScreenOrientation != nil {
 		orientation = *e.ScreenOrientation
 	}
-	return Document{1, base, Identity{n.UserAgent, n.Platform, metadata}, Display{s.Width, s.Height, s.AvailWidth, s.AvailHeight, e.Display.DeviceScaleFactor, e.Display.ColorDepth, orientation}, e.Window, e.Hardware, e.Locale, e.Graphics, e.Fonts, e.Preferences, Network{e.Network.SaveData, e.Network.Online, e.Network.EffectiveType, e.Network.DownlinkMbps, e.Network.RTTMillis, e.Network.CookiesEnabled, e.Network.WireProfile, e.Network.ICE, proxy}, e.Permissions, e.Capabilities, e.Features, Timing{e.Time.ExecutionScale, e.Time.NavigationScale, e.Time.NetworkScale}}
+	d := Document{1, base, Identity{n.UserAgent, n.Platform, metadata}, Display{s.Width, s.Height, s.AvailWidth, s.AvailHeight, e.Display.DeviceScaleFactor, e.Display.ColorDepth, orientation}, e.Window, e.Hardware, e.Locale, e.Graphics, e.Audio, e.Fonts, e.Preferences, Network{e.Network.SaveData, e.Network.Online, e.Network.EffectiveType, e.Network.DownlinkMbps, e.Network.RTTMillis, e.Network.CookiesEnabled, e.Network.WireProfile, e.Network.ICE, proxy}, e.Permissions, e.Capabilities, e.Features, Timing{e.Time.ExecutionScale, e.Time.NavigationScale, e.Time.NetworkScale}}
+	canonicalizeEmptyCollections(reflect.ValueOf(&d).Elem())
+	return d
 }
 
-// Apply constructs a private environment while preserving the bundle's semantic
-// version and live clocks. All external inputs pass Normalize first.
+func (d Document) fingerprintID() string {
+	identity := d
+	// Proxy routing belongs to Context transport ownership, not the observable
+	// environment or its bootstrap cache key. Credentials never enter this hash.
+	identity.Network.Proxy = Proxy{}
+	encoded, _ := json.Marshal(identity)
+	return fmt.Sprintf("%x", sha256.Sum256(encoded))
+}
+
+// Apply constructs an independent environment while preserving the bundle's
+// semantic version and live clocks. All external inputs pass Normalize first.
 func (d Document) Apply(base state.Environment) state.Environment {
-	e := base.Clone()
-	encoded, _ := json.Marshal(d.Public())
-	e.ProfileID = fmt.Sprintf("mimic-profile-v1-%x", sha256.Sum256(encoded))
+	return d.ApplyOwned(base).Clone()
+}
+
+// ApplyOwned transfers the already-normalized Document's nested values to the
+// result. Browser construction uses it when no caller retains or mutates d;
+// public environment getters still return defensive clones.
+func (d Document) ApplyOwned(base state.Environment) state.Environment {
+	e := base
+	e.ProfileID = "mimic-profile-" + d.fingerprintID()
 	e.UserAgentOverride = &state.UserAgentOverride{UserAgent: d.Identity.UserAgent, Platform: d.Identity.Platform, Metadata: &d.Identity.Metadata}
 	e.Display = state.Display{PhysicalWidth: int(math.Round(float64(d.Display.Width) * d.Display.DeviceScaleFactor)), PhysicalHeight: int(math.Round(float64(d.Display.Height) * d.Display.DeviceScaleFactor)), AvailableWidth: int(math.Round(float64(d.Display.AvailableWidth) * d.Display.DeviceScaleFactor)), AvailableHeight: int(math.Round(float64(d.Display.AvailableHeight) * d.Display.DeviceScaleFactor)), DeviceScaleFactor: d.Display.DeviceScaleFactor, ColorDepth: d.Display.ColorDepth}
 	e.ScreenOrientation = &d.Display.Orientation
@@ -173,6 +237,7 @@ func (d Document) Apply(base state.Environment) state.Environment {
 	e.Hardware = d.Hardware
 	e.Locale = d.Locale
 	e.Graphics = d.Graphics
+	e.Audio = d.Audio
 	e.Fonts = d.Fonts
 	e.Preferences = d.Preferences
 	e.Permissions = d.Permissions
@@ -182,7 +247,7 @@ func (d Document) Apply(base state.Environment) state.Environment {
 	e.Time.ExecutionScale = d.Timing.ExecutionScale
 	e.Time.NavigationScale = d.Timing.NavigationScale
 	e.Time.NetworkScale = d.Timing.NetworkScale
-	return e.Clone()
+	return e
 }
 
 func Decode(raw []byte) (map[string]any, error) {
@@ -339,6 +404,7 @@ func Normalize(raw []byte, base state.Environment, current *Document) (Document,
 	if err = json.Unmarshal(encoded, &d); err != nil {
 		return d, failure("$", "invalidValue", "value exceeds supported range")
 	}
+	canonicalizeEmptyCollections(reflect.ValueOf(&d).Elem())
 	validation := d
 	if patch {
 		// Standard CDP deliberately permits identities/geometries outside the
@@ -357,6 +423,9 @@ func Normalize(raw []byte, base state.Environment, current *Document) (Document,
 	return d, nil
 }
 func (d Document) Validate(base state.Environment) error {
+	if d.SchemaVersion != 1 || d.BaseProfile != base.ProfileID {
+		return failure("baseProfile", "unsupported", "profile must use the installed Mimic contract and base profile")
+	}
 	if d.Locale.Timezone == "" || d.Locale.Timezone == "Local" {
 		return failure("locale.timezone", "invalidValue", "expected an explicit IANA time zone")
 	}
@@ -410,6 +479,12 @@ func (d Document) Validate(base state.Environment) error {
 	if d.Graphics.MaxTextureSize < 1 || d.Graphics.MaxTextureSize > 65536 || d.Graphics.MaxTextureSize&(d.Graphics.MaxTextureSize-1) != 0 {
 		return failure("graphics.maxTextureSize", "invalidValue", "expected a power of two up to 65536")
 	}
+	if d.Audio.SampleRate != 44100 && d.Audio.SampleRate != 48000 {
+		return failure("audio.sampleRate", "unsupported", "supported output-device sample rates are 44100 and 48000 Hz")
+	}
+	if d.Audio.Channels != 2 || d.Audio.BufferDuration != 0.01 || d.Audio.MaxBufferFrames != 7680 {
+		return failure("audio", "unsupported", "this release models stereo output with the installed latency recipe")
+	}
 	m := d.Identity.Metadata
 	if m.Mobile || m.Platform != "Windows" || d.Identity.Platform != "Win32" || m.FullVersion != base.Product.FullVersion || !strings.Contains(d.Identity.UserAgent, "Chrome/"+base.Product.Version) {
 		return failure("identity", "incoherent", "identity must retain the selected desktop Chrome implementation")
@@ -448,7 +523,7 @@ func (d Document) Validate(base state.Environment) error {
 	} else if p.Username != "" || p.Password != "" {
 		return failure("network.proxy", "invalidValue", "credentials require server")
 	}
-	if err := d.Apply(base).Validate(); err != nil {
+	if err := d.ApplyOwned(base).Validate(); err != nil {
 		return failure("$", "incoherent", err.Error())
 	}
 	return nil

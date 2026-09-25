@@ -6,12 +6,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"os"
 	"reflect"
 	"strconv"
 	"testing"
 	"time"
+
+	chrome152 "github.com/moreveal/mimic/chrome/152"
+	v8engine "github.com/moreveal/mimic/internal/engine/v8"
+	"github.com/moreveal/mimic/internal/profile"
 )
 
 func TestBootstrapSnapshotObservationalEquivalence(t *testing.T) {
@@ -198,5 +204,173 @@ func TestBootstrapSnapshotRebindsChangedEnvironment(t *testing.T) {
 	// Restoration must also leave the original live Page's environment intact.
 	if difference := bootstrapSnapshotDifference("$", seedState, bootstrapSnapshotEvaluate(t, seed, observe)); difference != "" {
 		t.Fatal("seed changed: " + difference)
+	}
+}
+
+func TestBootstrapSnapshotRebindsAcrossProfileContexts(t *testing.T) {
+	serialBrowserTest(t)
+	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
+		t.Skip("requires snapshot restoration")
+	}
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = b.Close() })
+	create := func(seed string) *Page {
+		t.Helper()
+		_, descriptor, err := profile.Generate([]byte(fmt.Sprintf(`{"seed":%q}`, seed)), b.env)
+		if err != nil {
+			t.Fatal(err)
+		}
+		c, err := b.NewProfileContext(descriptor.Token(), nil, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { _ = c.Close() })
+		p, err := c.NewPage()
+		if err != nil {
+			t.Fatal(err)
+		}
+		return p
+	}
+	const observe = `(()=>{const canvas=document.createElement('canvas');const gl=canvas.getContext('webgl');gl.getExtension('WEBGL_debug_renderer_info');const a=new AudioContext();const twoD=document.createElement('canvas').getContext('2d');twoD.font='17px sans-serif';const value={screen:[screen.width,screen.height,screen.availWidth,screen.availHeight,screenX,screenY],window:[outerWidth,outerHeight,innerWidth,innerHeight,devicePixelRatio],preferences:[matchMedia('(prefers-color-scheme: dark)').matches,matchMedia('(prefers-reduced-motion: reduce)').matches],audio:[a.sampleRate,a.baseLatency],graphics:[gl.getParameter(37445),gl.getParameter(37446),gl.getParameter(3379)],font:[document.fonts.check('12px Arial'),twoD.measureText('Mimic 152').width],identity:[navigator.userAgent,navigator.platform,navigator.hardwareConcurrency]};a.close();return value})()`
+	seed := create("snapshot-profile-seed")
+	bootstrapSnapshotWarm(t, seed)
+	baseline := bootstrapSnapshotEvaluate(t, seed, observe)
+	control := create("snapshot-profile-consumer")
+	t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "1")
+	expected := bootstrapSnapshotEvaluate(t, control, observe)
+	t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "")
+	consumer := create("snapshot-profile-consumer")
+	actual := bootstrapSnapshotEvaluate(t, consumer, observe)
+	if got := actual.(map[string]any)["audio"].([]any)[0]; got != consumer.ctx.env.Audio.SampleRate {
+		t.Fatalf("audio output rate diverged from profile: %v vs %v", got, consumer.ctx.env.Audio.SampleRate)
+	}
+	if !consumer.Top.Realm.bootstrapRestored {
+		t.Fatal("different profile did not reuse browser snapshot")
+	}
+	if seed.Top.Realm.bootstrapSource().key != consumer.Top.Realm.bootstrapSource().key {
+		t.Fatal("profile values selected another bootstrap artifact")
+	}
+	if reflect.DeepEqual(baseline, expected) {
+		t.Fatal("distinct generated profiles did not change observations")
+	}
+	if difference := bootstrapSnapshotDifference("$", expected, actual); difference != "" {
+		t.Fatal(difference)
+	}
+	if difference := bootstrapSnapshotDifference("$", baseline, bootstrapSnapshotEvaluate(t, seed, observe)); difference != "" {
+		t.Fatal("seed profile changed: " + difference)
+	}
+}
+
+func TestManagedProfilePreparesBootstrapBeforeFirstEvaluation(t *testing.T) {
+	serialBrowserTest(t)
+	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
+		t.Skip("requires snapshot restoration")
+	}
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer b.Close()
+	_, descriptor, err := profile.Generate([]byte(`{"seed":"first-managed-page"}`), b.env)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, err := b.NewProfileContext(descriptor.Token(), nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	bootstrapSnapshotEvaluate(t, p, "true")
+	if !p.Top.Realm.bootstrapRestored {
+		t.Fatal("first managed Page did not restore the shared bootstrap graph")
+	}
+	if !b.bootstrapSnapshots.hasSnapshotKey(p.Top.Realm.bootstrapSource().key) {
+		t.Fatal("managed Page used a missing bootstrap artifact")
+	}
+}
+
+func TestManagedProfilesRestoreNavigatedDocument(t *testing.T) {
+	serialBrowserTest(t)
+	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
+		t.Skip("requires snapshot restoration")
+	}
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer b.Close()
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte("<!doctype html><title>Profile document</title>"))
+	}))
+	defer server.Close()
+	const observe = `(async()=>{const audio=new AudioContext();const adapter=await navigator.gpu.requestAdapter();const gl=document.createElement('canvas').getContext('webgl');gl.getExtension('WEBGL_debug_renderer_info');const result={title:document.title,audio:audio.sampleRate,gpu:adapter.info.vendor,webgl:gl.getParameter(37445),history:history.length,location:location.href,origin:location.origin};audio.close();return result})()`
+	_, controlDescriptor, err := profile.Generate([]byte(`{"seed":"navigated-a"}`), b.env)
+	if err != nil {
+		t.Fatal(err)
+	}
+	control, err := b.NewProfileContext(controlDescriptor.Token(), nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "1")
+	controlPage, err := control.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := controlPage.Navigate(context.Background(), server.URL); err != nil {
+		t.Fatal(err)
+	}
+	expected := bootstrapSnapshotEvaluate(t, controlPage, observe)
+	if err := control.Close(); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "")
+	var keys [2][32]byte
+	for i, seed := range []string{"navigated-a", "navigated-b"} {
+		_, descriptor, err := profile.Generate([]byte(fmt.Sprintf(`{"seed":%q}`, seed)), b.env)
+		if err != nil {
+			t.Fatal(err)
+		}
+		c, err := b.NewProfileContext(descriptor.Token(), nil, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		p, err := c.NewPage()
+		if err != nil {
+			_ = c.Close()
+			t.Fatal(err)
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		err = p.Navigate(ctx, server.URL)
+		cancel()
+		if err != nil {
+			_ = c.Close()
+			t.Fatal(err)
+		}
+		value := bootstrapSnapshotEvaluate(t, p, observe).(map[string]any)
+		if value["title"] != "Profile document" || value["audio"] != c.env.Audio.SampleRate || value["gpu"] != c.env.Graphics.WebGPU.Vendor || value["webgl"] != c.env.Graphics.Vendor || !p.Top.Realm.bootstrapRestored {
+			_ = c.Close()
+			t.Fatalf("managed navigation did not restore its environment: value=%v restored=%t", value, p.Top.Realm.bootstrapRestored)
+		}
+		if i == 0 {
+			if difference := bootstrapSnapshotDifference("$", expected, value); difference != "" {
+				_ = c.Close()
+				t.Fatal("navigated snapshot changed observations: " + difference)
+			}
+		}
+		keys[i] = p.Top.Realm.bootstrapSource().key
+		if err := c.Close(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if keys[0] != keys[1] {
+		t.Fatal("distinct generated identities selected different document graphs")
 	}
 }

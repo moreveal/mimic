@@ -20,7 +20,14 @@ func TestMimicProfileContextsAndAtomicUpdates(t *testing.T) {
 	}
 	base := s.Browser.Environment().ProfileID
 	create := func(id int, cpu, width int) string {
-		return wireCall(t, c, id, "Mimic.createContext", map[string]any{"profile": map[string]any{"schemaVersion": 1, "baseProfile": base, "hardware": map[string]any{"logicalProcessors": cpu}, "window": map[string]any{"viewportWidth": width}, "locale": map[string]any{"languages": []string{"fr-FR", "en"}}}})["browserContextId"].(string)
+		// Ordinary contexts still support mutable CDP emulation. Provision their
+		// environment through the internal test boundary, not the portable API.
+		raw, _ := json.Marshal(map[string]any{"schemaVersion": 1, "baseProfile": base, "hardware": map[string]any{"logicalProcessors": cpu}, "window": map[string]any{"viewportWidth": width}, "locale": map[string]any{"languages": []string{"fr-FR", "en"}}})
+		context, err := s.Browser.NewContextWithProfile(raw)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return context.ID
 	}
 	ca, cb := create(2, 4, 900), create(3, 12, 1000)
 	target := func(id int, context string) string {
@@ -101,13 +108,13 @@ func TestMimicProfileProxyHeadersAndRedaction(t *testing.T) {
 	defer proxy.Close()
 	s, addr := runningServer(t)
 	c := browserConnection(t, addr)
-	cfg := map[string]any{"schemaVersion": 1, "baseProfile": s.Browser.Environment().ProfileID, "locale": map[string]any{"languages": []string{"fr-FR", "en"}}, "network": map[string]any{"proxy": map[string]any{"server": proxy.URL, "username": "secret-user", "password": "secret-password"}}}
-	result := wireCall(t, c, 1, "Mimic.validateProfile", map[string]any{"profile": cfg})
+	cfg := map[string]any{"locale": map[string]any{"languages": []string{"fr-FR", "en"}}}
+	result := wireCall(t, c, 1, "Mimic.importProfile", map[string]any{"mode": "manual", "profile": cfg})
 	raw, _ := json.Marshal(result)
 	if strings.Contains(string(raw), "secret-") {
 		t.Fatal("exposed credentials")
 	}
-	ctx := wireCall(t, c, 2, "Mimic.createContext", map[string]any{"profile": cfg})["browserContextId"].(string)
+	ctx := wireCall(t, c, 2, "Mimic.createContext", map[string]any{"profile": result["profile"], "proxy": map[string]any{"server": proxy.URL, "username": "secret-user", "password": "secret-password"}})["browserContextId"].(string)
 	target := wireCall(t, c, 3, "Target.createTarget", map[string]any{"browserContextId": ctx, "url": "about:blank"})["targetId"].(string)
 	sid := wireCall(t, c, 4, "Target.attachToTarget", map[string]any{"targetId": target, "flatten": true})["sessionId"].(string)
 	// A .invalid hostname proves the clear-text fallback cannot bypass the proxy.

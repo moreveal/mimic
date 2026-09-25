@@ -1,176 +1,128 @@
-# Environment profiles (`Mimic.*`, schema version 1)
+# Context profiles
 
-One JSON contract configures a new browser Context through CDP or the `--profile`
-command-line option. A Context owns its initial environment and connection pool;
-its pages, frames and workers inherit that environment. Full replacement requires
-a new Context. Existing cookies, documents and JavaScript are not migrated.
+Mimic exposes one current contract. Use `Mimic.getVersion` to identify the Mimic
+release/build, separately from `chromeVersion`. There is no contractVersion.
+The generator uses one coherent installed Chrome 152 device recipe. It is not a
+catalog of all physical machines.
 
-## Example
-
-Save as `profile.json`:
-
-```json
-{
-  "schemaVersion": 1,
-  "baseProfile": "chrome-152-windows-x64-headful-controlled-v1",
-  "display": {
-    "width": 1920,
-    "height": 1080,
-    "availableWidth": 1920,
-    "availableHeight": 1040,
-    "deviceScaleFactor": 1,
-    "orientation": {"type": "landscape-primary", "angle": 0}
+```javascript
+const { browserContextId, profile, warnings } = await cdp.send("Mimic.createContext", {
+  profile: {
+    generate: { browser: "chrome", version: 152, platform: "windows", seed: "account-1842" },
   },
-  "window": {
-    "outerWidth": 1280,
-    "outerHeight": 800,
-    "viewportWidth": 1280,
-    "viewportHeight": 720
+  proxy: { server: "socks5://host:1080", username: "user", password: "pass" },
+  resourcePolicy: { presets: ["noVisualAssets", "noSpeculativeLoads"] },
+  disposeOnDetach: true,
+});
+```
+
+`profile` in the response is a portable string. Save it and pass it as the
+`profile` parameter of another createContext call. It contains no proxy credentials,
+context ID, cookies or storage. No server-side profile registry is created.
+Treat it as opaque; use export/import to inspect or store JSON.
+Omitting profile means random generation. Omitting seed uses 256 random bits;
+explicit empty seeds, unknown selectors/fields, null and wrong types fail.
+Version/platform filter the installed bundle; they do not install a browser.
+
+```javascript
+const generated = await cdp.send("Mimic.generateProfile", { seed: "account-1842" });
+const exported = await cdp.send("Mimic.exportProfile", { profile: generated.profile });
+const imported = await cdp.send("Mimic.importProfile", { profile: exported.profile });
+const context = await cdp.send("Mimic.createContext", { profile: imported.profile });
+```
+
+Generation/import/export allocate no browser Context or Page. Restore recomputes
+and validates the environment. An unavailable base or changed resolution returns
+`incompatibleProfile`; no old generator implementation is selected. A saved seed
+alone does not promise the same output across releases. profileId hashes the
+resolved environment rather than seed, so collisions in generated configurations
+are visible. Tokens and hashes are not signatures or access-control credentials.
+
+## Explicit manual mode
+
+```javascript
+const { profile, warnings } = await cdp.send("Mimic.importProfile", {
+  mode: "manual",
+  profile: {
+    hardware: { logicalProcessors: 8, deviceMemoryGB: 8 },
+    window: { outerWidth: 1280, outerHeight: 800, viewportWidth: 1280, viewportHeight: 720 },
+    locale: { languages: ["en-US", "en"], intlLocale: "en-US", timezone: "America/New_York" },
+    audio: { sampleRate: 44100 },
+    preferences: { colorScheme: "dark", reducedMotion: false },
   },
-  "hardware": {"logicalProcessors": 8, "deviceMemoryGB": 8},
-  "locale": {
-    "languages": ["en-US", "en"],
-    "reduceAcceptLanguage": false,
-    "timezone": "America/New_York",
-    "intlLocale": "en-US"
-  },
-  "preferences": {"colorScheme": "dark", "reducedMotion": false}
-}
-```
-
-```powershell
-./.build/mimic.exe --profile profile.json --listen 127.0.0.1:9222
-```
-
-The file is validated before opening the listener. It supplies the default for
-the initial Context and subsequent ordinary `Target.createBrowserContext` calls.
-`Mimic.createContext` supplies its own profile independently of that default.
-`baseProfile` must be the profile of the loaded Chrome bundle/mode; obtain its
-exact name from `Mimic.getProfileSchema`. No other Chrome implementation is
-installed by changing identity strings.
-
-For CDP clients, `send` below sends a command on the browser WebSocket:
-
-```js
-const { schema, baseProfiles, limitations } =
-  await send("Mimic.getProfileSchema", {});
-const validated = await send("Mimic.validateProfile", { profile });
-const { browserContextId } = await send("Mimic.createContext", {
-  profile, disposeOnDetach: true
 });
-const { targetId } = await send("Target.createTarget", {
-  browserContextId, url: "about:blank"
-});
-await send("Mimic.updateProfile", {
-  targetId, patch: { window: { viewportWidth: 900, viewportHeight: 600 } }
-});
-const effective = await send("Mimic.getProfile", { targetId });
-await send("Mimic.resetProfileOverrides", { targetId });
-await send("Target.disposeBrowserContext", { browserContextId });
+const context = await cdp.send("Mimic.createContext", { profile });
 ```
 
-Attach with `Target.attachToTarget` to navigate or evaluate scripts using standard
-page commands. Set the profile before creating/navigating the target so the first
-document request and bootstrap see the intended values.
+Manual mode explicitly warns against inconsistent surfaces. Known invalid values
+and relations fail; the warning is not an override. Only modeled fields work.
+Identity, graphics and fonts must retain the installed baseline until complete
+alternative recipes can be validated. Arbitrary hardware realism and every
+cross-surface relation are not yet certified. Custom timezone/Intl locale requires
+native Intl (V8). IANA timezone and language do not infer the proxy's geography.
 
-## Contract and ownership
+Manual input has no schemaVersion/baseProfile and cannot contain network.proxy.
+It merges named fields into the installed baseline; arrays replace whole arrays.
+Exported descriptors can be restored without mode. To deliberately edit one,
+pass its environment member through explicit mode: manual; do not rewrite its hash.
+Manual export includes normalized environment data and can be substantially larger
+than a generated token. Tokens are currently limited to 1 MiB on restoration.
 
-`getProfileSchema` returns JSON Schema and `x-mimic-mutability` annotations.
-Objects merge named members into the base; arrays replace their entire value.
-Unknown fields, nulls and wrong types are errors. Fields use case-sensitive
-lower-camel names, including `cpuPerformance`, `deviceMemoryGB`, `rttMillis`,
-`graphics.webGPU`, and `graphics.webGLCapabilitiesJSON`.
+## Lifecycle, emulation and network
 
-`validateProfile` returns `profile` and `diagnostics` without creating a Context.
-`getProfile` accepts exactly one of `browserContextId` and `targetId`; the latter
-includes Page overrides. Responses are defensive projections, not mutable
-references into the runtime. Internal custom profile IDs are content-derived and
-are not represented as the frozen reference profile's identity.
+Profile, proxy and policy validate before publication. Create returns
+browserContextId, profile, profileId, mode and warnings. Use Target.createTarget,
+Target.attachToTarget and ordinary page commands, then
+Target.disposeBrowserContext in finally. disposeOnDetach refers to the creating
+browser connection, not an individual Page attachment.
 
-`updateProfile` accepts only dynamic fields. A forbidden member returns a CDP
-error with `data.path`, `data.reason: "requiresNewContext"` and `data.message`;
-no members of that patch take effect. Reset restores the Page's own Context
-baseline. Already sent requests retain their original headers.
+Generated/imported Context environments are immutable. UA, metrics,
+locale, timezone, theme and viewport mutation commands return profileLocked before
+modification. Resize currently requires a new Context. This may conflict with
+client-library automatic emulation: raw CDP is the tested integration path.
+Ordinary Target-created contexts retain standard mutable CDP behavior.
+Mimic.getProfile reads effective observations; it is not accepted as create input.
+Existing update/reset commands only change ordinary mutable contexts.
+This is not a sandbox against user scripts or request interception: these can
+still replace script/network observations. Managed-profile CDP mutation paths,
+including generic-font overrides, reject changes to the selected environment.
 
-Existing Workers retain their startup navigator identity and languages, as in
-the controlled Chrome probe; newly constructed Workers inherit the updated Page.
-UA overrides do not synthesize a `languagechange` event. Media-query changes
-notify registered `MediaQueryList` listeners through the Page task queue.
+--profile and the browser ProfileJSON option have been removed. Profile JSON is
+only a CDP import/export format. Mimic.validateProfile is replaced by importProfile.
+ResourcePolicy follows the current Mimic release contract without a version
+selector; `scraping` is not a preset.
+Blocking images/fonts changes observable behavior and must be workload-tested.
+Resource byte budgets do not cap process RSS, DOM, V8 or native allocation.
 
-| Group | Supported changes | Boundary |
-| --- | --- | --- |
-| `display`, `window` | Dynamic screen/available area, DPR, orientation, position, outer size and viewport; color depth at creation | Positive coherent dimensions; no mobile layout |
-| `identity` | Dynamic `userAgent`, `platform`, `metadata` Client Hints | Full profiles retain the loaded desktop Chrome identity; standard CDP remains permissive |
-| `hardware` | CPU count, memory bucket, CPU performance class at creation | Observations, not allocation of physical CPU/RAM |
-| `locale` | Languages dynamically; language reduction, IANA timezone and Intl locale at creation | Custom timezone/Intl locale requires the native Intl (V8) backend; experimental engines reject rather than simulate formatting |
-| `graphics` | Vendor, renderer, maximum texture size at creation | Custom capability JSON and WebGPU adapter overrides reject; graph/pixel approximations remain documented |
-| `fonts` | Read baseline selection | Custom selections reject until resource validation is implemented |
-| `preferences` | Theme/reduced motion dynamically; DNT at creation | Existing modeled preferences only |
-| `network` | Existing connection observations, cookies, ICE and proxy at creation | Wire profile stays coupled to the loaded bundle; metadata does not provide a real device or public IP |
-| `permissions` | Initial decisions for existing baseline permission names | Live permission state stays in the origin capability store |
-| `capabilities` | Existing quota and keyboard-layout settings | Custom device/media backends reject |
-| `features` | Restrict existing exposure flags | Cannot enable an uncaptured feature |
-| `timing` | Existing execution/navigation/network scale factors at creation | No arbitrary wall-clock or monotonic epoch injection |
+HTTP, HTTPS and SOCKS5 proxy credentials use separate fields, not URL userinfo.
+The origin Chrome transport remains coupled to the installed bundle. Proxy
+failure does not fall back to direct requests; proxy mode disables HTTP/3.
+HTTP(S) resource-loader paths and Worker fetch use the Context proxy. Do not infer
+UDP/WebRTC routing from ICE metadata; broader proxy coverage remains an audit item.
+Credentials are omitted from profile reads and errors.
 
-Unsupported fields may be read or round-tripped unchanged; their custom values
-return `unsupported` with a reason. The schema describes their shape without
-claiming that every value is executable. Browser security still controls exposure:
-for example, `navigator.deviceMemory` is not exposed in an insecure document.
+## Current diversity and RAM limits
 
-Date local construction, parsing, getters/setters and formatting use the Context
-zone, including DST gaps/repeats. UTC methods and stored timestamps remain native
-engine values. Window, frames and workers share the same implementation; neither
-the host timezone nor process-global ICU defaults are changed. Eight cached
-transition intervals bound realm-local lookup overhead. Default Intl formatting
-and Date/Number/BigInt locale methods use `intlLocale`, independently of the
-language list. Explicit formatter arguments still take precedence. These two
-fields require a new Context, not an in-place update of existing documents.
+The generated recipe varies viewport dimensions, window position, theme, reduced
+motion and output-device sample rate (44.1 or 48 kHz). Window insets and the
+audio latency recipe remain coupled to their installed defaults. Hardware,
+browser identity, display, locale, graphics, fonts and wire profile stay at the
+captured baseline. On the current 2560×1440 screen, the Cartesian upper bound is
+**3,612,980,639,528 configurations (~41.7 bits)**: the sum of 1..1753 legal
+horizontal placements times the sum of 1..766 vertical placements times eight
+preference/audio choices. The 256-bit random seed makes random generation
+unpredictable; it does not imply 2^256 observable fingerprints. Different seeds
+can still produce the same profileId, and a site's smaller observation set may
+collapse many configurations. Graphics readbacks use canonical modeled state,
+without per-seed random noise. Distinct generated profiles do not imply distinct
+GPUs, font inventories, public IPs or network identities.
 
-The US example changes language/time observations, not network geolocation. A
-US public IP requires a real US proxy. Other unsupported resource/device/graphics
-fields remain explicit boundaries; accepting arbitrary JSON is not compatibility.
-
-## Proxy
-
-Add this group to the input profile:
-
-```json
-{
-  "network": {
-    "proxy": {
-      "server": "socks5://127.0.0.1:1080",
-      "username": "user",
-      "password": "password"
-    }
-  }
-}
-```
-
-HTTP and HTTPS proxy URLs are also supported. Keep credentials in their separate
-fields, not in the URL. Empty `server` means no explicit proxy. Default ports are
-80/443/1080. Bypass lists are not supported.
-
-Each Context uses its own pool. HTTP(S) proxies use CONNECT; SOCKS5 sends the
-destination hostname to the proxy. The origin still uses the selected Chrome
-TLS profile. HTTPS proxy certificates use system trust independently of any
-explicit origin certificate override. Proxy mode disables HTTP/3/QUIC. Connection
-or authentication failure never falls back to a direct request.
-
-Credentials are omitted from validation/read/update responses and diagnostics;
-retain the original input privately if recreating an authenticated profile.
-Proxy settings route resource-loader HTTP(S) requests, including Worker fetch;
-they do not configure UDP/WebRTC routes. ICE settings describe modeled
-observations and must not be interpreted as a public-IP change.
-
-## Standard CDP compatibility
-
-`Emulation.*` is a standard Chrome CDP domain. Existing commands and
-`Mimic.setViewport` remain available and operate on the same Page environment.
-They do not gain extra custom parameters. Standard metrics overrides preserve
-Chrome's outer-window semantics and expose the whole emulated screen as available;
-the full Mimic profile instead lets callers specify these dimensions explicitly.
-
-The focused native probe is `tools/compatibility/profile_contract_oracle.py`.
-It launches an owned frozen headful Chrome, creates a disposable context and
-captures baseline, metrics, identity/media and reset observations. It never
-modifies the frozen performance harness or reference expectations.
+For 100 jobs, limit live contexts (for example to 8), create on admission, stream
+results and close in finally. For 100 simultaneously live pages, expect a much
+larger memory footprint. Profile-specific bootstrap code is now shared across
+contexts whose exposure graph is the same; each Page still owns its realm and
+event loop. The first managed Page for a new security/exposure graph waits for
+its bounded snapshot to be prepared. This trades one-time startup latency for
+predictable live memory when many identities start together. See the
+[density report](performance/profile-context-final-20260925.md) and
+[implementation history](public-context-contract-plan.md).

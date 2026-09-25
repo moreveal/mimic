@@ -8,6 +8,12 @@ func (e Environment) Clone() Environment {
 	out := cloneValue(reflect.ValueOf(e)).Interface().(Environment)
 	return out
 }
+
+// Fork is an internal Page view of an already-owned Context environment.
+// Nested catalogs are immutable after Context construction. Page emulation
+// replaces slices, maps and pointers when it changes them; scalar fields live
+// in the copied struct. Public Environment getters must still use Clone.
+func (e Environment) Fork() Environment { return e }
 func cloneValue(v reflect.Value) reflect.Value {
 	switch v.Kind() {
 	case reflect.Pointer:

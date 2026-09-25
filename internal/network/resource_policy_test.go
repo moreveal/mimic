@@ -32,7 +32,7 @@ func (i *resourcePolicyFulfillInterceptor) After(_ context.Context, _ Request, r
 func TestResourcePolicyBlocksBeforeSyntheticFulfillment(t *testing.T) {
 	target, _ := url.Parse("https://example.com/image.png")
 	state := &ResourcePolicyState{}
-	policy := ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: "deny", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{CacheRead: policyBool(false), Network: policyBool(false)}}}}
+	policy := ResourcePolicy{Rules: []ResourceRule{{ID: "deny", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{CacheRead: policyBool(false), Network: policyBool(false)}}}}
 	if _, err := state.Update(policy); err != nil {
 		t.Fatal(err)
 	}
@@ -70,7 +70,7 @@ func TestResourcePolicyBodyBudgetStopsStreaming(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxBodyBytes: 15}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxBodyBytes: 15}}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -92,7 +92,7 @@ func TestResourcePolicyBodyBudgetAllowsExactKnownLength(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxBodyBytes: 15}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxBodyBytes: 15}}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -112,7 +112,7 @@ func TestResourcePolicyRetainedBudgetReleasesAfterHistoryClose(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxRetainedBytes: 12}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxRetainedBytes: 12}}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -143,7 +143,7 @@ func TestResourcePolicySharedCacheAndDebugBodyChargedOnce(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxRetainedBytes: 12}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxRetainedBytes: 12}}); err != nil {
 		t.Fatal(err)
 	}
 	session := NewSessionState()
@@ -197,7 +197,7 @@ func TestResourcePolicyRetainedBudgetSeesPreexistingCache(t *testing.T) {
 	if _, err := loader.Load(context.Background(), Request{ID: "before", URL: first, Initiator: Fetch}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxRetainedBytes: 12}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxRetainedBytes: 12}}); err != nil {
 		t.Fatal(err)
 	}
 	res, err := loader.Load(context.Background(), Request{ID: "after", URL: second, Initiator: Fetch})
@@ -214,7 +214,7 @@ func TestResourcePolicyRetainedBudgetSeesPreexistingCache(t *testing.T) {
 
 func TestResourcePolicyBodyBudgetConcurrentReservations(t *testing.T) {
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxBodyBytes: 15}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxBodyBytes: 15}}); err != nil {
 		t.Fatal(err)
 	}
 	result := make(chan error, 2)
@@ -235,7 +235,7 @@ func TestResourcePolicyBodyBudgetConcurrentReservations(t *testing.T) {
 
 func TestResourcePolicyMatchesOriginAndSchemefulTopLevelSite(t *testing.T) {
 	state := &ResourcePolicyState{}
-	policy := ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: "scoped", Match: ResourceMatch{Origins: []string{"https://assets.example:443"}, TopLevelSite: "https://example.com", Kinds: []string{"fetch"}}, Work: ResourceWork{Network: policyBool(false)}}}}
+	policy := ResourcePolicy{Rules: []ResourceRule{{ID: "scoped", Match: ResourceMatch{Origins: []string{"https://assets.example:443"}, TopLevelSite: "https://example.com", Kinds: []string{"fetch"}}, Work: ResourceWork{Network: policyBool(false)}}}}
 	if _, err := state.Update(policy); err != nil {
 		t.Fatal(err)
 	}
@@ -263,7 +263,7 @@ func TestResourcePolicyDeniedFetchDoesNotSendCORSPreflight(t *testing.T) {
 	target, _ := url.Parse(server.URL)
 	source, _ := url.Parse("https://other.example/")
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: "deny-fetch", Match: ResourceMatch{Kinds: []string{"fetch"}}, Work: ResourceWork{Network: policyBool(false)}}}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Rules: []ResourceRule{{ID: "deny-fetch", Match: ResourceMatch{Kinds: []string{"fetch"}}, Work: ResourceWork{Network: policyBool(false)}}}}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -320,7 +320,7 @@ func TestResourcePolicyCacheAndNetworkAreIndependent(t *testing.T) {
 	if _, err := loader.Load(context.Background(), request); err != nil {
 		t.Fatal(err)
 	}
-	_, err := state.Update(ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: "cache-only", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Network: policyBool(false)}}}})
+	_, err := state.Update(ResourcePolicy{Rules: []ResourceRule{{ID: "cache-only", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Network: policyBool(false)}}}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -354,7 +354,7 @@ func TestResourcePolicyReportOnlyCountsDeniedCachedRepresentation(t *testing.T) 
 	if _, err := loader.Load(context.Background(), request); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, ReportOnly: true, Rules: []ResourceRule{{ID: "deny", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{CacheRead: policyBool(false), Network: policyBool(false)}}}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{ReportOnly: true, Rules: []ResourceRule{{ID: "deny", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{CacheRead: policyBool(false), Network: policyBool(false)}}}}); err != nil {
 		t.Fatal(err)
 	}
 	res, err := loader.Load(context.Background(), request)
@@ -385,7 +385,7 @@ func TestResourcePolicyBodyLimitsPreserveGET(t *testing.T) {
 		size int64
 		want string
 	}{{"none", 0, ""}, {"prefix", 4, "0123"}} {
-		_, err := state.Update(ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: tc.mode, Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Body: tc.mode, PrefixBytes: tc.size}}}})
+		_, err := state.Update(ResourcePolicy{Rules: []ResourceRule{{ID: tc.mode, Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Body: tc.mode, PrefixBytes: tc.size}}}})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -412,7 +412,7 @@ func TestResourcePolicyRetentionIsIndependent(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	_, err := state.Update(ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: "no-storage", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{CacheRetain: policyBool(false), DebugRetain: policyBool(false)}}}})
+	_, err := state.Update(ResourcePolicy{Rules: []ResourceRule{{ID: "no-storage", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{CacheRetain: policyBool(false), DebugRetain: policyBool(false)}}}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -442,7 +442,7 @@ func TestResourcePolicyReportOnlyDoesNotChangeDelivery(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	_, err := state.Update(ResourcePolicy{SchemaVersion: 1, ReportOnly: true, Rules: []ResourceRule{{ID: "blocked", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Network: policyBool(false), Body: "none", Decode: policyBool(false)}}}})
+	_, err := state.Update(ResourcePolicy{ReportOnly: true, Rules: []ResourceRule{{ID: "blocked", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Network: policyBool(false), Body: "none", Decode: policyBool(false)}}}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -471,7 +471,7 @@ func TestResourcePolicyRequestBudget(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxRequests: 1}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxRequests: 1}}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -506,7 +506,7 @@ func TestResourcePolicyRedirectKeepsCapturedGeneration(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL + "/start")
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1}); err != nil {
+	if _, err := state.Update(ResourcePolicy{}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -522,7 +522,7 @@ func TestResourcePolicyRedirectKeepsCapturedGeneration(t *testing.T) {
 	}()
 	<-entered
 	no := false
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Rules: []ResourceRule{{ID: "block-target", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Network: &no}}}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Rules: []ResourceRule{{ID: "block-target", Match: ResourceMatch{Kinds: []string{"image"}}, Work: ResourceWork{Network: &no}}}}); err != nil {
 		t.Fatal(err)
 	}
 	close(resume)
@@ -536,15 +536,16 @@ func TestResourcePolicyRedirectKeepsCapturedGeneration(t *testing.T) {
 
 func TestResourcePolicyValidationAndPresets(t *testing.T) {
 	for _, input := range []string{
-		`{"schemaVersion":1,"unknown":true}`,
-		`{"schemaVersion":1,"rules":[{"id":"x","work":{"body":"prefix"}}]}`,
-		`{"schemaVersion":1,"presets":["unknown"]}`,
+		`{"unknown":true}`,
+		`{"schemaVersion":1}`,
+		`{"rules":[{"id":"x","work":{"body":"prefix"}}]}`,
+		`{"presets":["unknown"]}`,
 	} {
 		if _, err := ParseResourcePolicy([]byte(input)); err == nil {
 			t.Fatalf("accepted %s", input)
 		}
 	}
-	config, err := ParseResourcePolicy([]byte(`{"schemaVersion":1,"presets":["noVisualAssets"],"rules":[{"id":"exception","match":{"hosts":["keep.example"],"kinds":["image"]},"work":{"network":true}}]}`))
+	config, err := ParseResourcePolicy([]byte(`{"presets":["noVisualAssets"],"rules":[{"id":"exception","match":{"hosts":["keep.example"],"kinds":["image"]},"work":{"network":true}}]}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -569,7 +570,7 @@ func TestResourcePolicyResponseSizeBudget(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	state := &ResourcePolicyState{}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, Budgets: ResourceBudgets{MaxResponseBytes: 5}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{Budgets: ResourceBudgets{MaxResponseBytes: 5}}); err != nil {
 		t.Fatal(err)
 	}
 	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
@@ -581,7 +582,7 @@ func TestResourcePolicyResponseSizeBudget(t *testing.T) {
 	if state.Stats().BudgetDenied != 1 {
 		t.Fatalf("stats: %+v", state.Stats())
 	}
-	if _, err := state.Update(ResourcePolicy{SchemaVersion: 1, ReportOnly: true, Budgets: ResourceBudgets{MaxResponseBytes: 5}}); err != nil {
+	if _, err := state.Update(ResourcePolicy{ReportOnly: true, Budgets: ResourceBudgets{MaxResponseBytes: 5}}); err != nil {
 		t.Fatal(err)
 	}
 	res, err := loader.Load(context.Background(), Request{URL: target, Initiator: Image})

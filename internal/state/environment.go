@@ -190,6 +190,7 @@ func ChromeDesktopWindows(product Product) Environment {
 			Vendor: "Google Inc. (Intel)", Renderer: "ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)", MaxTextureSize: 16384,
 			WebGPU: GPUAdapter{Vendor: "intel", Architecture: "gen-12lp", Features: []string{"bgra8unorm-storage", "clip-distances", "core-features-and-limits", "depth-clip-control", "depth32float-stencil8", "dual-source-blending", "float32-blendable", "float32-filterable", "indirect-first-instance", "primitive-index", "rg11b10ufloat-renderable", "shader-f16", "subgroup-size-control", "subgroups", "texture-component-swizzle", "texture-compression-bc", "texture-compression-bc-sliced-3d", "texture-formats-tier1", "texture-formats-tier2", "timestamp-query"}},
 		},
+		Audio:       Audio{SampleRate: 48000, Channels: 2, BufferDuration: 0.01, MaxBufferFrames: 7680},
 		Locale:      Locale{Languages: []string{"en-US", "en"}, IntlLocale: "en-US", Timezone: "UTC"},
 		Preferences: Preferences{ColorScheme: "dark"},
 		Time:        Time{WallOrigin: now, ExecutionScale: 1, NavigationScale: 1, NetworkScale: 1},

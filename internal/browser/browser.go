@@ -20,7 +20,6 @@ import (
 type Browser struct {
 	defaultResourcePolicy *network.ResourcePolicy
 	devPreview            bool
-	defaultProfile        *profile.Document
 	speechProvider        speech.Provider
 	mu                    sync.RWMutex
 	lifetime              context.Context
@@ -33,14 +32,15 @@ type Browser struct {
 	compat                compatibility.Bundle
 	contexts              map[string]*Context
 	bootstrapSnapshots    bootstrapSnapshotCache
+	profileBootstrapMu    sync.Mutex
+	profileBootstraps     map[[32]byte]*profileBootstrapAttempt
 }
 
 type Options struct {
 	// ResourcePolicy supplies an opt-in template for newly created Contexts.
 	ResourcePolicyJSON []byte
 	// DevPreview enables private debug observations and the CDP preview routes.
-	DevPreview  bool
-	ProfileJSON []byte
+	DevPreview bool
 	// SpeechProvider is an optional portable synthesis driver. Nil selects the
 	// system provider. It creates document-owned resources only on first use.
 	SpeechProvider speech.Provider
@@ -73,35 +73,36 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 		}
 		b.defaultResourcePolicy = &policy
 	}
-	if len(options.ProfileJSON) > 0 {
-		d, err := b.ValidateProfile(options.ProfileJSON)
-		if err != nil {
-			return nil, err
-		}
-		b.defaultProfile = &d
-	}
 	return b, nil
 }
-func (b *Browser) NewContext() *Context {
-	return b.newContext(b.defaultProfile)
-}
+func (b *Browser) NewContext() *Context { return b.newContext(nil) }
+
 func (b *Browser) newContext(d *profile.Document) *Context {
+	return b.newConfiguredContext(d, nil, false)
+}
+
+func (b *Browser) newConfiguredContext(d *profile.Document, policy *network.ResourcePolicy, locked bool) *Context {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	lifetime, cancel := context.WithCancel(context.Background())
 	c := &Context{lifetime: lifetime, cancel: cancel, ID: uuid.NewString(), browser: b, cookies: network.NewCookieStore(), network: network.NewSessionState(), storage: map[string]map[string]string{}, pages: map[string]*Page{}}
 	c.resourcePolicy = &network.ResourcePolicyState{}
+	c.profileLocked = locked
 	if b.defaultResourcePolicy != nil {
 		_, _ = c.resourcePolicy.Update(*b.defaultResourcePolicy)
+	}
+	if policy != nil {
+		_, _ = c.resourcePolicy.Update(*policy)
 	}
 	if b.closed {
 		cancel()
 		return c
 	}
-	c.env = b.env.Clone()
 	if d != nil {
-		c.env = d.Apply(b.env)
+		c.env = d.ApplyOwned(b.env)
 		c.proxy = d.Network.Proxy
+	} else {
+		c.env = b.env.Clone()
 	}
 	b.contexts[c.ID] = c
 	return c
@@ -114,6 +115,7 @@ func (b *Browser) Environment() state.Environment {
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
+	profileLocked    bool
 	resourcePolicy   *network.ResourcePolicyState
 	env              state.Environment
 	proxy            profile.Proxy

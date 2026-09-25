@@ -1,0 +1,169 @@
+{
+  "baseProfile": "chrome-152-windows-x64-headful-controlled-v1",
+  "concurrency": 100,
+  "display": {
+    "Width": 2560,
+    "Height": 1440,
+    "AvailableWidth": 2560,
+    "AvailableHeight": 1392,
+    "DeviceScaleFactor": 1,
+    "ColorDepth": 24,
+    "Orientation": {
+      "Type": "landscape-primary",
+      "Angle": 0
+    }
+  },
+  "pages": 300,
+  "profileMode": "distinct",
+  "recipeCombinationUpperBound": 3612980639528,
+  "samples": [
+    {
+      "bootstrapCache": {
+        "entries": 0,
+        "seedBytes": 0,
+        "snapshots": 0
+      },
+      "completed": 0,
+      "contexts": 0,
+      "elapsedMillis": 0,
+      "memory": {
+        "go_heap": 8394120,
+        "go_released": 6012928,
+        "go_sys": 29444344,
+        "goroutines": 3,
+        "private": 98541568,
+        "rss": 35295232
+      },
+      "phase": "ready",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 1,
+        "seedBytes": 0,
+        "snapshots": 1
+      },
+      "completed": 0,
+      "contexts": 100,
+      "elapsedMillis": 1844,
+      "memory": {
+        "go_heap": 111321432,
+        "go_released": 71802880,
+        "go_sys": 383584504,
+        "goroutines": 503,
+        "private": 3527602176,
+        "rss": 3289075712
+      },
+      "phase": "live",
+      "restoredPages": 100
+    },
+    {
+      "bootstrapCache": {
+        "entries": 1,
+        "seedBytes": 0,
+        "snapshots": 1
+      },
+      "completed": 100,
+      "contexts": 0,
+      "elapsedMillis": 2067,
+      "memory": {
+        "go_heap": 112348728,
+        "go_released": 101425152,
+        "go_sys": 383584504,
+        "goroutines": 4,
+        "private": 577904640,
+        "rss": 530329600
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 1,
+        "seedBytes": 0,
+        "snapshots": 1
+      },
+      "completed": 100,
+      "contexts": 100,
+      "elapsedMillis": 3045,
+      "memory": {
+        "go_heap": 96042960,
+        "go_released": 217423872,
+        "go_sys": 383846648,
+        "goroutines": 503,
+        "private": 3401154560,
+        "rss": 3156819968
+      },
+      "phase": "live",
+      "restoredPages": 100
+    },
+    {
+      "bootstrapCache": {
+        "entries": 1,
+        "seedBytes": 0,
+        "snapshots": 1
+      },
+      "completed": 200,
+      "contexts": 0,
+      "elapsedMillis": 3272,
+      "memory": {
+        "go_heap": 96966688,
+        "go_released": 217423872,
+        "go_sys": 383846648,
+        "goroutines": 4,
+        "private": 475611136,
+        "rss": 426004480
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 1,
+        "seedBytes": 0,
+        "snapshots": 1
+      },
+      "completed": 200,
+      "contexts": 100,
+      "elapsedMillis": 4342,
+      "memory": {
+        "go_heap": 81756784,
+        "go_released": 227753984,
+        "go_sys": 384567544,
+        "goroutines": 503,
+        "private": 3391250432,
+        "rss": 3148042240
+      },
+      "phase": "live",
+      "restoredPages": 100
+    },
+    {
+      "bootstrapCache": {
+        "entries": 1,
+        "seedBytes": 0,
+        "snapshots": 1
+      },
+      "completed": 300,
+      "contexts": 0,
+      "elapsedMillis": 4572,
+      "memory": {
+        "go_heap": 82692976,
+        "go_released": 227753984,
+        "go_sys": 384567544,
+        "goroutines": 3,
+        "private": 474198016,
+        "rss": 427364352
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    }
+  ],
+  "window": {
+    "X": 0,
+    "Y": 0,
+    "OuterWidth": 1280,
+    "OuterHeight": 800,
+    "ViewportWidth": 1272,
+    "ViewportHeight": 653
+  }
+}

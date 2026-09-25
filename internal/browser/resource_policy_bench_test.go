@@ -63,8 +63,8 @@ func BenchmarkResourcePolicyBrowserContext(b *testing.B) {
 		policy *network.ResourcePolicy
 	}{
 		{name: "off"},
-		{name: "reportOnly", policy: &network.ResourcePolicy{SchemaVersion: 1, ReportOnly: true, Rules: []network.ResourceRule{{ID: "visual", Match: network.ResourceMatch{Kinds: []string{"image"}}, Work: network.ResourceWork{CacheRead: &blocked, Network: &blocked}}}}},
-		{name: "active", policy: &network.ResourcePolicy{SchemaVersion: 1, Rules: []network.ResourceRule{{ID: "visual", Match: network.ResourceMatch{Kinds: []string{"image"}}, Work: network.ResourceWork{CacheRead: &blocked, Network: &blocked}}}}},
+		{name: "reportOnly", policy: &network.ResourcePolicy{ReportOnly: true, Rules: []network.ResourceRule{{ID: "visual", Match: network.ResourceMatch{Kinds: []string{"image"}}, Work: network.ResourceWork{CacheRead: &blocked, Network: &blocked}}}}},
+		{name: "active", policy: &network.ResourcePolicy{Rules: []network.ResourceRule{{ID: "visual", Match: network.ResourceMatch{Kinds: []string{"image"}}, Work: network.ResourceWork{CacheRead: &blocked, Network: &blocked}}}}},
 	} {
 		b.Run(scenario.name, func(b *testing.B) {
 			requests.Store(0)

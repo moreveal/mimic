@@ -1,0 +1,1609 @@
+{
+  "baseProfile": "chrome-152-windows-x64-headful-controlled-v1",
+  "concurrency": 8,
+  "display": {
+    "Width": 2560,
+    "Height": 1440,
+    "AvailableWidth": 2560,
+    "AvailableHeight": 1392,
+    "DeviceScaleFactor": 1,
+    "ColorDepth": 24,
+    "Orientation": {
+      "Type": "landscape-primary",
+      "Angle": 0
+    }
+  },
+  "pages": 300,
+  "profileMode": "distinct",
+  "recipeCombinationUpperBound": 3612980639528,
+  "samples": [
+    {
+      "bootstrapCache": {
+        "entries": 0,
+        "seedBytes": 0,
+        "snapshots": 0
+      },
+      "completed": 0,
+      "contexts": 0,
+      "elapsedMillis": 0,
+      "memory": {
+        "go_heap": 8814848,
+        "go_released": 6660096,
+        "go_sys": 29411576,
+        "goroutines": 3,
+        "private": 97824768,
+        "rss": 34738176
+      },
+      "phase": "ready",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 0,
+      "contexts": 8,
+      "elapsedMillis": 1045,
+      "memory": {
+        "go_heap": 73709640,
+        "go_released": 6692864,
+        "go_sys": 129607928,
+        "goroutines": 43,
+        "private": 552108032,
+        "rss": 496861184
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 8,
+      "contexts": 0,
+      "elapsedMillis": 1076,
+      "memory": {
+        "go_heap": 73950184,
+        "go_released": 6692864,
+        "go_sys": 129607928,
+        "goroutines": 4,
+        "private": 216625152,
+        "rss": 180592640
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 8,
+      "contexts": 8,
+      "elapsedMillis": 1334,
+      "memory": {
+        "go_heap": 90230336,
+        "go_released": 6053888,
+        "go_sys": 151382264,
+        "goroutines": 43,
+        "private": 582193152,
+        "rss": 523706368
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 16,
+      "contexts": 0,
+      "elapsedMillis": 1371,
+      "memory": {
+        "go_heap": 90471104,
+        "go_released": 6053888,
+        "go_sys": 151382264,
+        "goroutines": 4,
+        "private": 252321792,
+        "rss": 214949888
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 16,
+      "contexts": 8,
+      "elapsedMillis": 1627,
+      "memory": {
+        "go_heap": 67539024,
+        "go_released": 33685504,
+        "go_sys": 151398648,
+        "goroutines": 43,
+        "private": 554536960,
+        "rss": 497586176
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 24,
+      "contexts": 0,
+      "elapsedMillis": 1666,
+      "memory": {
+        "go_heap": 67779440,
+        "go_released": 37486592,
+        "go_sys": 151398648,
+        "goroutines": 4,
+        "private": 223633408,
+        "rss": 187285504
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 24,
+      "contexts": 8,
+      "elapsedMillis": 1921,
+      "memory": {
+        "go_heap": 74045840,
+        "go_released": 26746880,
+        "go_sys": 151660792,
+        "goroutines": 43,
+        "private": 555864064,
+        "rss": 499097600
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 32,
+      "contexts": 0,
+      "elapsedMillis": 1951,
+      "memory": {
+        "go_heap": 74286496,
+        "go_released": 26746880,
+        "go_sys": 151660792,
+        "goroutines": 3,
+        "private": 223436800,
+        "rss": 185798656
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 32,
+      "contexts": 8,
+      "elapsedMillis": 2189,
+      "memory": {
+        "go_heap": 71090408,
+        "go_released": 17195008,
+        "go_sys": 151660792,
+        "goroutines": 43,
+        "private": 582516736,
+        "rss": 528994304
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 40,
+      "contexts": 0,
+      "elapsedMillis": 2220,
+      "memory": {
+        "go_heap": 71330536,
+        "go_released": 21782528,
+        "go_sys": 151660792,
+        "goroutines": 4,
+        "private": 227631104,
+        "rss": 191881216
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 40,
+      "contexts": 8,
+      "elapsedMillis": 2459,
+      "memory": {
+        "go_heap": 67663640,
+        "go_released": 26828800,
+        "go_sys": 151677176,
+        "goroutines": 43,
+        "private": 577351680,
+        "rss": 522248192
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 48,
+      "contexts": 0,
+      "elapsedMillis": 2486,
+      "memory": {
+        "go_heap": 67904056,
+        "go_released": 28663808,
+        "go_sys": 151677176,
+        "goroutines": 4,
+        "private": 258785280,
+        "rss": 222859264
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 48,
+      "contexts": 8,
+      "elapsedMillis": 2731,
+      "memory": {
+        "go_heap": 61001352,
+        "go_released": 28442624,
+        "go_sys": 151677176,
+        "goroutines": 43,
+        "private": 559050752,
+        "rss": 502751232
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 56,
+      "contexts": 0,
+      "elapsedMillis": 2762,
+      "memory": {
+        "go_heap": 61241960,
+        "go_released": 33030144,
+        "go_sys": 151677176,
+        "goroutines": 4,
+        "private": 217554944,
+        "rss": 180817920
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407720,
+        "snapshots": 0
+      },
+      "completed": 56,
+      "contexts": 8,
+      "elapsedMillis": 3000,
+      "memory": {
+        "go_heap": 75832296,
+        "go_released": 21110784,
+        "go_sys": 155871480,
+        "goroutines": 43,
+        "private": 591290368,
+        "rss": 536784896
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407720,
+        "snapshots": 0
+      },
+      "completed": 64,
+      "contexts": 0,
+      "elapsedMillis": 3034,
+      "memory": {
+        "go_heap": 76072088,
+        "go_released": 26157056,
+        "go_sys": 155871480,
+        "goroutines": 4,
+        "private": 277831680,
+        "rss": 241733632
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 64,
+      "contexts": 8,
+      "elapsedMillis": 3278,
+      "memory": {
+        "go_heap": 64024264,
+        "go_released": 33669120,
+        "go_sys": 155879672,
+        "goroutines": 43,
+        "private": 582516736,
+        "rss": 528080896
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 72,
+      "contexts": 0,
+      "elapsedMillis": 3313,
+      "memory": {
+        "go_heap": 64264392,
+        "go_released": 39370752,
+        "go_sys": 155879672,
+        "goroutines": 4,
+        "private": 218763264,
+        "rss": 182255616
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 72,
+      "contexts": 8,
+      "elapsedMillis": 3560,
+      "memory": {
+        "go_heap": 52386256,
+        "go_released": 33153024,
+        "go_sys": 155887864,
+        "goroutines": 43,
+        "private": 582197248,
+        "rss": 527011840
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 80,
+      "contexts": 0,
+      "elapsedMillis": 3587,
+      "memory": {
+        "go_heap": 52627088,
+        "go_released": 33153024,
+        "go_sys": 155887864,
+        "goroutines": 4,
+        "private": 265961472,
+        "rss": 228986880
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 80,
+      "contexts": 8,
+      "elapsedMillis": 3821,
+      "memory": {
+        "go_heap": 63177592,
+        "go_released": 19660800,
+        "go_sys": 155887864,
+        "goroutines": 43,
+        "private": 595283968,
+        "rss": 540483584
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 88,
+      "contexts": 0,
+      "elapsedMillis": 3847,
+      "memory": {
+        "go_heap": 63417880,
+        "go_released": 19660800,
+        "go_sys": 155887864,
+        "goroutines": 3,
+        "private": 279748608,
+        "rss": 243777536
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 88,
+      "contexts": 8,
+      "elapsedMillis": 4087,
+      "memory": {
+        "go_heap": 51077000,
+        "go_released": 22667264,
+        "go_sys": 164276472,
+        "goroutines": 43,
+        "private": 592105472,
+        "rss": 535175168
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 96,
+      "contexts": 0,
+      "elapsedMillis": 4135,
+      "memory": {
+        "go_heap": 51316952,
+        "go_released": 30007296,
+        "go_sys": 164276472,
+        "goroutines": 3,
+        "private": 287248384,
+        "rss": 247930880
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 96,
+      "contexts": 4,
+      "elapsedMillis": 4315,
+      "memory": {
+        "go_heap": 70002352,
+        "go_released": 38436864,
+        "go_sys": 164276472,
+        "goroutines": 23,
+        "private": 430317568,
+        "rss": 379449344
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 100,
+      "contexts": 0,
+      "elapsedMillis": 4335,
+      "memory": {
+        "go_heap": 70127264,
+        "go_released": 38436864,
+        "go_sys": 164276472,
+        "goroutines": 4,
+        "private": 228102144,
+        "rss": 190734336
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 100,
+      "contexts": 8,
+      "elapsedMillis": 4572,
+      "memory": {
+        "go_heap": 49163560,
+        "go_released": 40960000,
+        "go_sys": 164276472,
+        "goroutines": 43,
+        "private": 584224768,
+        "rss": 527851520
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 108,
+      "contexts": 0,
+      "elapsedMillis": 4609,
+      "memory": {
+        "go_heap": 49403496,
+        "go_released": 46923776,
+        "go_sys": 164276472,
+        "goroutines": 4,
+        "private": 283394048,
+        "rss": 246104064
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 108,
+      "contexts": 8,
+      "elapsedMillis": 4838,
+      "memory": {
+        "go_heap": 51152768,
+        "go_released": 28459008,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 596434944,
+        "rss": 541413376
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 116,
+      "contexts": 0,
+      "elapsedMillis": 4878,
+      "memory": {
+        "go_heap": 51393056,
+        "go_released": 34422784,
+        "go_sys": 164284664,
+        "goroutines": 4,
+        "private": 294666240,
+        "rss": 258187264
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 116,
+      "contexts": 8,
+      "elapsedMillis": 5110,
+      "memory": {
+        "go_heap": 87766704,
+        "go_released": 20832256,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 605118464,
+        "rss": 548569088
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 124,
+      "contexts": 0,
+      "elapsedMillis": 5156,
+      "memory": {
+        "go_heap": 88007360,
+        "go_released": 20832256,
+        "go_sys": 164284664,
+        "goroutines": 4,
+        "private": 281747456,
+        "rss": 244817920
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 124,
+      "contexts": 8,
+      "elapsedMillis": 5388,
+      "memory": {
+        "go_heap": 53366120,
+        "go_released": 44154880,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 582152192,
+        "rss": 526286848
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 132,
+      "contexts": 0,
+      "elapsedMillis": 5425,
+      "memory": {
+        "go_heap": 53606376,
+        "go_released": 47890432,
+        "go_sys": 164284664,
+        "goroutines": 4,
+        "private": 281309184,
+        "rss": 245075968
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 132,
+      "contexts": 8,
+      "elapsedMillis": 5661,
+      "memory": {
+        "go_heap": 73967816,
+        "go_released": 27721728,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 581799936,
+        "rss": 525471744
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 140,
+      "contexts": 0,
+      "elapsedMillis": 5703,
+      "memory": {
+        "go_heap": 74209400,
+        "go_released": 27721728,
+        "go_sys": 164284664,
+        "goroutines": 4,
+        "private": 279728128,
+        "rss": 241430528
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 140,
+      "contexts": 8,
+      "elapsedMillis": 5939,
+      "memory": {
+        "go_heap": 83715496,
+        "go_released": 29523968,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 595046400,
+        "rss": 541589504
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 148,
+      "contexts": 0,
+      "elapsedMillis": 5979,
+      "memory": {
+        "go_heap": 83955720,
+        "go_released": 29523968,
+        "go_sys": 164284664,
+        "goroutines": 3,
+        "private": 251371520,
+        "rss": 214827008
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407720,
+        "snapshots": 0
+      },
+      "completed": 148,
+      "contexts": 8,
+      "elapsedMillis": 6222,
+      "memory": {
+        "go_heap": 45930488,
+        "go_released": 38625280,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 591306752,
+        "rss": 535973888
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407720,
+        "snapshots": 0
+      },
+      "completed": 156,
+      "contexts": 0,
+      "elapsedMillis": 6266,
+      "memory": {
+        "go_heap": 46171320,
+        "go_released": 45047808,
+        "go_sys": 164284664,
+        "goroutines": 4,
+        "private": 233762816,
+        "rss": 198057984
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 156,
+      "contexts": 8,
+      "elapsedMillis": 6504,
+      "memory": {
+        "go_heap": 60838824,
+        "go_released": 23134208,
+        "go_sys": 164284664,
+        "goroutines": 43,
+        "private": 601812992,
+        "rss": 544555008
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 164,
+      "contexts": 0,
+      "elapsedMillis": 6550,
+      "memory": {
+        "go_heap": 61079128,
+        "go_released": 30015488,
+        "go_sys": 164284664,
+        "goroutines": 3,
+        "private": 287313920,
+        "rss": 249450496
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 164,
+      "contexts": 8,
+      "elapsedMillis": 6790,
+      "memory": {
+        "go_heap": 74888720,
+        "go_released": 16015360,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 619778048,
+        "rss": 564391936
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 172,
+      "contexts": 0,
+      "elapsedMillis": 6821,
+      "memory": {
+        "go_heap": 75129200,
+        "go_released": 20602880,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 254271488,
+        "rss": 216801280
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 172,
+      "contexts": 8,
+      "elapsedMillis": 7058,
+      "memory": {
+        "go_heap": 48280336,
+        "go_released": 31875072,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 595722240,
+        "rss": 541863936
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 180,
+      "contexts": 0,
+      "elapsedMillis": 7091,
+      "memory": {
+        "go_heap": 48520976,
+        "go_released": 36921344,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 286523392,
+        "rss": 249274368
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 180,
+      "contexts": 8,
+      "elapsedMillis": 7337,
+      "memory": {
+        "go_heap": 75333032,
+        "go_released": 35176448,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 574246912,
+        "rss": 517742592
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 188,
+      "contexts": 0,
+      "elapsedMillis": 7367,
+      "memory": {
+        "go_heap": 75573496,
+        "go_released": 39763968,
+        "go_sys": 168478968,
+        "goroutines": 3,
+        "private": 236744704,
+        "rss": 200302592
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 188,
+      "contexts": 8,
+      "elapsedMillis": 7600,
+      "memory": {
+        "go_heap": 47049872,
+        "go_released": 43409408,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 589479936,
+        "rss": 535162880
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 196,
+      "contexts": 0,
+      "elapsedMillis": 7638,
+      "memory": {
+        "go_heap": 47289824,
+        "go_released": 48914432,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 233140224,
+        "rss": 197992448
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 196,
+      "contexts": 4,
+      "elapsedMillis": 7836,
+      "memory": {
+        "go_heap": 48221888,
+        "go_released": 41287680,
+        "go_sys": 168478968,
+        "goroutines": 23,
+        "private": 424960000,
+        "rss": 376954880
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 200,
+      "contexts": 0,
+      "elapsedMillis": 7851,
+      "memory": {
+        "go_heap": 48346624,
+        "go_released": 44040192,
+        "go_sys": 168478968,
+        "goroutines": 3,
+        "private": 257871872,
+        "rss": 219463680
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 200,
+      "contexts": 8,
+      "elapsedMillis": 8086,
+      "memory": {
+        "go_heap": 68704616,
+        "go_released": 36356096,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 578912256,
+        "rss": 522067968
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 208,
+      "contexts": 0,
+      "elapsedMillis": 8131,
+      "memory": {
+        "go_heap": 68945224,
+        "go_released": 36356096,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 270192640,
+        "rss": 233697280
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 208,
+      "contexts": 8,
+      "elapsedMillis": 8363,
+      "memory": {
+        "go_heap": 56838096,
+        "go_released": 22749184,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 612274176,
+        "rss": 557277184
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 216,
+      "contexts": 0,
+      "elapsedMillis": 8405,
+      "memory": {
+        "go_heap": 57077680,
+        "go_released": 24584192,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 326131712,
+        "rss": 288690176
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 216,
+      "contexts": 8,
+      "elapsedMillis": 8651,
+      "memory": {
+        "go_heap": 89970248,
+        "go_released": 22102016,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 612933632,
+        "rss": 558026752
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 224,
+      "contexts": 0,
+      "elapsedMillis": 8684,
+      "memory": {
+        "go_heap": 90210376,
+        "go_released": 22102016,
+        "go_sys": 168478968,
+        "goroutines": 3,
+        "private": 252735488,
+        "rss": 216457216
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 224,
+      "contexts": 8,
+      "elapsedMillis": 8933,
+      "memory": {
+        "go_heap": 48921424,
+        "go_released": 25968640,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 585551872,
+        "rss": 530493440
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 232,
+      "contexts": 0,
+      "elapsedMillis": 8970,
+      "memory": {
+        "go_heap": 49161712,
+        "go_released": 32391168,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 252624896,
+        "rss": 216588288
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 232,
+      "contexts": 8,
+      "elapsedMillis": 9205,
+      "memory": {
+        "go_heap": 79729016,
+        "go_released": 18677760,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 614424576,
+        "rss": 560451584
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 240,
+      "contexts": 0,
+      "elapsedMillis": 9238,
+      "memory": {
+        "go_heap": 79969336,
+        "go_released": 18677760,
+        "go_sys": 168478968,
+        "goroutines": 5,
+        "private": 256561152,
+        "rss": 220467200
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 240,
+      "contexts": 8,
+      "elapsedMillis": 9477,
+      "memory": {
+        "go_heap": 85028192,
+        "go_released": 28385280,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 606224384,
+        "rss": 551743488
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 248,
+      "contexts": 0,
+      "elapsedMillis": 9513,
+      "memory": {
+        "go_heap": 85268960,
+        "go_released": 28385280,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 300036096,
+        "rss": 263811072
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 248,
+      "contexts": 8,
+      "elapsedMillis": 9759,
+      "memory": {
+        "go_heap": 68669976,
+        "go_released": 30015488,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 604499968,
+        "rss": 548196352
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 256,
+      "contexts": 0,
+      "elapsedMillis": 9800,
+      "memory": {
+        "go_heap": 68910280,
+        "go_released": 30015488,
+        "go_sys": 168478968,
+        "goroutines": 3,
+        "private": 265347072,
+        "rss": 229449728
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 256,
+      "contexts": 8,
+      "elapsedMillis": 10035,
+      "memory": {
+        "go_heap": 78363880,
+        "go_released": 15245312,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 621215744,
+        "rss": 565248000
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 264,
+      "contexts": 0,
+      "elapsedMillis": 10070,
+      "memory": {
+        "go_heap": 78605016,
+        "go_released": 20750336,
+        "go_sys": 168478968,
+        "goroutines": 6,
+        "private": 256376832,
+        "rss": 218329088
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 264,
+      "contexts": 8,
+      "elapsedMillis": 10325,
+      "memory": {
+        "go_heap": 46018728,
+        "go_released": 43057152,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 587526144,
+        "rss": 530796544
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 272,
+      "contexts": 0,
+      "elapsedMillis": 10361,
+      "memory": {
+        "go_heap": 46259208,
+        "go_released": 48562176,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 277155840,
+        "rss": 238080000
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 272,
+      "contexts": 8,
+      "elapsedMillis": 10602,
+      "memory": {
+        "go_heap": 80433216,
+        "go_released": 27598848,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 596893696,
+        "rss": 542597120
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407722,
+        "snapshots": 0
+      },
+      "completed": 280,
+      "contexts": 0,
+      "elapsedMillis": 10639,
+      "memory": {
+        "go_heap": 80672992,
+        "go_released": 27598848,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 258007040,
+        "rss": 222093312
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 280,
+      "contexts": 8,
+      "elapsedMillis": 10872,
+      "memory": {
+        "go_heap": 51819688,
+        "go_released": 31850496,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 602951680,
+        "rss": 547352576
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 288,
+      "contexts": 0,
+      "elapsedMillis": 10906,
+      "memory": {
+        "go_heap": 52060152,
+        "go_released": 34275328,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 293232640,
+        "rss": 257376256
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 288,
+      "contexts": 8,
+      "elapsedMillis": 11135,
+      "memory": {
+        "go_heap": 64892816,
+        "go_released": 28762112,
+        "go_sys": 168478968,
+        "goroutines": 43,
+        "private": 608366592,
+        "rss": 552570880
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 296,
+      "contexts": 0,
+      "elapsedMillis": 11183,
+      "memory": {
+        "go_heap": 65132944,
+        "go_released": 28762112,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 334524416,
+        "rss": 297938944
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 296,
+      "contexts": 4,
+      "elapsedMillis": 11377,
+      "memory": {
+        "go_heap": 61761328,
+        "go_released": 35102720,
+        "go_sys": 168478968,
+        "goroutines": 23,
+        "private": 424058880,
+        "rss": 377077760
+      },
+      "phase": "live",
+      "restoredPages": 0
+    },
+    {
+      "bootstrapCache": {
+        "entries": 4,
+        "seedBytes": 16407724,
+        "snapshots": 0
+      },
+      "completed": 300,
+      "contexts": 0,
+      "elapsedMillis": 11395,
+      "memory": {
+        "go_heap": 61886592,
+        "go_released": 37855232,
+        "go_sys": 168478968,
+        "goroutines": 4,
+        "private": 233435136,
+        "rss": 198201344
+      },
+      "phase": "closed",
+      "restoredPages": 0
+    }
+  ],
+  "window": {
+    "X": 0,
+    "Y": 0,
+    "OuterWidth": 1280,
+    "OuterHeight": 800,
+    "ViewportWidth": 1272,
+    "ViewportHeight": 653
+  }
+}

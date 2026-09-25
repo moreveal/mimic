@@ -7,6 +7,7 @@
     "playwright": "node playwright.mjs",
     "puppeteer": "node puppeteer.mjs",
     "concurrency": "node concurrency.mjs",
+    "profiles": "node profile-contexts.mjs",
     "verify": "node verify.mjs"
   },
   "engines": {

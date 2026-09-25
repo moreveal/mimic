@@ -13,7 +13,7 @@ import (
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
 
-func TestBrowserBootstrapSnapshotKeySeparatesContextProfiles(t *testing.T) {
+func TestBrowserBootstrapSnapshotKeySharesHostStateProfiles(t *testing.T) {
 	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
@@ -26,7 +26,8 @@ func TestBrowserBootstrapSnapshotKeySeparatesContextProfiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = p.Evaluate(context.Background(), "true"); err != nil {
+	firstTimeZone, err := p.Evaluate(context.Background(), "Intl.DateTimeFormat().resolvedOptions().timeZone")
+	if err != nil {
 		t.Fatal(err)
 	}
 	firstKey := p.Top.Realm.bootstrapSource().key
@@ -41,11 +42,15 @@ func TestBrowserBootstrapSnapshotKeySeparatesContextProfiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = q.Evaluate(context.Background(), "true"); err != nil {
+	secondTimeZone, err := q.Evaluate(context.Background(), "Intl.DateTimeFormat().resolvedOptions().timeZone")
+	if err != nil {
 		t.Fatal(err)
 	}
-	if q.Top.Realm.bootstrapSource().key == firstKey {
-		t.Fatal("distinct Context profiles shared a bootstrap snapshot key")
+	if q.Top.Realm.bootstrapSource().key != firstKey {
+		t.Fatal("host-only profile values selected a separate bootstrap graph")
+	}
+	if firstTimeZone == secondTimeZone || secondTimeZone != "America/New_York" {
+		t.Fatalf("host state leaked across contexts: first=%v second=%v", firstTimeZone, secondTimeZone)
 	}
 }
 

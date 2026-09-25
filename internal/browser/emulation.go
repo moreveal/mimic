@@ -12,6 +12,9 @@ import (
 )
 
 func (p *Page) SetDeviceMetrics(width, height int, scale float64, screenWidth, screenHeight int) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	if width < 0 || height < 0 || width > 10000000 || height > 10000000 || scale < 0 || math.IsInf(scale, 0) || math.IsNaN(scale) {
 		return fmt.Errorf("Invalid device metrics")
 	}
@@ -49,7 +52,10 @@ func (p *Page) SetDeviceMetrics(width, height int, scale float64, screenWidth, s
 	p.env.Window.ViewportHeight = height
 	return nil
 }
-func (p *Page) ClearDeviceMetrics() {
+func (p *Page) ClearDeviceMetrics() error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	p.viewportObservationChange(true)
 	defer p.viewportObservationChange(false)
 	base := p.ctx.Environment()
@@ -59,16 +65,24 @@ func (p *Page) ClearDeviceMetrics() {
 	p.env.Display = base.Display
 	p.env.ScreenOrientation = base.ScreenOrientation
 	p.mu.Unlock()
+	return nil
 }
-func (p *Page) SetUserAgentOverride(o *state.UserAgentOverride) {
+func (p *Page) SetUserAgentOverride(o *state.UserAgentOverride) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	p.mu.Lock()
 	p.env.UserAgentOverride = o
 	// External callers retain no references to mutable identity metadata.
 	p.env = p.env.Clone()
 	p.mu.Unlock()
+	return nil
 }
 
 func (p *Page) SetScreenOrientation(kind string, angle int) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	switch kind {
 	case "portraitPrimary", "portraitSecondary", "landscapePrimary", "landscapeSecondary":
 	default:
@@ -92,7 +106,10 @@ func (p *Page) SetScreenOrientation(kind string, angle int) error {
 	p.mu.Unlock()
 	return nil
 }
-func (p *Page) SetMediaPreferences(scheme string, reducedMotion *bool) {
+func (p *Page) SetMediaPreferences(scheme string, reducedMotion *bool) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	p.viewportObservationChange(true)
 	defer p.viewportObservationChange(false)
 	p.mu.Lock()
@@ -103,12 +120,16 @@ func (p *Page) SetMediaPreferences(scheme string, reducedMotion *bool) {
 	if reducedMotion != nil {
 		p.env.Preferences.ReducedMotion = *reducedMotion
 	}
+	return nil
 }
 
 // SetLocaleOverride changes the default ICU locale without changing
 // navigator.languages or Accept-Language. Future navigation realms inherit
 // the canonical Page environment.
 func (p *Page) SetLocaleOverride(locale string) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	if locale == "" {
 		locale = p.ctx.Environment().Locale.IntlLocale
 	}
@@ -126,6 +147,9 @@ func (p *Page) SetLocaleOverride(locale string) error {
 // SetTimezoneOverride changes the Page's clock projection without changing the
 // process-wide Go or ICU timezone. The empty identifier restores the context.
 func (p *Page) SetTimezoneOverride(timezone string) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	if timezone == "" {
 		timezone = p.ctx.Environment().Locale.Timezone
 	}
@@ -143,6 +167,9 @@ func (p *Page) SetTimezoneOverride(timezone string) error {
 // preserves the viewport in that case and reports the independently sized
 // outer window through Browser.getWindowBounds and window.outerWidth/Height.
 func (p *Page) SetWindowBounds(left, top, width, height *int) error {
+	if err := p.CheckProfileMutation(); err != nil {
+		return err
+	}
 	p.mu.Lock()
 	if width != nil {
 		if *width <= 0 {

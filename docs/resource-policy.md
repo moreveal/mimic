@@ -5,7 +5,7 @@ resource loading follows the existing Chrome 152 compatibility path. A policy is
 owned by one BrowserContext; its Pages, frames, workers and WebSockets use the
 same generation. It never changes animations, timers or scheduler behavior.
 
-Pass a versioned JSON document with `--resource-policy path.json`, through
+Pass a JSON document for the current Mimic release with `--resource-policy path.json`, through
 `browser.Options.ResourcePolicyJSON`, or as `resourcePolicy` in
 `Mimic.createContext`. Existing contexts can be updated with
 `Context.UpdateResourcePolicy` or `Mimic.updateResourcePolicy`. Updates are
@@ -14,7 +14,6 @@ An update does not cancel loads or clear existing cache entries.
 
 ```json
 {
-  "schemaVersion": 1,
   "rules": [
     {
       "id": "drop-visual-assets",

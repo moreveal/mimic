@@ -1,5 +1,16 @@
 # Performance architecture pass
 
+## 2026-09-25: generated/manual Context profile PoC
+
+The [profile PoC diagnostic](profile-context-poc.md) runs 300 unique-seed Contexts
+on a small local 200-link HTML fixture, with bounded concurrency 8 and genuinely
+simultaneous 100-live waves. Maximum barrier-sampled RSS was 533.91 / 4441.53 MiB;
+post-close RSS after 300 jobs was 195.28 / 404.72 MiB. Every closed wave had zero
+registered Contexts. These are not continuous peaks, a matched optimization
+comparison, or proof of a retention plateau. The 100-live memory target is not
+solved. No compact-storage rewrite is included. Receipts, executable hash,
+host-load qualifications and remaining coherence/diversity limits are linked.
+
 ## 2026-09-23: ResourcePolicy on the external Wikipedia AB scraper
 
 The default scenario of `C:/Users/moreveal/Desktop/ab-scripts/run.ps1` runs
@@ -3106,3 +3117,24 @@ isolates can make close slower, especially once the old pool was fully warm.
 These figures are diagnostic snapshots, not a replacement for the frozen public
 benchmark. Native snapshot consumer copies and active-Page memory were not
 changed.
+
+## 2026-09-25 -- generated-profile bootstrap sharing and memory
+
+Distinct generated Contexts had selected different bootstrap keys despite the
+same exposed JS graph. Managed Pages now prepare the exact security/exposure
+graph once, then restore independent realms with Page-owned host callbacks.
+In three alternating fresh-process pairs with 100 simultaneously live distinct
+profiles, median maximum sampled RSS fell from **4004 to 3135 MiB**
+(**-869 MiB, -21.7%**); all 100 candidate realms restored one shared artifact.
+With eight live Pages processing 300 jobs, the two-pair midpoint fell from
+**537 to 398 MiB**. A 1000-job, concurrency-eight soak sampled **403 MiB**
+maximum live RSS and 149–189 MiB after each hundred closed, with no retained
+Contexts. Profile environment ownership transfer also removed a sampled
+~1.5 MiB/100-Context retained Go clone. Direct resolved-profile validation and
+typed hashing lowered profile-attributed sampled allocations from ~156 to
+~34 MiB across the first 100 Pages. Removing the per-Page bootstrap-source copy
+and canonicalizing empty profile collections lowered a later matched-fixture
+sample of total Go allocations from 408 to 334 MiB. Native V8 remains the
+dominant RSS cost.
+These are local barrier samples, not continuously measured peaks or a Chrome
+comparison. See [method, raw receipts and limitations](profile-context-final-20260925.md).

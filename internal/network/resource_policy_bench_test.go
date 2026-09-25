@@ -39,7 +39,7 @@ func BenchmarkResourcePolicyImageBody(b *testing.B) {
 		b.Run(tc.name, func(b *testing.B) {
 			state := &ResourcePolicyState{}
 			if tc.name != "off" {
-				_, err := state.Update(ResourcePolicy{SchemaVersion: 1, ReportOnly: tc.reportOnly, Rules: []ResourceRule{{ID: tc.name, Match: ResourceMatch{Kinds: []string{"image"}}, Work: tc.work}}})
+				_, err := state.Update(ResourcePolicy{ReportOnly: tc.reportOnly, Rules: []ResourceRule{{ID: tc.name, Match: ResourceMatch{Kinds: []string{"image"}}, Work: tc.work}}})
 				if err != nil {
 					b.Fatal(err)
 				}

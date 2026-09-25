@@ -39,8 +39,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 		}
 		return empty, true, nil
 	case "Emulation.clearDeviceMetricsOverride":
-		s.page.ClearDeviceMetrics()
-		return empty, true, nil
+		return empty, true, s.page.ClearDeviceMetrics()
 	case "Emulation.setFocusEmulationEnabled":
 		enabled, _ := p["enabled"].(bool)
 		s.page.SetFocusEmulationEnabled(enabled)
@@ -87,8 +86,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 		if o.UserAgent == "" && o.Platform == "" && len(o.Languages) == 0 {
 			o = nil
 		}
-		s.page.SetUserAgentOverride(o)
-		return empty, true, nil
+		return empty, true, s.page.SetUserAgentOverride(o)
 	case "Emulation.setEmulatedMedia":
 		if media := stringValue(p["media"]); media != "" && media != "screen" {
 			return nil, true, fmt.Errorf("Media type %s is not supported", media)
@@ -114,8 +112,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 				}
 			}
 		}
-		s.page.SetMediaPreferences(scheme, reduced)
-		return empty, true, nil
+		return empty, true, s.page.SetMediaPreferences(scheme, reduced)
 	}
 	return nil, false, nil
 }

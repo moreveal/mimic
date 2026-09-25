@@ -135,14 +135,21 @@ answers. The same observable model applies to ordinary application code.
 - V8 cancellation watchers are joined before the next isolate operation; persistent
   values and modules are released on the isolate thread at Close. Values currently
   remain rooted until realm teardown; long-lived realm memory is technical debt.
-- Window bootstrap snapshots are immutable, bounded artifacts owned by the browser
-  Context. Repeated compatible profiles admit asynchronous construction; restoration
+- Window bootstrap snapshots are immutable, bounded artifacts owned by the Browser.
+  Repeated compatible profiles admit asynchronous construction; restoration
   creates an independent isolate and rebinds native callbacks and realm state before
-  user script. Page teardown releases consumer copies; Context teardown cancels and
+  user script. Page teardown releases consumer copies; Browser teardown cancels and
   joins builders and releases the cache. Workers retain ordinary initialization.
   Snapshot failure falls back to ordinary bootstrap with diagnostics. See
   [bootstrap snapshot measurements](performance/bootstrap-snapshot-20260910.md)
-  for admission, profiling bypass and the live-memory tradeoff.
+  for admission, profiling bypass and the live-memory tradeoff. The cache key
+  uses bootstrap exposure-shaping state, not the complete Context
+  environment. Per-Context locale, device, graphics, audio and font observations
+  come from native callbacks rebound to the consuming Page after restoration;
+  distinct generated identities can therefore reuse one immutable JS artifact.
+  Managed profile Pages prepare the exact exposure graph on first use under
+  Browser-owned singleflight; a burst of navigations waits for compilation.
+  Ordinary Pages retain lazy preparation.
   The pinned native engine must keep the stock shared read-only heap sealed
   (`--no-extensible-ro-snapshot` before initialization). Custom snapshot objects
   remain in private serialized heaps. Independent custom read-only layouts can

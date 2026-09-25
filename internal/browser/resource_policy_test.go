@@ -27,7 +27,7 @@ func TestResourcePolicyContextIsolationAndHotUpdate(t *testing.T) {
 	defer server.Close()
 	target, _ := url.Parse(server.URL)
 	blocked := false
-	policy := network.ResourcePolicy{SchemaVersion: 1, Rules: []network.ResourceRule{{ID: "images", Match: network.ResourceMatch{Kinds: []string{"image"}}, Work: network.ResourceWork{Network: &blocked}}}}
+	policy := network.ResourcePolicy{Rules: []network.ResourceRule{{ID: "images", Match: network.ResourceMatch{Kinds: []string{"image"}}, Work: network.ResourceWork{Network: &blocked}}}}
 	firstGeneration, err := first.ctx.UpdateResourcePolicy(policy)
 	if err != nil || firstGeneration != 1 {
 		t.Fatalf("update: %d %v", firstGeneration, err)
@@ -68,7 +68,7 @@ func TestResourcePolicyDecodedBudgetAppliesToLatePixels(t *testing.T) {
 	}))
 	defer server.Close()
 	p := testPage(t)
-	if _, err := p.ctx.UpdateResourcePolicy(network.ResourcePolicy{SchemaVersion: 1, Budgets: network.ResourceBudgets{MaxDecodedBytes: 8}}); err != nil {
+	if _, err := p.ctx.UpdateResourcePolicy(network.ResourcePolicy{Budgets: network.ResourceBudgets{MaxDecodedBytes: 8}}); err != nil {
 		t.Fatal(err)
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

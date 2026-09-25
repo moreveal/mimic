@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-25",
+  "host": "Windows amd64, Intel Core i7-14700KF, 34,177,138,688 bytes physical RAM",
+  "fixture": "local HTTP HTML with 200 links; 300 jobs in three 100-job rounds; 1000-job soak in ten rounds",
+  "control": {
+    "description": "Matched source with full per-environment bootstrap key and eager about:blank preparation; navigated Pages do not restore a shared artifact.",
+    "binary": "profile-feature-key-control.test.exe",
+    "sha256": "AE6B3A46FBE01E8C5BA531DB2E89BEF6308C4C3AA33A650B173A9AE0BE2FD423"
+  },
+  "candidate": {
+    "description": "Exposure-only bootstrap key plus Browser-owned preparation of the actual managed Page exposure graph.",
+    "binary": "profile-feature-site-ready.test.exe",
+    "sha256": "E3EE9FEE5CA814F690367D0BD443A9BCA93264B1E10168906DB14D0F27B36D12"
+  },
+  "soak": {
+    "binary": "profile-feature-soak.test.exe",
+    "sha256": "5F0ED50A94663BE79265F0F65DCA7F6DAD50E0A6E135315418ACA55B6A267581"
+  },
+  "finalCanonical": {
+    "binary": "profile-feature-final-canonical.test.exe",
+    "sha256": "CAC83A229989A35A2DB173309DC5D1330E27D41C211928CB01F3BB604CC30129",
+    "receipt": "profile-final-release.json",
+    "heapProfile": "profile-final-release.heap",
+    "description": "Final source after bootstrap-source zero-copy hashing and canonical empty-collection typed profile hashing; single 100-Page verification, not a paired comparison."
+  },
+  "method": "Each receipt is a fresh process. Barrier samples after each live wave; no forced GC or continuously sampled peak. Control/candidate order: C A A C C A for concurrency 100, C A A C for concurrency 8. No proxy or resource policy.",
+  "heapProfiles": [
+    {
+      "binary": "profile-feature-heap-owned.test.exe",
+      "sha256": "56B087C1FAF78C1601F0A2DEBA6595A4AA286AFCD031DB8A387C0B2857805606",
+      "capture": "profile-feature-live-owned.heap",
+      "change": "after ApplyOwned, before typed hash and direct resolved validation"
+    },
+    {
+      "binary": "profile-feature-heap-contract.test.exe",
+      "sha256": "6EC97EED51BB975B8E6279E332E85F867AFC370719B7C307012D9EDA229F1EC6",
+      "capture": "profile-feature-live-contract.heap",
+      "change": "after typed hash and direct resolved validation"
+    }
+  ]
+}

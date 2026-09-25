@@ -724,7 +724,7 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 		if serif == "" {
 			serif = stringValue(families["standard"])
 		}
-		s.page.SetGenericFontFamilies(serif, stringValue(families["sansSerif"]), stringValue(families["fixed"]))
+		err = s.page.SetGenericFontFamilies(serif, stringValue(families["sansSerif"]), stringValue(families["fixed"]))
 	case "DOM.getDocument":
 		s.setDomain("DOM", true)
 		var d *dom.Document

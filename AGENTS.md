@@ -109,6 +109,17 @@ the current behavioral reference.
 
 ## Changes
 
+- Expose one current public contract per mechanism. Do not add API contract
+  versions, parallel legacy handlers, or compatibility modes for older Mimic
+  releases. Clients inspect the Mimic release version and adapt. This applies
+  to CDP extensions, profiles, resource policies, and other public mechanisms.
+  Artifact provenance and installed Chrome bundle identities are data, not
+  selectors for an older API implementation.
+
+- Environment profile JSON is only a CDP import/export format, not a CLI
+  configuration file or an arbitrary createContext override document. Generated
+  and imported profiles must pass the same coherence checks.
+
 - Keep changes scoped to the problem being solved. Avoid unrelated refactors
   unless they are necessary for correctness or materially simplify the fix.
 

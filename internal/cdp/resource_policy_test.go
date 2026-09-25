@@ -10,7 +10,7 @@ func TestMimicResourcePolicyCommands(t *testing.T) {
 		t.Fatalf("schema: %v", schema)
 	}
 	context := s.Browser.NewContext()
-	policy := map[string]any{"schemaVersion": 1, "rules": []any{map[string]any{"id": "images", "match": map[string]any{"kinds": []string{"image"}}, "work": map[string]any{"network": false}}}}
+	policy := map[string]any{"rules": []any{map[string]any{"id": "images", "match": map[string]any{"kinds": []string{"image"}}, "work": map[string]any{"network": false}}}}
 	validated := wireCall(t, c, 2, "Mimic.validateResourcePolicy", map[string]any{"policy": policy})
 	if validated["policy"] == nil {
 		t.Fatal(validated)
