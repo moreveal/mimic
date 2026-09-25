@@ -50,6 +50,10 @@ the current behavioral reference.
 - When fixing a compatibility issue, add or extend a focused regression test
   whenever practical.
 
+- Do not run the full local test suite. Before changing behavior, run only the
+  focused tests needed to establish the baseline; after the change, rerun only
+  the focused tests needed to verify it. Let GitHub CI detect broad regressions.
+
 - Fix the shared semantic cause across related APIs and value types. If a
   failure appears through one entry point, check the underlying boundary and
   its other callers before adding a local conversion or workaround.
