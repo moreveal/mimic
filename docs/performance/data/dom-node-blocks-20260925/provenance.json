@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-25",
+  "host": "Windows amd64, Intel Core i7-14700KF",
+  "controlCommit": "4f4e5ef",
+  "rejectedPatchSha256": "B28180F612C7424B01401DCDA22CBE3CBEB03A4C77004434E7A873AA1C435247",
+  "diagnostic": "go build of tools/performance/dom_density.go in both source trees; five parsed documents with 10,000 repeated div/span pairs each; GC before and after; three alternating fresh-process pairs C A A C C A",
+  "densityBinaries": {
+    "controlSha256": "0B2F08DA2FE9B5FC852ACDCEAA11FF28BD34EE076CE1BB14D17EF7F38400CADC",
+    "candidateSha256": "3B3D72318F8B09D685909B69EAD6D3F7DECC89C7E4125CE21CE35737858A8A18"
+  },
+  "pageFixture": "TestProfilePoCDensity with 100 live generated contexts, 200 links per local HTTP Page; three alternating fresh-process pairs C A A C C A; no proxy or policy; barrier samples, not continuous peaks",
+  "pageBinaries": {
+    "controlSha256": "CAC83A229989A35A2DB173309DC5D1330E27D41C211928CB01F3BB604CC30129",
+    "candidateSha256": "F1F8D37438B925FEB163F82E98E061D72CC1190D74C6D78FDA14472478115DA7"
+  },
+  "fastGate": {
+    "controlPasses": 5,
+    "candidatePasses": 4,
+    "candidateFailures": 1,
+    "failure": "25 of 25 jobs timed out after 30 seconds in the first measured static N=25 wave; teardown also timed out; candidate rejected"
+  },
+  "receipts": ["dom-density-paired.json", "dom-live-paired.json", "dom-live-0-control.json", "dom-live-1-candidate.json", "dom-live-2-candidate.json", "dom-live-3-control.json", "dom-live-4-control.json", "dom-live-5-candidate.json", "failed-fast-gate-summary.json"]
+}

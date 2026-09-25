@@ -1,0 +1,56 @@
+[
+  {
+    "run": 0,
+    "kind": "control",
+    "rss": 3115204608,
+    "private": 3330646016,
+    "goHeap": 94105696,
+    "restored": 100,
+    "elapsed": 1307
+  },
+  {
+    "run": 1,
+    "kind": "candidate",
+    "rss": 3116113920,
+    "private": 3328479232,
+    "goHeap": 83088352,
+    "restored": 100,
+    "elapsed": 1148
+  },
+  {
+    "run": 2,
+    "kind": "candidate",
+    "rss": 3113730048,
+    "private": 3330519040,
+    "goHeap": 92467208,
+    "restored": 100,
+    "elapsed": 1139
+  },
+  {
+    "run": 3,
+    "kind": "control",
+    "rss": 3120517120,
+    "private": 3353690112,
+    "goHeap": 108540960,
+    "restored": 100,
+    "elapsed": 1155
+  },
+  {
+    "run": 4,
+    "kind": "control",
+    "rss": 3118792704,
+    "private": 3360931840,
+    "goHeap": 98459312,
+    "restored": 100,
+    "elapsed": 1146
+  },
+  {
+    "run": 5,
+    "kind": "candidate",
+    "rss": 3125104640,
+    "private": 3363524608,
+    "goHeap": 79564456,
+    "restored": 100,
+    "elapsed": 1109
+  }
+]

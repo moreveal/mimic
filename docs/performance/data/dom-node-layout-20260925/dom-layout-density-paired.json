@@ -1,0 +1,44 @@
+[
+  {
+    "kind": "control",
+    "heapLiveDelta": 73819840,
+    "allocationDelta": 99998864,
+    "elapsedMillis": 70,
+    "nodeSize": 296
+  },
+  {
+    "kind": "candidate",
+    "heapLiveDelta": 68989840,
+    "allocationDelta": 95150400,
+    "elapsedMillis": 70,
+    "nodeSize": 288
+  },
+  {
+    "kind": "candidate",
+    "heapLiveDelta": 69026864,
+    "allocationDelta": 95224352,
+    "elapsedMillis": 67,
+    "nodeSize": 288
+  },
+  {
+    "kind": "control",
+    "heapLiveDelta": 73777816,
+    "allocationDelta": 99919912,
+    "elapsedMillis": 69,
+    "nodeSize": 296
+  },
+  {
+    "kind": "control",
+    "heapLiveDelta": 73827840,
+    "allocationDelta": 100025328,
+    "elapsedMillis": 67,
+    "nodeSize": 296
+  },
+  {
+    "kind": "candidate",
+    "heapLiveDelta": 68924208,
+    "allocationDelta": 95029376,
+    "elapsedMillis": 66,
+    "nodeSize": 288
+  }
+]

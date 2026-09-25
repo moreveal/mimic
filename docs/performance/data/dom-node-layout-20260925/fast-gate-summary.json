@@ -1,0 +1,618 @@
+[
+  {
+    "kind": "control",
+    "source": ".build/dom-control-fast-gate-retry-20260925/raw.json",
+    "sha256": "694953a5ac81cf2e5a4679fa44baddf2e05f509e3753a8e8e01d78b4ee4a110e",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 13.977100000374776,
+        "execution_ms": 266.5947999994387,
+        "completion_ms": 299.0768999998181
+      },
+      "static": {
+        "session_create_ms": 21.843499999704363,
+        "execution_ms": 3.078800000366755,
+        "completion_ms": 33.12980000009702
+      },
+      "react": {
+        "session_create_ms": 9.162400000604976,
+        "execution_ms": 45.261000000209606,
+        "completion_ms": 90.7760000000053
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 33.319394719884194,
+        "marginalRSSMiB": 57.51328125,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 75.44624568117005,
+        "marginalRSSMiB": 38.128515625,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 76.84575826772401,
+        "marginalRSSMiB": 42.1734375,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 47.58350953504039,
+        "marginalRSSMiB": 70.90609375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 74.95157378808732,
+        "marginalRSSMiB": 56.64890625,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 73.5283304657243,
+        "marginalRSSMiB": 51.65125,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 69.562890625,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 48.8265625,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "control",
+    "source": ".build/dom-control-fast-gate-repeat-20260925/raw.json",
+    "sha256": "694953a5ac81cf2e5a4679fa44baddf2e05f509e3753a8e8e01d78b4ee4a110e",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 22.639899999376212,
+        "execution_ms": 254.7565000004397,
+        "completion_ms": 293.25799999969604
+      },
+      "static": {
+        "session_create_ms": 20.139299999755167,
+        "execution_ms": 3.2698999993954203,
+        "completion_ms": 35.64300000016374
+      },
+      "react": {
+        "session_create_ms": 20.997600000555394,
+        "execution_ms": 47.5880000003599,
+        "completion_ms": 85.5889999993451
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 33.18591045712642,
+        "marginalRSSMiB": 78.396484375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 76.71070628352733,
+        "marginalRSSMiB": 69.727734375,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 51.739454593761295,
+        "marginalRSSMiB": 61.925390625,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 39.249641062003434,
+        "marginalRSSMiB": 52.51234375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 65.35602564244323,
+        "marginalRSSMiB": 34.77,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 73.83009568672917,
+        "marginalRSSMiB": 33.76421875,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 60.8671875,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 49.73828125,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "control",
+    "source": ".build/dom-control-fast-gate-third-20260925/raw.json",
+    "sha256": "694953a5ac81cf2e5a4679fa44baddf2e05f509e3753a8e8e01d78b4ee4a110e",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 10.638000000653847,
+        "execution_ms": 259.6467000003031,
+        "completion_ms": 295.19600000094215
+      },
+      "static": {
+        "session_create_ms": 17.68140000058338,
+        "execution_ms": 3.330100000312086,
+        "completion_ms": 33.94699999989825
+      },
+      "react": {
+        "session_create_ms": 21.55719999973371,
+        "execution_ms": 47.556399998939014,
+        "completion_ms": 91.25529999982973
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 33.210355387343704,
+        "marginalRSSMiB": 55.89609375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 77.87124923464387,
+        "marginalRSSMiB": 38.81328125,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 75.80932136189286,
+        "marginalRSSMiB": 40.67265625,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 40.00929495950088,
+        "marginalRSSMiB": 70.8946875,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 70.47838188393649,
+        "marginalRSSMiB": 56.005625,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 72.01601636209543,
+        "marginalRSSMiB": 50.71921875,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 60.784765625,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 48.59296875,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "control",
+    "source": ".build/dom-control-fast-gate-fourth-20260925/raw.json",
+    "sha256": "694953a5ac81cf2e5a4679fa44baddf2e05f509e3753a8e8e01d78b4ee4a110e",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 11.562199999389122,
+        "execution_ms": 252.84060000012687,
+        "completion_ms": 296.7287999999826
+      },
+      "static": {
+        "session_create_ms": 21.07160000014119,
+        "execution_ms": 3.331199999593082,
+        "completion_ms": 34.53580000132206
+      },
+      "react": {
+        "session_create_ms": 13.851100000465522,
+        "execution_ms": 45.8303999985219,
+        "completion_ms": 86.21730000049865
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 32.344120744481216,
+        "marginalRSSMiB": 77.484375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 73.55401991130553,
+        "marginalRSSMiB": 68.861328125,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 74.85175609737662,
+        "marginalRSSMiB": 67.230078125,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 47.32484035447605,
+        "marginalRSSMiB": 74.2834375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 70.42047218887711,
+        "marginalRSSMiB": 60.264375,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 73.33896772176084,
+        "marginalRSSMiB": 55.0815625,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 69.4375,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 49.0859375,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "control",
+    "source": ".build/dom-control-fast-gate-fifth-20260925/raw.json",
+    "sha256": "694953a5ac81cf2e5a4679fa44baddf2e05f509e3753a8e8e01d78b4ee4a110e",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 19.08980000007432,
+        "execution_ms": 259.57370000105584,
+        "completion_ms": 295.942599999762
+      },
+      "static": {
+        "session_create_ms": 19.09419999901729,
+        "execution_ms": 3.0079000007390277,
+        "completion_ms": 33.058700000765384
+      },
+      "react": {
+        "session_create_ms": 18.883200000345823,
+        "execution_ms": 45.484600001145736,
+        "completion_ms": 90.78020000015385
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 32.93848868997114,
+        "marginalRSSMiB": 59.825390625,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 73.17264133571824,
+        "marginalRSSMiB": 41.28515625,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 73.81065205807354,
+        "marginalRSSMiB": 40.978515625,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 41.71353181974938,
+        "marginalRSSMiB": 60.79796875,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 72.2169953167172,
+        "marginalRSSMiB": 44.84359375,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 75.43405509661075,
+        "marginalRSSMiB": 39.44640625,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 61.45546875,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 49.01640625,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "layout",
+    "source": ".build/dom-layout-fast-gate-20260925/raw.json",
+    "sha256": "c4d70a8a4deeb5946acf5ffecd6008cb2d7b91e4bafc340fd4ac82289bff1991",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 19.1675000005489,
+        "execution_ms": 260.1166000004014,
+        "completion_ms": 295.75689999910537
+      },
+      "static": {
+        "session_create_ms": 13.327999999091844,
+        "execution_ms": 3.5074000006716233,
+        "completion_ms": 32.70890000021609
+      },
+      "react": {
+        "session_create_ms": 4.426600000442704,
+        "execution_ms": 67.00590000036755,
+        "completion_ms": 111.96039999958884
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 33.575660063936,
+        "marginalRSSMiB": 77.8296875,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 77.53350416540619,
+        "marginalRSSMiB": 70.315625,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 76.10379034925333,
+        "marginalRSSMiB": 68.834375,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 40.92020706938921,
+        "marginalRSSMiB": 73.63484375,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 66.56587705339811,
+        "marginalRSSMiB": 60.57546875,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 72.93426813669905,
+        "marginalRSSMiB": 55.5775,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 60.752734375,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 49.44453125,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "layout",
+    "source": ".build/dom-layout-fast-gate-repeat-20260925/raw.json",
+    "sha256": "c4d70a8a4deeb5946acf5ffecd6008cb2d7b91e4bafc340fd4ac82289bff1991",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 22.304600001007202,
+        "execution_ms": 270.74249999895983,
+        "completion_ms": 311.8876000007731
+      },
+      "static": {
+        "session_create_ms": 8.35660000120697,
+        "execution_ms": 3.233600000385195,
+        "completion_ms": 35.43539999918721
+      },
+      "react": {
+        "session_create_ms": 6.819500000347034,
+        "execution_ms": 48.70599999958358,
+        "completion_ms": 95.1054999986809
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 33.21417195572422,
+        "marginalRSSMiB": 55.669921875,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 56.07333045839852,
+        "marginalRSSMiB": 40.13984375,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 74.72601705874233,
+        "marginalRSSMiB": 41.274609375,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 38.97717044754107,
+        "marginalRSSMiB": 59.10921875,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 70.89149744426724,
+        "marginalRSSMiB": 41.705,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 72.86080671494872,
+        "marginalRSSMiB": 36.70703125,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 69.476953125,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 49.871484375,
+        "workload": "react"
+      }
+    ]
+  },
+  {
+    "kind": "layout",
+    "source": ".build/dom-layout-fast-gate-third-20260925/raw.json",
+    "sha256": "c4d70a8a4deeb5946acf5ffecd6008cb2d7b91e4bafc340fd4ac82289bff1991",
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 10.154100000363542,
+        "execution_ms": 265.48799999909534,
+        "completion_ms": 308.98270000034245
+      },
+      "static": {
+        "session_create_ms": 19.884599998476915,
+        "execution_ms": 3.303299999970477,
+        "completion_ms": 36.012500000651926
+      },
+      "react": {
+        "session_create_ms": 15.245600001435378,
+        "execution_ms": 46.15560000092955,
+        "completion_ms": 83.7744999989809
+      }
+    },
+    "concurrency": [
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 32.79074487786347,
+        "marginalRSSMiB": 58.8796875,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 74.22648579083474,
+        "marginalRSSMiB": 39.00703125,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 10,
+        "throughput": 76.31758494516511,
+        "marginalRSSMiB": 43.406640625,
+        "wave": 2
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 34.13440407954043,
+        "marginalRSSMiB": 72.8603125,
+        "wave": 0
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 71.88578556336498,
+        "marginalRSSMiB": 57.6196875,
+        "wave": 1
+      },
+      {
+        "valid": true,
+        "n": 25,
+        "throughput": 76.48412862535761,
+        "marginalRSSMiB": 52.19546875,
+        "wave": 2
+      }
+    ],
+    "memory": [
+      {
+        "marginalRSSMiB": 69.675390625,
+        "workload": "static"
+      },
+      {
+        "marginalRSSMiB": 48.434375,
+        "workload": "react"
+      }
+    ]
+  }
+]

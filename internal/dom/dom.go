@@ -21,7 +21,6 @@ type Node struct {
 	QualifiedName  string `json:"qualifiedName,omitempty"`
 	ContentType    string `json:"contentType,omitempty"`
 	DocumentURL    string `json:"documentURL,omitempty"`
-	ParsedDocument bool   `json:"parsedDocument,omitempty"`
 	Text           string `json:"text,omitempty"`
 	// TextJSON preserves DOMString code units that cannot cross a UTF-8 string
 	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
@@ -36,9 +35,12 @@ type Node struct {
 	TemplateHost          int64             `json:"templateHost,omitempty"`
 	Nonce                 string            `json:"-"`
 	ScriptText            string            `json:"-"` // Last source accepted by a script text setter; clones do not inherit it.
+	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
+	// Keep these flags together after pointer-sized fields. On amd64 this
+	// avoids the next Go allocator class for every retained Node.
+	ParsedDocument        bool              `json:"parsedDocument,omitempty"`
 	ScriptAlreadyStarted  bool              `json:"-"`
 	ScriptForceAsync      bool              `json:"-"`
-	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
 
 type arenaMutex struct {

@@ -32,6 +32,8 @@
 # Generated performance evidence; keep authored Markdown summaries visible
 /docs/performance/data/*
 !/docs/performance/data/profile-context-final-20260925/
+!/docs/performance/data/dom-node-blocks-20260925/
+!/docs/performance/data/dom-node-layout-20260925/
 /docs/performance/dom-current/**
 !/docs/performance/dom-current/**/
 !/docs/performance/dom-current/**/*.md

@@ -3138,3 +3138,21 @@ sample of total Go allocations from 408 to 334 MiB. Native V8 remains the
 dominant RSS cost.
 These are local barrier samples, not continuously measured peaks or a Chrome
 comparison. See [method, raw receipts and limitations](profile-context-final-20260925.md).
+
+## 2026-09-25 -- compact DOM Node layout
+
+A separate DOM change groups three `Node` booleans after pointer-sized fields,
+reducing the struct from 296 to 288 bytes and its Go allocator class. Five
+DOM-heavy documents with 10,000 repeated element pairs each used median live
+Go heap **73.82 → 68.99 MB** across three alternating pairs (-6.54%). Parser
+bytes per batch/stream parse fell 114,089→107,721 / 183,003→176,507;
+allocation counts and semantics stayed the same. The small-DOM 100-Page fixture
+did not show a meaningful process-RSS change. Five control and three candidate
+fast gates passed, but candidate warm DOM completion was 309.0 versus 295.9 ms
+median, a possible 4.4% workload cost that the parser benchmark did not show.
+See [method and limits](dom-node-layout-20260925.md).
+
+An earlier 16-record block allocator saved 3.16% DOM-heavy live Go heap and
+reduced allocation counts, but one of five candidate fast gates stalled all 25
+jobs in a static wave; all five controls passed. Its
+[negative result and removable patch](dom-node-blocks-20260925.md) are retained.

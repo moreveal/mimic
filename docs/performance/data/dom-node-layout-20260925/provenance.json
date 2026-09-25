@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-25",
+  "host": "Windows amd64, Intel Core i7-14700KF",
+  "controlCommit": "4f4e5ef",
+  "change": "Reorder three Node booleans after pointer-sized fields; no other production source change",
+  "diagnostic": "tools/performance/dom_density.go; five parsed documents with 10,000 repeated div/span pairs each; GC before and after; three alternating fresh-process pairs C A A C C A",
+  "densityBinarySha256": {
+    "control": "0B2F08DA2FE9B5FC852ACDCEAA11FF28BD34EE076CE1BB14D17EF7F38400CADC",
+    "layout": "D0328E186C54E4855A4BEF936635CB59146EDF07864DE736CEC8F60FC72072B9"
+  },
+  "pageFixture": "TestProfilePoCDensity with 100 live generated Contexts, 200 links per local HTTP Page; three alternating fresh-process pairs C A A C C A; barrier samples, not continuous peaks",
+  "pageBinarySha256": {
+    "control": "CAC83A229989A35A2DB173309DC5D1330E27D41C211928CB01F3BB604CC30129",
+    "layout": "E03CDD000AEC704307D06679AD419347B1846982D19166EC5A473EB33473A27C"
+  },
+  "fastGate": "Five control and three layout runs with tools/performance/fast_gate.py; compact per-run results and build hashes in fast-gate-summary.json",
+  "receipts": ["dom-layout-density-paired.json", "dom-layout-live-paired.json", "dom-layout-live-0-control.json", "dom-layout-live-1-candidate.json", "dom-layout-live-2-candidate.json", "dom-layout-live-3-control.json", "dom-layout-live-4-control.json", "dom-layout-live-5-candidate.json", "fast-gate-summary.json"]
+}

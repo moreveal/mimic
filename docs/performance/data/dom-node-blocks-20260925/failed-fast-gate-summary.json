@@ -1,0 +1,27 @@
+{
+  "buildSha256": "5ad2f0717b078d1331b3efb1ce2d1b9508009100505941eb1eaba64d2299794c",
+  "failure": "RuntimeError('Mandatory workload correctness gate failed; see raw.json')",
+  "workload": "static",
+  "n": 25,
+  "wave": 0,
+  "elapsedSeconds": 110.50986040000043,
+  "stopReason": null,
+  "statusCounts": [
+    {
+      "status": "ERROR",
+      "count": 25
+    }
+  ],
+  "errorCounts": [
+    {
+      "error": "timed out in 30.0s",
+      "count": 25
+    }
+  ],
+  "teardownErrorCounts": [
+    {
+      "error": "timed out in 30.0s",
+      "count": 25
+    }
+  ]
+}
