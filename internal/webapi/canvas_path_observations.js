@@ -576,9 +576,9 @@ const installPathObservations = (proto) => {
     if (rx < 0 || ry < 0) fail('IndexSizeError', 'Negative radius');
     let delta = end - start,
       tau = Math.PI * 2;
-    if (!ccw) {
-      delta = delta >= tau ? tau : ((delta % tau) + tau) % tau;
-    } else delta = -delta >= tau ? -tau : -(((-delta % tau) + tau) % tau);
+    if (Math.abs(delta) >= tau) delta = ccw ? -tau : tau;
+    else if (!ccw) delta = ((delta % tau) + tau) % tau;
+    else delta = -(((-delta % tau) + tau) % tau);
     const steps = Math.max(1, Math.ceil((Math.abs(delta) / tau) * 128)),
       co = Math.cos(rotation),
       si = Math.sin(rotation);

@@ -21,6 +21,26 @@ const canvasStateFixture = `(async()=>{
  return true;
 })()`
 
+func TestCanvasFullTurnArcsInBothDirections(t *testing.T) {
+	parallelBrowserTest(t)
+	p := blitzStandardsPage(t)
+	value, err := p.Evaluate(context.Background(), `(()=>{
+  const tau=2*Math.PI;
+  for(const method of ['arc','ellipse'])for(const delta of [-2*tau,-tau,tau,2*tau])for(const ccw of [false,true]){
+    const canvas=new OffscreenCanvas(49,44),ctx=canvas.getContext('2d',{willReadFrequently:true});
+    ctx.scale(0.4,0.4);ctx.fillStyle='#ff22ff';ctx.beginPath();
+    if(method==='arc')ctx.arc(40,40,40,0,delta,ccw);
+    else ctx.ellipse(40,40,40,40,0,0,delta,ccw);
+    ctx.fill();
+    if(!ctx.getImageData(0,0,49,44).data.some(v=>v))return method+':'+delta+':'+ccw;
+  }
+  return 'ok';
+})()`)
+	if err != nil || value != "ok" {
+		t.Fatalf("full-turn canvas arcs: %v %v", value, err)
+	}
+}
+
 func TestCanvasZeroImageDataDimensionMessage(t *testing.T) {
 	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
