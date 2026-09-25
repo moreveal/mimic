@@ -13,9 +13,9 @@ import (
 	"github.com/moreveal/mimic/internal/state"
 )
 
-// Generation keeps the captured graphics/font/device and wire recipe intact.
-// Window placement, viewport, preferences, and audio output rate are modeled
-// independently by the same environment that backs all observable surfaces.
+// Generation selects a complete GPU/font observation recipe, then varies only
+// independently modeled window, preference and audio-output settings. Chrome
+// identity and the network wire recipe remain those of the installed bundle.
 type Generation struct {
 	Browser  string `json:"browser,omitempty"`
 	Version  int    `json:"version,omitempty"`
@@ -102,6 +102,9 @@ func Generate(raw []byte, base state.Environment) (Document, Descriptor, error) 
 		h := sha256.Sum256([]byte("mimic-profile\x00" + base.ProfileID + "\x00" + options.Seed + "\x00" + group))
 		return int(binary.LittleEndian.Uint64(h[:8]) % uint64(count))
 	}
+	if selected := choose("gpu-font-recipe", len(gpuFontRecipes)+1); selected != 0 {
+		gpuFontRecipes[selected-1].apply(&d)
+	}
 	d.Window.ViewportWidth = 800 + choose("width", maxWidth-800+1)
 	d.Window.ViewportHeight = 480 + choose("height", maxHeight-480+1)
 	d.Window.OuterWidth = d.Window.ViewportWidth + dx
@@ -169,8 +172,8 @@ func ResolveToken(token string, base state.Environment) (Document, Descriptor, e
 	return Restore(raw, base)
 }
 
-// ImportManual exposes only existing modeled surfaces. Graphics and fonts stay
-// at baseline until complete alternative recipes can be validated together.
+// ImportManual accepts the installed baseline or an exact complete generated
+// GPU/font pair. Individual graphics/font edits remain unsupported.
 func ImportManual(raw []byte, base state.Environment) (Document, Descriptor, error) {
 	obj, err := Decode(raw)
 	if err != nil {
@@ -188,16 +191,52 @@ func ImportManual(raw []byte, base state.Environment) (Document, Descriptor, err
 	}
 	obj["schemaVersion"], obj["baseProfile"] = 1, base.ProfileID
 	encoded, _ := json.Marshal(obj)
+	baseline := FromEnvironment(base, base.ProfileID, Proxy{})
 	d, err := Normalize(encoded, base, nil)
+	if err != nil && obj["graphics"] != nil && obj["fonts"] != nil {
+		// A manual user can pin one of the curated whole-machine observations,
+		// but cannot splice an arbitrary GPU or font override into another.
+		for _, recipe := range gpuFontRecipes {
+			candidate := base.Clone()
+			candidateDoc := FromEnvironment(candidate, base.ProfileID, Proxy{})
+			recipe.apply(&candidateDoc)
+			candidate.Graphics, candidate.Fonts = candidateDoc.Graphics, candidateDoc.Fonts
+			candidateFields := FromEnvironment(candidate, base.ProfileID, Proxy{}).Object()
+			graphicsInput, _ := json.Marshal(obj["graphics"])
+			graphicsRecipe, _ := json.Marshal(candidateFields["graphics"])
+			fontsInput, _ := json.Marshal(obj["fonts"])
+			fontsRecipe, _ := json.Marshal(candidateFields["fonts"])
+			if string(graphicsInput) != string(graphicsRecipe) || string(fontsInput) != string(fontsRecipe) {
+				continue
+			}
+			d, err = Normalize(encoded, candidate, nil)
+			if err == nil {
+				break
+			}
+		}
+	}
 	if err != nil {
 		return Document{}, Descriptor{}, err
 	}
-	baseline := FromEnvironment(base, base.ProfileID, Proxy{})
-	for key, pair := range map[string][2]any{"graphics": {d.Graphics, baseline.Graphics}, "fonts": {d.Fonts, baseline.Fonts}, "identity": {d.Identity, baseline.Identity}} {
+	if !reflect.DeepEqual(d.Graphics, baseline.Graphics) || !reflect.DeepEqual(d.Fonts, baseline.Fonts) {
+		matched := false
+		for _, recipe := range gpuFontRecipes {
+			candidate := baseline
+			recipe.apply(&candidate)
+			if reflect.DeepEqual(d.Graphics, candidate.Graphics) && reflect.DeepEqual(d.Fonts, candidate.Fonts) {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			return Document{}, Descriptor{}, failure("graphics", "unsupported", "use a complete supported GPU/font recipe")
+		}
+	}
+	for key, pair := range map[string][2]any{"identity": {d.Identity, baseline.Identity}} {
 		a, _ := json.Marshal(wire(reflect.ValueOf(pair[0])))
 		b, _ := json.Marshal(wire(reflect.ValueOf(pair[1])))
 		if string(a) != string(b) {
-			return Document{}, Descriptor{}, failure(key, "unsupported", "manual changes require a complete validated recipe; keep the installed baseline")
+			return Document{}, Descriptor{}, failure(key, "unsupported", "browser identity must remain the installed Chrome 152 recipe")
 		}
 	}
 	environment := d.Public()
@@ -209,9 +248,9 @@ func ImportManual(raw []byte, base state.Environment) (Document, Descriptor, err
 
 func Warnings(mode string) []string {
 	if mode == "manual" {
-		return []string{"Manual mode: do not combine inconsistent surfaces. Known invalid combinations are rejected, but unmodeled cross-surface relationships cannot yet be certified.", "Graphics, fonts, browser identity and wire behavior remain the installed Chrome 152 recipe. A Context proxy does not route WebRTC or define locale/timezone."}
+		return []string{"Manual mode: do not combine inconsistent surfaces. Known invalid combinations are rejected, but unmodeled cross-surface relationships cannot yet be certified.", "Manual graphics and fonts accept only the installed baseline or a complete supported GPU/font pair. Browser identity and wire behavior remain Chrome 152. A Context proxy does not route WebRTC or define locale/timezone."}
 	}
-	return []string{"Generated profiles preserve the installed Chrome 152 graphics, fonts, device and wire recipe. They vary window geometry, preferences and audio output rate; this does not certify equivalence to every physical machine or route WebRTC through the Context proxy."}
+	return []string{"Generated profiles select one supported GPU/font observation recipe while retaining Chrome 152 identity and wire behavior. They also vary window geometry, preferences and audio output rate. Readbacks are stable modeled operations, not captured pixel hashes; this does not certify physical-GPU equivalence or route WebRTC through the Context proxy."}
 }
 
 func ManualSchema(base state.Environment) map[string]any {
@@ -221,8 +260,9 @@ func ManualSchema(base state.Environment) map[string]any {
 	delete(properties, "schemaVersion")
 	delete(properties, "baseProfile")
 	delete(properties["network"].(map[string]any)["properties"].(map[string]any), "proxy")
-	for _, key := range []string{"identity", "graphics", "fonts"} {
-		properties[key].(map[string]any)["description"] = "Only unchanged installed-baseline values are accepted until another complete recipe is captured and validated."
+	properties["identity"].(map[string]any)["description"] = "Only unchanged installed Chrome 152 identity is accepted."
+	for _, key := range []string{"graphics", "fonts"} {
+		properties[key].(map[string]any)["description"] = "Only the installed baseline or an exact complete generated GPU/font pair is accepted; individual field edits are rejected."
 	}
 	properties["audio"].(map[string]any)["description"] = "Modeled stereo output device: 44100 or 48000 Hz; latency fields retain the installed recipe."
 	schema["description"] = "Explicit manual import fields. Generated/imported Contexts are immutable; mutability annotations describe ordinary Page emulation only."

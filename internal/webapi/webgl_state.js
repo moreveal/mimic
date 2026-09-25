@@ -55,8 +55,20 @@
         configurable: true,
       });
     }
-  const graphics = typeof host.graphics === 'function' ? host.graphics() : {},
-    capabilities = JSON.parse(graphics.capabilitiesJSON || '{}');
+  const graphics = {},
+    capabilities = {};
+  const refreshGraphics = () => {
+    const selected = typeof host.graphics === 'function' ? host.graphics() : {};
+    Object.assign(graphics, selected);
+    const next = JSON.parse(selected.capabilitiesJSON || '{}');
+    for (const kind of ['webgl', 'webgl2']) {
+      const current = (capabilities[kind] ||= {});
+      for (const key of Object.keys(current)) delete current[key];
+      Object.assign(current, next[kind] || {});
+    }
+  };
+  refreshGraphics();
+  if (typeof bootstrapRestoreHooks !== 'undefined') bootstrapRestoreHooks.push(refreshGraphics);
   const fail = (name) => {
     host.semanticMissingAt('webgl_state.js:9', 'WebGL.' + name);
     throw new DOMException(
@@ -181,12 +193,14 @@
     const profile = capabilities[kind] || { parameters: {}, samples: {}, floatSamples: {} };
     /* shared_webgl_extensions */
     /* shared_webgl_vertex_arrays */
-    method('getSupportedExtensions', () => [...extensionDefinitions.keys()].sort());
+    const supportedExtensions = () => {
+      const observed = Array.isArray(profile.extensions) ? new Set(profile.extensions) : null;
+      return [...extensionDefinitions.keys()].filter((name) => !observed || observed.has(name));
+    };
+    method('getSupportedExtensions', () => supportedExtensions().sort());
     method('getExtension', (s, name) => {
       name = String(name).toLowerCase();
-      const canonical = [...extensionDefinitions.keys()].find(
-        (value) => value.toLowerCase() === name,
-      );
+      const canonical = supportedExtensions().find((value) => value.toLowerCase() === name);
       if (!canonical) return null;
       if (s.extensions.has(canonical)) return s.extensions.get(canonical);
       const d = extensionDefinitions.get(canonical),

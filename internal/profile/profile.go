@@ -30,7 +30,7 @@ func (e *Error) Error() string     { return e.Path + ": " + e.Reason + ": " + e.
 func (e *Error) ProtocolCode() int { return -32602 }
 func (e *Error) ProtocolData() any { return e }
 func Limitations() []string {
-	return []string{"Custom timezone/Intl locale requires the native Intl backend. Generated graphics and fonts use the installed captured recipe; unvalidated custom graphics/font/media backends are unavailable.", "Audio output supports modeled 44.1/48 kHz stereo recipes. Graphics observations remain bounded approximations, not arbitrary GPU or Chrome pixel equivalence.", "Proxy routes resource-loader HTTP(S) traffic only; ICE metadata does not route WebRTC or change the public IP.", "Changing identity does not change the installed Chrome implementation; proxy transport disables HTTP/3."}
+	return []string{"Custom timezone/Intl locale requires the native Intl backend. Generated GPU/font recipes are supported; arbitrary manual graphics/font/media backends remain unavailable.", "Audio output supports modeled 44.1/48 kHz stereo recipes. Graphics readbacks remain stateful approximations, not physical-GPU or Chrome pixel equivalence.", "Proxy routes resource-loader HTTP(S) traffic only; ICE metadata does not route WebRTC or change the public IP.", "Changing identity does not change the installed Chrome implementation; proxy transport disables HTTP/3."}
 }
 func failure(path, reason, message string) error { return &Error{path, reason, message} }
 

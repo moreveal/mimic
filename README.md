@@ -115,9 +115,9 @@ await Promise.all(jobs.map(async (job) => {
 Provide one proxy per job if every route must differ. `profile` is an opaque,
 portable token that can be saved and reused; manual settings require explicit
 `Mimic.importProfile` with `mode: "manual"`. See the
-[profile contract and limits](docs/environment-profiles.md). GPU and fonts remain
-the installed measured recipe, so distinct generated profiles do not imply
-different GPU or font observations.
+[profile contract and limits](docs/environment-profiles.md). Generated profiles
+select paired GPU/font observation recipes, while Chrome 152 identity and the
+network wire recipe remain fixed. Different seeds can select the same recipe.
 
 See the [runnable examples](examples/README.md),
 [supported CDP surface](docs/cdp-compatibility.md), and

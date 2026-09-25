@@ -2,8 +2,9 @@
 
 Mimic exposes one current contract. Use `Mimic.getVersion` to identify the Mimic
 release/build, separately from `chromeVersion`. There is no contractVersion.
-The generator uses one coherent installed Chrome 152 device recipe. It is not a
-catalog of all physical machines.
+The generator keeps the installed Chrome 152 browser and network recipe while
+selecting one of several coherent graphics/font observation recipes. These
+recipes are modeled observations, not a catalog of certified physical machines.
 
 ```javascript
 const { browserContextId, profile, warnings } = await cdp.send("Mimic.createContext", {
@@ -61,9 +62,11 @@ const context = await cdp.send("Mimic.createContext", { profile });
 
 Manual mode explicitly warns against inconsistent surfaces. Known invalid values
 and relations fail; the warning is not an override. Only modeled fields work.
-Identity, graphics and fonts must retain the installed baseline until complete
-alternative recipes can be validated. Arbitrary hardware realism and every
-cross-surface relation are not yet certified. Custom timezone/Intl locale requires
+Browser and network identity must retain the installed baseline. Graphics and
+fonts may retain the baseline or exactly match one complete curated recipe;
+individual graphics/font edits and mixed recipes are rejected. Arbitrary
+hardware realism and every cross-surface relation are not yet certified.
+Custom timezone/Intl locale requires
 native Intl (V8). IANA timezone and language do not infer the proxy's geography.
 
 Manual input has no schemaVersion/baseProfile and cannot contain network.proxy.
@@ -108,19 +111,34 @@ Credentials are omitted from profile reads and errors.
 
 ## Current diversity and RAM limits
 
-The generated recipe varies viewport dimensions, window position, theme, reduced
-motion and output-device sample rate (44.1 or 48 kHz). Window insets and the
-audio latency recipe remain coupled to their installed defaults. Hardware,
-browser identity, display, locale, graphics, fonts and wire profile stay at the
-captured baseline. On the current 2560×1440 screen, the Cartesian upper bound is
-**3,612,980,639,528 configurations (~41.7 bits)**: the sum of 1..1753 legal
-horizontal placements times the sum of 1..766 vertical placements times eight
-preference/audio choices. The 256-bit random seed makes random generation
+The generated recipe selects among the installed graphics/font baseline and four
+paired GPU/font recipes, then varies viewport dimensions, window position, theme,
+reduced motion and output-device sample rate (44.1 or 48 kHz). The four added
+recipes derive jointly observed WebGL identity, parameters, extensions, shader
+precision, WebGPU adapter/features/limits and CSS system fonts from Windows
+Chrome 142–145 records. Browser identity, network wire recipe, hardware,
+display and locale stay at the Chrome 152 baseline. Window insets and the audio
+latency recipe remain coupled to their installed defaults. On the current
+2560×1440 screen, the Cartesian upper bound is **18,064,903,197,640
+configurations (~44.0 bits)**: five paired graphics/font choices times the sum
+of 1..1753 legal horizontal placements times the sum of 1..766 vertical
+placements times eight preference/audio choices. The 256-bit random seed makes random generation
 unpredictable; it does not imply 2^256 observable fingerprints. Different seeds
 can still produce the same profileId, and a site's smaller observation set may
-collapse many configurations. Graphics readbacks use canonical modeled state,
-without per-seed random noise. Distinct generated profiles do not imply distinct
-GPUs, font inventories, public IPs or network identities.
+collapse many configurations. Graphics readbacks use stable modeled state rather
+than fixed per-GPU pixel hashes or per-call noise. Font variation currently covers
+observed CSS system-font shorthands and the selected generic resources, not a
+complete installed-font inventory. Unlinked graphics/font fields stay at their
+baseline values. Distinct generated profiles do not guarantee distinct GPUs,
+font inventories, public IPs or network identities.
+
+The small [recipe catalog](../internal/profile/gpu_font_recipes.json) contains
+only modeled observations and source hashes. The external source collection is
+not embedded. Rebuild it with
+`python tools/fingerprints/build_recipes.py --source <dataset-directory> --output internal/profile/gpu_font_recipes.json`.
+WebGL extension lists expose only extensions Mimic implements. CSS system-font
+shorthands use the per-Context recipe even when the native style producer cannot
+represent them; that case falls back to the JS style cascade.
 
 For 100 jobs, limit live contexts (for example to 8), create on admission, stream
 results and close in finally. For 100 simultaneously live pages, expect a much

@@ -51,8 +51,9 @@ job `i` uses entry `i % proxies.length`, so provide 100 entries for 100 distinct
 routes. `RESOURCE_POLICY=dataExtraction` optionally blocks image/font/media
 requests and can change page observations. `PROFILE_MODE=manual` demonstrates
 explicit manual import (the same manual environment for every isolated context).
-Generated profiles vary window position/size, preferences and output audio rate;
-GPU and font resources stay on the installed measured recipe. See
+Generated profiles vary window position/size, preferences and output audio rate,
+and select among paired GPU/font observation recipes. Chrome 152 identity and
+the network wire recipe remain fixed. See
 [profile limits](../docs/environment-profiles.md).
 
 The fixture uses localhost so the examples are reproducible without a third-party

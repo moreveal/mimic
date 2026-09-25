@@ -10,6 +10,8 @@ import (
 func TestGeneratedProfileRoundtripAndDiversity(t *testing.T) {
 	base := testBase()
 	seen := map[string]bool{}
+	seenGPU := map[string]bool{}
+	seenFont := map[string]bool{}
 	for i := 0; i < 1000; i++ {
 		raw := []byte(fmt.Sprintf(`{"seed":"account-%d","browser":"chrome","version":152,"platform":"windows"}`, i))
 		d, descriptor, err := Generate(raw, base)
@@ -24,8 +26,24 @@ func TestGeneratedProfileRoundtripAndDiversity(t *testing.T) {
 			t.Fatal("duplicate in fixed 1000-profile corpus", i)
 		}
 		seen[descriptor.ProfileID] = true
-		if !reflect.DeepEqual(d.Graphics, base.Graphics) || !reflect.DeepEqual(d.Hardware, base.Hardware) || !reflect.DeepEqual(d.Fonts, base.Fonts) {
-			t.Fatal("invented device recipe")
+		if !reflect.DeepEqual(d.Hardware, base.Hardware) || !reflect.DeepEqual(d.Identity, FromEnvironment(base, base.ProfileID, Proxy{}).Identity) || d.Network.WireProfile != base.Network.WireProfile {
+			t.Fatal("machine recipe changed Chrome identity, hardware or wire behavior")
+		}
+		if !reflect.DeepEqual(d.Graphics, base.Graphics) || !reflect.DeepEqual(d.Fonts, base.Fonts) {
+			matched := false
+			for _, recipe := range gpuFontRecipes {
+				candidate := FromEnvironment(base, base.ProfileID, Proxy{})
+				recipe.apply(&candidate)
+				if reflect.DeepEqual(d.Graphics, candidate.Graphics) && reflect.DeepEqual(d.Fonts, candidate.Fonts) {
+					matched = true
+					seenGPU[d.Graphics.Renderer] = true
+					seenFont[d.Fonts.System["menu"]] = true
+					break
+				}
+			}
+			if !matched {
+				t.Fatal("graphics and fonts were spliced across recipes")
+			}
 		}
 		if d.Window.OuterWidth > d.Display.AvailableWidth || d.Window.OuterHeight > d.Display.AvailableHeight {
 			t.Fatal("window exceeds recipe bounds")
@@ -36,6 +54,9 @@ func TestGeneratedProfileRoundtripAndDiversity(t *testing.T) {
 		if d.Audio.SampleRate != 44100 && d.Audio.SampleRate != 48000 {
 			t.Fatal("unsupported audio device rate")
 		}
+	}
+	if len(seenGPU) < 3 || len(seenFont) < 2 {
+		t.Fatalf("generated corpus lacks GPU/font diversity: %d GPUs, %d font recipes", len(seenGPU), len(seenFont))
 	}
 	_, a, err := Generate([]byte(`{}`), base)
 	if err != nil {
@@ -129,5 +150,36 @@ func TestGenerationModeDoesNotChangeProfileIdentity(t *testing.T) {
 	manualDoc, manual, err := ImportManual(raw, base)
 	if err != nil || generated.ProfileID != manual.ProfileID || !reflect.DeepEqual(d, manualDoc) {
 		t.Fatalf("mode changed profile identity: %v", err)
+	}
+}
+
+func TestManualRejectsMixedGPUFontRecipes(t *testing.T) {
+	base := testBase()
+	var first, second Document
+	for i := 0; i < 100 && second.Graphics.Renderer == ""; i++ {
+		d, _, err := Generate([]byte(fmt.Sprintf(`{"seed":"manual-pair-%d"}`, i)), base)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if d.Graphics.WebGLCapabilitiesJSON == "" {
+			continue
+		}
+		if first.Graphics.Renderer == "" {
+			first = d
+		} else if d.Graphics.Renderer != first.Graphics.Renderer && !reflect.DeepEqual(d.Fonts, first.Fonts) {
+			second = d
+		}
+	}
+	if second.Graphics.Renderer == "" {
+		t.Fatal("fixed seeds did not select two different graphics/font pairs")
+	}
+	fields := first.Public()
+	delete(fields, "schemaVersion")
+	delete(fields, "baseProfile")
+	delete(fields["network"].(map[string]any), "proxy")
+	fields["fonts"] = second.Public()["fonts"]
+	raw, _ := json.Marshal(fields)
+	if _, _, err := ImportManual(raw, base); err == nil {
+		t.Fatal("accepted graphics and fonts from different recipes")
 	}
 }

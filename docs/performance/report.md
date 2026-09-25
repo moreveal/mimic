@@ -3156,3 +3156,16 @@ An earlier 16-record block allocator saved 3.16% DOM-heavy live Go heap and
 reduced allocation counts, but one of five candidate fast gates stalled all 25
 jobs in a static wave; all five controls passed. Its
 [negative result and removable patch](dom-node-blocks-20260925.md) are retained.
+
+## 2026-09-25 -- generated GPU/font recipe density check
+
+After adding four paired GPU/font recipes, a fresh in-process Windows V8 probe
+created 100 distinct generated Contexts and navigated one Page per Context
+concurrently to a local 200-link fixture. All 100 Pages returned the expected
+link count. At the live barrier, process RSS was **2968 MiB** (private bytes
+**3169 MiB**, Go heap **81 MiB**). Two seconds after closing every Context,
+without forced GC, RSS was **381 MiB** and three goroutines remained. The
+earlier final profile build's single 100-Page sanity sample was **2978 MiB**;
+these nearby single samples suggest no large density regression, but they are
+not a matched A/B measurement. The temporary measurement probe was removed
+after the run.

@@ -624,23 +624,33 @@ const constructedStyleSheets = (() => {
       for (const sheet of collection) {
         let cached = nativeEligibilityCache.get(sheet);
         if (!cached || cached.revision !== revision) {
+          const firstReason = (items, get) => {
+            for (const item of items) {
+              const reason = get(item);
+              if (reason) return reason;
+            }
+            return '';
+          };
           const visit = (rule) => {
             const state = rules.get(rule);
             return (
               (!editedDeclarationBlocks.has(state.node.block) &&
-                declarations(state.node.block).some(blitzUnsupportedDeclaration)) ||
-              entriesForBlock(state.node.block).some(
+                firstReason(declarations(state.node.block), blitzUnsupportedDeclaration)) ||
+              (entriesForBlock(state.node.block).some(
                 (entry) => entry.name === 'content-visibility',
-              ) ||
-              state.children.some(visit)
+              )
+                ? 'authored content-visibility requires canonical fallback'
+                : '') ||
+              firstReason(state.children, visit) ||
+              ''
             );
           };
-          cached = { revision, unsupported: requireSheet(sheet).rules.some(visit) };
+          cached = { revision, unsupported: firstReason(requireSheet(sheet).rules, visit) };
           nativeEligibilityCache.set(sheet, cached);
         }
         if (cached.unsupported)
           return {
-            unsupported: 'authored content-visibility requires canonical fallback',
+            unsupported: cached.unsupported,
             sheets: [],
           };
       }
@@ -718,7 +728,17 @@ const blitzUnsupportedDeclaration = (node) => {
       }
     } else if (i + 1 < input.length) name += input[++i];
   }
-  return name.toLowerCase() === 'content-visibility';
+  name = name.toLowerCase();
+  if (name === 'content-visibility')
+    return 'authored content-visibility requires canonical fallback';
+  // The native style producer does not consume the Context's system-font
+  // palette. The JS cascade resolves these declarations per Page.
+  return name === 'font' &&
+    parseCSS(`font:${mimicSelectorLibrary.generateCSS(node.value)}`).some(
+      (entry) => entry.pending?.systemFont,
+    )
+    ? 'system font requires per-Context CSS fallback'
+    : '';
 };
 let blitzControlMembershipRevision,
   blitzControlMembership = [];
@@ -773,12 +793,12 @@ const readBlitzInputs = () => {
         inputs.unsupported = 'native inline declaration admission failed';
         break;
       }
-      let unsupported = false;
+      let unsupported = '';
       block.children.forEach((node) => {
         unsupported ||= blitzUnsupportedDeclaration(node);
       });
       if (unsupported) {
-        inputs.unsupported = 'authored content-visibility requires canonical fallback';
+        inputs.unsupported = unsupported;
         break;
       }
     }
