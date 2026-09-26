@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/moreveal/mimic/internal/monotime"
 	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/trace"
 )
@@ -21,7 +22,13 @@ func (s *sessionFulfillment) Before(_ context.Context, request Request) (Decisio
 	header := http.Header{"Content-Type": {"text/plain"}}
 	status := http.StatusOK
 	if request.URL.Path == "/start" {
-		time.Sleep(10 * time.Millisecond)
+		// Go's Windows sleep clock and the loader's QPC clock can disagree by
+		// a fraction of a millisecond. Establish the fixture's minimum delay
+		// using the same elapsed-time source as the observation under test.
+		deadline := monotime.Now().Add(10 * time.Millisecond)
+		for remaining := deadline.Sub(monotime.Now()); remaining > 0; remaining = deadline.Sub(monotime.Now()) {
+			time.Sleep(remaining)
+		}
 		header["Set-Cookie"] = []string{"visible=1; Path=/; SameSite=Lax", "hidden=2; Path=/; HttpOnly; SameSite=Lax"}
 		header["Accept-Ch"] = []string{"Sec-CH-Prefers-Color-Scheme", "Sec-CH-UA-Bitness"}
 	} else if request.URL.Path == "/redirect" {
