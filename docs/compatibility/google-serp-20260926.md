@@ -39,3 +39,32 @@ Private HARs, captures and extracted response bodies remain untracked under
 No cookies, account identifiers, session tokens or captured application
 bodies are included in public project files. Temporary header diagnostics
 were removed. The full local test suite was not run.
+
+## Follow-up: complete incognito CAPTCHA chain
+
+A subsequent user-provided HAR includes the previously missing intermediate
+document. Its SHA-256 is
+`0287cc6905e36cf82a22048c92e4c7a78dacd68fe589057366a2077cdbc6c4aa`.
+Chrome 154 first received 92,415 bytes of intermediate Search HTML, then
+requested Search with `sei`, received HTTP 302, and reached `/sorry/index`
+with HTTP 429. Later, the HAR records a return to Search with `google_abuse`,
+another redirect, and successful result HTML. The initial intermediate-program
+execution therefore did not itself establish admission in this Chrome session.
+The successful result cannot be used as evidence that Mimic failed a branch
+which this Chrome execution passed.
+
+The saved intermediate document was replayed unchanged in fresh contexts in
+Mimic and frozen Chrome 152. Every outgoing request was fulfilled locally;
+neither replay contacted Google. Both executions created an `SG_SS` cookie
+with a 1,332-character value, Lax SameSite and no Secure attribute, and issued
+the next Search navigation with the original query-key set plus `sei`.
+Neither emitted a page exception. Mimic reported no semantic-missing entries
+in its saved API trace. The observed first-to-next-request intervals were
+approximately 390 ms in Mimic and 52 ms in Chrome; these are individual
+intercepted replay measurements, not a live performance comparison.
+
+This proves the presence of the cookie-and-navigation branch in both replays,
+not equality of the encrypted cookie contents, VM instruction sequences or
+all browser observations. No captured cookie or CAPTCHA credential was copied
+into a live Mimic session. No additional production semantic fix is justified
+by this capture alone.
