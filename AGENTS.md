@@ -16,6 +16,15 @@ the current behavioral reference.
   Chrome 152 for the same case. Run it again only when the saved evidence cannot
   answer a specific remaining question, and retain the new capture.
 
+- Before capturing Chrome, read `docs/oracle-policy.md`, including its normal
+  browser launch and recording rules. Launch the headful binary directly with
+  a fresh dedicated profile and a fixed nonzero CDP port, then attach the
+  recorder. Do not use an automation framework's default launch as a normal
+  browser control. Verify and record the original `navigator.webdriver` value;
+  do not hide launch artifacts with injected property or prototype overrides.
+  Preserve exact launch arguments and distinguish passive controls from
+  instrumented, intercepted, headless, and network-modified experiments.
+
 - Prefer behavioral compatibility over superficial API coverage. An API that
   exists but behaves incorrectly is not considered implemented.
 

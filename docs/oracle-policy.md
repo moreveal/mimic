@@ -50,8 +50,99 @@ and both Chrome capture metadata blocks.
 
 ## Capture workflow
 
+### Normal browser launch and recording
+
+For a normal desktop browser control, start the headful executable directly,
+then attach the recorder to its existing CDP endpoint. Do not use Playwright,
+Puppeteer, Selenium, or another framework's default browser launch: its flags
+and profile changes are part of the observed environment. Connecting through
+CDP does not require launching Chrome with `--enable-automation`.
+
+Use a new, dedicated user data directory outside tracked project files and a
+fixed, nonzero debugging port. A minimal argument set is:
+
+```text
+--remote-debugging-port=<fixed nonzero port>
+--user-data-dir=<new private absolute directory>
+--no-first-run
+--no-default-browser-check
+about:blank
+```
+
+For the canonical geometry above, also use `--window-size=1280,800` and record
+the actual outer window, inner viewport, device scale, focus, and visibility.
+Headful mode and a window hidden by the operating system are different facts;
+record both. Do not infer presentation state from the absence of a headless flag.
+Check the executable path and `/json/version` before navigating. Frozen Chrome
+152 and the user's system Chrome are separate references, even when both work.
+
+The normal control must not add `--enable-automation`, `--headless`, or
+`--remote-debugging-port=0`. These launch conditions can expose automation
+through `navigator.webdriver`. Do not inject a replacement getter, patch
+prototypes, or use `--disable-blink-features=AutomationControlled` to conceal
+that exposure. An apparently normal property value after a patch does not make
+the rest of the environment equivalent to an ordinary browser. Verify the
+unmodified `navigator.webdriver` value and retain its descriptor, user agent,
+languages, exact process command line, executable hash, and profile provenance.
+If it is unexpectedly true, classify the run as an automation control and
+correct the launch conditions before collecting the normal reference.
+
+Attach with a method such as `chromium.connectOverCDP(endpoint)`, rather than
+`chromium.launch(...)`. Record whether the page belongs to the persistent
+profile or a newly created browser context. An incognito context does not reset
+process flags or the process's network state. A fresh incognito session requires
+closing all previous incognito windows; it is not equivalent to a fresh process
+and profile. When the user requests their Chrome through the Computer Use
+extension, use that browser rather than substituting a separately launched one.
+Record the extension's observation limits; a page view does not supply HAR or
+Debugger events.
+
+Enable recording domains before the first navigation and collect the complete
+initial document, redirect chain, subsequent requests, cookies and client hint
+state, exceptions, and terminal page state. Finish on an observable outcome with
+a bounded timeout, not merely the first `load` event or an immediately empty
+token field. Retain response bodies as requests complete. If a fast navigation
+can discard the bootstrap body before `Network.getResponseBody` succeeds, use
+`Network.streamResourceContent` where supported and retain both its initial
+buffer and subsequent data events; record the collection method.
+
+Keep the primary outcome run passive: no initialization scripts, deterministic
+randomness, API wrappers, request fulfillment, or injected browser observations.
+Use separate, explicitly labelled diagnostic runs for those operations. Record
+all changes and their hashes. Local replay can establish executed behavior but
+cannot establish acceptance by a live server. When forwarding or fulfilling
+responses, verify cookies, response headers, navigation timing, and lifecycle
+state in each runtime before treating the comparison as matched; the interception
+mechanism can itself change these observations.
+
+Preserve default networking in the normal control. Flags such as
+`--disable-quic`, proxy settings, and framework routing can change protocols,
+connection reuse, and server outcomes. `--log-net-log` is an additional diagnostic
+condition and can show an unsupported command-line warning; record it and use a
+separate run when needed. Do not interpret that warning alone as proof of the
+server's rejection cause. Keep protocol, egress, profile, launch, and execution
+differences separate when drawing conclusions.
+
+The 2026-09-26 Search investigation demonstrated why these rules matter: a
+fresh system Chrome 154 normal launch reached results, adding only
+`--enable-automation` produced a rejection, and another fresh normal launch
+reached results again. The successful and rejected runs both used HTTP/3.
+A separate normal launch with QUIC disabled was rejected over HTTP/2. A directly
+launched frozen Chrome 152 with unmodified `navigator.webdriver === false` also
+reached results. These observations establish launch and networking as material
+experimental conditions; they do not prove that a single JavaScript property or
+protocol determines the server's decision. Raw captures remain private under
+`.build/google-serp-success-20260926/`.
+
+Immediately preserve each successful capture, its complete launch provenance,
+and an artifact hash inventory before changing instrumentation. Reuse that
+capture for offline analysis. Launch another live reference only for a specific
+question the saved evidence cannot answer, and preserve the new run separately.
+
+### Mode comparison for local semantic probes
+
 Start the exact Chrome binary twice with separate fresh profiles and pinned launch
-configuration, then run:
+configuration when a local probe requires a headful/headless comparison, then run:
 
 ```powershell
 python compatibility/oracle_differential.py `
@@ -75,4 +166,3 @@ The environment model selects a coherent presentation profile. It does not apply
 property-by-property “not headless” patches: Product/UA, display/window, graphics,
 permissions and capability behavior all derive from the selected headful or
 headless Environment.
-

@@ -149,7 +149,10 @@ Compute `hashes.sha256` before analysis and never modify the originals afterward
 ## 6. Capturing Chrome 152
 
 1. Start the exact headful binary with a separate fresh profile and the
-   configuration in `docs/oracle-policy.md`. Check `/json/version`; a product
+   configuration and [normal browser launch rules](../oracle-policy.md#normal-browser-launch-and-recording)
+   in `docs/oracle-policy.md`. Launch directly and attach the recorder; verify
+   the unmodified automation state and preserve the full command line. Check
+   `/json/version`; a product
    mismatch immediately invalidates the series.
 2. Attach one recorder through CDP, enable domains before navigation, clear
    cookies/cache according to the experiment contract, and register every
