@@ -17,6 +17,9 @@ func TestBorrowedDOMOperationsPreserveOwnerIdentity(t *testing.T) {
  const getter=Object.getOwnPropertyDescriptor(foreign.Node.prototype,'parentNode').get;
  const borrowed=getter.call(child);
  if(borrowed!==parent||child.parentNode!==parent||document.getElementById(parent.id)!==parent)return false;
+ const descriptor=Object.getOwnPropertyDescriptor(foreign.Node.prototype,'parentNode');
+ Object.defineProperty(foreign.Node.prototype,'parentNode',{...descriptor,get(){return 'replacement'}});
+ if(getter.call(child)!==parent||Object.getOwnPropertyDescriptor(foreign.Node.prototype,'parentNode').get.call(child)!=='replacement')return false;
  Object.defineProperty(child,'parentNode',{get:()=>null});
  parent.insertBefore(document.createElement('script'),child);
  const created=foreign.Document.prototype.createElement.call(document,'div');

@@ -70,7 +70,7 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		if len(args) > 2 {
 			r.frameNodeDescribe = args[2]
 		}
-		if err := r.installFrameValueEncoder(); err != nil {
+		if err := r.installFrameValueEncoder(args[8]); err != nil {
 			return nil, err
 		}
 		return nil, nil
@@ -452,8 +452,8 @@ const frameReflectionSource = `(()=>{
 // and never cache arbitrary property values, prototypes or access checks.
 // Fresh intrinsic Array iterator results are the sole data-field exception;
 // the importer invalidates those fields before mutation or reference escape.
-const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent,binding,nativeName,functionSource,eventState)=>{
- const global=globalThis,intrinsicEval=globalThis.eval,stringify=JSON.stringify,create=Object.create,keys=Object.keys,event=typeof eventState==='function'?eventState:()=>null;
+const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent,binding,nativeName,functionSource,eventState,intrinsicParentNode)=>{
+ const global=globalThis,intrinsicEval=globalThis.eval,intrinsicCall=Function.prototype.call,stringify=JSON.stringify,create=Object.create,keys=Object.keys,event=typeof eventState==='function'?eventState:()=>null;
  const plain=data=>{const out=create(null),names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return out};
  const encode=value=>{
   const type=typeof value;
@@ -474,7 +474,7 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   if(value===global.document)out.document=true;
   if(value===intrinsicEval)out.eval=true;
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array;const state=event(value);if(state)out.eventState=plain(encode(state))}
-  else if(type==='function'){out.constructable=reflect('shape',value).constructable;if(reflect('iteratorNext',value))out.iteratorNext=true;const name=nativeName(value);if(name!==undefined)out.nativeName=name;else if(functionSource)out.functionSource=functionSource(value)}
+  else if(type==='function'){out.constructable=reflect('shape',value).constructable;if(value===intrinsicCall)out.intrinsicCall=true;if(value===intrinsicParentNode.getter)out.intrinsicParentNode=true;if(reflect('iteratorNext',value))out.iteratorNext=true;const name=nativeName(value);if(name!==undefined)out.nativeName=name;else if(functionSource)out.functionSource=functionSource(value)}
   if(type==='object'&&reflect('takeIteratorResult',value)){
    out.iteratorResult=create(null);out.iteratorResult.done=plain(encode(value.done));
    // Do not inspect object-valued results early: e.g. a revoked Proxy must
@@ -487,7 +487,7 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
  return value=>{const data=encode(value),out=create(null);const names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return stringify(out)};
 })`
 
-func (r *Realm) installFrameValueEncoder() error {
+func (r *Realm) installFrameValueEncoder(parentNodeGetter engine.Value) error {
 	factory, err := r.runtime.Eval(context.Background(), frameValueEncoderSource, "mimic:frame-value-encoder")
 	if err != nil {
 		return err
@@ -497,7 +497,7 @@ func (r *Realm) installFrameValueEncoder() error {
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		parent = frame.parent.ID
 	}
-	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent), r.frameBindingDescribe, r.frameNativeNameDescribe, r.frameSourceDescribe, r.frameEventDescribe)
+	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent), r.frameBindingDescribe, r.frameNativeNameDescribe, r.frameSourceDescribe, r.frameEventDescribe, parentNodeGetter)
 	if err == nil {
 		r.frameValueEncoder = encoder
 		r.frameValueEncoderJSON = true

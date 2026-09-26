@@ -2081,10 +2081,7 @@
             break;
           }
           visited.push(node);
-          if (
-            elementShadows.has(node) ||
-            (typeof ShadowRoot === 'function' && node instanceof ShadowRoot)
-          ) {
+          if (elementShadows.has(node) || shadowSlots.has(node)) {
             inShadow = true;
             break;
           }
@@ -7087,6 +7084,15 @@
     crossRealmReferences = new WeakMap();
   let bridgeRealmID = host.selfRealmID();
   const bridgeApply = Reflect.apply;
+  const bridgeParentNodeIntrinsic = {
+    getter: Object.getOwnPropertyDescriptor(Node.prototype, 'parentNode').get,
+  };
+  const finalizeFrameIntrinsicBindings = () => {
+    bridgeParentNodeIntrinsic.getter = Object.getOwnPropertyDescriptor(
+      Node.prototype,
+      'parentNode',
+    ).get;
+  };
   const bridgeHasOwn = Object.prototype.hasOwnProperty;
   const bridgeParse = JSON.parse,
     bridgeStringify = JSON.stringify,
@@ -7337,6 +7343,14 @@
       },
       apply(_target, receiver, args) {
         bridgeAccess(id, result.realm);
+        if (result.intrinsicCall && typeof receiver === 'function') {
+          return bridgeApply(receiver, args.length ? args[0] : undefined, args.slice(1));
+        }
+        // A borrowed native Node getter observes the receiver's canonical DOM
+        // state. For a local wrapper, invoke that getter in its owning realm.
+        if (result.intrinsicParentNode && !referenceHas(receiver) && elementSlot(receiver)) {
+          return bridgeApply(bridgeParentNodeIntrinsic.getter, receiver, []);
+        }
         // A native Window operation keeps the callable's owner identity but
         // takes its incumbent document and transferable arguments from the
         // invoking realm. Do not first turn message data into remote wrappers.
@@ -7579,6 +7593,7 @@
     nativeFunctionNameGet,
     (value) => functionSourceApply(engineFunctionToString, value, []),
     (value) => bridgeApply(bridgeWeakGet, eventSlots, [value]) || null,
+    bridgeParentNodeIntrinsic,
   );
   const postToFrame = (id, args) => {
     if (args.length === 0)
