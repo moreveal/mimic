@@ -62,6 +62,24 @@ but are not a claim of complete Chrome equivalence. Regenerate the inventory aft
 editing the manifest. Adding a command handler also requires adding its manifest
 entry; a generated descriptor alone never enables a command.
 
+### Required handler-change checklist
+
+Keep these changes together whenever a handler is added, removed, or its behavior
+changes:
+
+1. Update `protocol_support.json` with the supported scope, remaining limitations,
+   and repository test references (`path#test-name`). Use `partial` when the full
+   command contract is not supported.
+2. Run `python tools/generate_cdp.py` and commit the generated projections with
+   the manifest. The runtime inventory and published coverage table must describe
+   the same support state.
+3. Run `python tools/generate_cdp.py --check`, the focused handler tests, and
+   `go test ./internal/cdp -run '^(TestProtocolSupportManifestHasLiveEvidenceAndNoLostHandlers|TestProtocolCoverageUsesCompleteGeneratedInventory)$' -count=1`.
+
+The registry is intentionally reviewed rather than inferred from dispatch code:
+the presence of a handler establishes reachability, not semantic compatibility.
+Keep implementation claims here instead of adding parallel handwritten lists.
+
 ## Parameter boundary
 
 `validateCommand(method, rawParams)` reports unknown methods as `-32601` and

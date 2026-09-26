@@ -17,8 +17,8 @@
     "types": 611,
     "methods": {
       "implemented": 9,
-      "partial": 105,
-      "unsupported": 551
+      "partial": 114,
+      "unsupported": 542
     },
     "events": {
       "partial": 26,
@@ -1240,7 +1240,11 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Geolocation allowlists for the selected context and optional HTTP(S) origin; other permission grants explicitly reject. Other permissions are denied by the allowlist.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {
@@ -1255,7 +1259,11 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Restores canonical context permission defaults and notifies live permission observers. Native permission prompts and platform permission stores are not modeled.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {
@@ -1308,9 +1316,11 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported",
-        "notes": "Acknowledgment only for client initialization. Download policy, filesystem destinations, context-specific behavior and download events are not implemented.",
-        "tests": []
+        "status": "partial",
+        "notes": "Per-context allow, allowAndName, deny and default policies for attachment navigation responses; completed bytes are written to the configured destination and Browser download events are emitted. Other download initiators and streaming progress are not modeled.",
+        "tests": [
+          "internal/cdp/download_test.go#TestDownloadBehaviorValidatesPolicyAndContext"
+        ]
       }
     },
     {
@@ -1330,7 +1340,11 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Geolocation granted, denied and prompt settings for the selected context and optional HTTP(S) origin. Other permission descriptors explicitly reject.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {
@@ -5009,7 +5023,11 @@
       "optionalParameters": [],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Removes the Page-owned provider override and updates live watches. With no native provider, permitted requests report position unavailable.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {
@@ -5376,7 +5394,11 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Page-owned coordinates and optional altitude, altitudeAccuracy, heading and speed; missing required coordinates emulate unavailable position. Updates live watches and survives navigation. No native location provider is connected.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {
@@ -5614,7 +5636,11 @@
       "optionalParameters": [],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Page-local IANA timezone override and empty reset affect Intl and Date observations in the current top realm and future realms. Existing child realms and workers are not refreshed.",
+        "tests": [
+          "internal/cdp/automation_commands_test.go#TestTimezoneOverrideRefreshesCurrentRealm"
+        ]
       }
     },
     {
@@ -10285,7 +10311,11 @@
       "optionalParameters": [],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Deprecated clear command shares the Emulation Page-owned provider state; no native provider is restored.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {
@@ -11493,7 +11523,11 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Deprecated coordinate override shares the Emulation Page-owned provider state. No native location provider is connected.",
+        "tests": [
+          "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+        ]
       }
     },
     {

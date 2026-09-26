@@ -128,6 +128,15 @@ the current behavioral reference.
 
 ## Changes
 
+- When adding, removing, or changing CDP handlers, update
+  `internal/cdp/protocol_support.json` in the same change with the actual support
+  scope, limitations, and focused test evidence. This is the authoritative
+  semantic support registry; generated wire schemas do not imply implementation.
+  Regenerate its projections with `python tools/generate_cdp.py`, then run
+  `python tools/generate_cdp.py --check` and the focused CDP coverage tests.
+  See `docs/cdp-protocol-generation.md`. Do not edit generated support tables
+  independently or omit the registry update because a handler test passes.
+
 - Write all public documentation and other public-facing project materials in
   English. Keep technical identifiers, quoted evidence, and external titles in
   their original form when changing them would lose meaning.
