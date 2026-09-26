@@ -1,4 +1,53 @@
 {
+  "Browser.grantPermissions": {
+    "status": "partial",
+    "notes": "Geolocation allowlists for the selected context and optional HTTP(S) origin; other permission grants explicitly reject. Other permissions are denied by the allowlist.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
+  "Browser.resetPermissions": {
+    "status": "partial",
+    "notes": "Restores canonical context permission defaults and notifies live permission observers. Native permission prompts and platform permission stores are not modeled.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
+  "Browser.setPermission": {
+    "status": "partial",
+    "notes": "Geolocation granted, denied and prompt settings for the selected context and optional HTTP(S) origin. Other permission descriptors explicitly reject.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
+  "Emulation.setGeolocationOverride": {
+    "status": "partial",
+    "notes": "Page-owned coordinates and optional altitude, altitudeAccuracy, heading and speed; missing required coordinates emulate unavailable position. Updates live watches and survives navigation. No native location provider is connected.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
+  "Emulation.clearGeolocationOverride": {
+    "status": "partial",
+    "notes": "Removes the Page-owned provider override and updates live watches. With no native provider, permitted requests report position unavailable.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
+  "Page.setGeolocationOverride": {
+    "status": "partial",
+    "notes": "Deprecated coordinate override shares the Emulation Page-owned provider state. No native location provider is connected.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
+  "Page.clearGeolocationOverride": {
+    "status": "partial",
+    "notes": "Deprecated clear command shares the Emulation Page-owned provider state; no native provider is restored.",
+    "tests": [
+      "internal/cdp/geolocation_test.go#TestGeolocationOverrideCommands"
+    ]
+  },
   "Audits.disable": {
     "status": "unsupported",
     "notes": "Client subscription state only; no Audits issue engine or WebMCP model-context backend. Semantic support is not claimed.",
