@@ -193,6 +193,11 @@ func (owner *Realm) observeBlitz(id int64, kind, property string) (any, error) {
 		// asks the JS compatibility oracle for that property.
 		result := make([]any, len(values))
 		for i, value := range values {
+			// Keep the scalar and batch projections on the same Chrome
+			// serialization path for these pinned Stylo differences.
+			if names[i] == "alignment-baseline" || names[i] == "place-items" {
+				continue
+			}
 			if value != "" || strings.HasPrefix(names[i], "--") {
 				result[i] = value
 			}

@@ -634,6 +634,9 @@ const constructedStyleSheets = (() => {
           const visit = (rule) => {
             const state = rules.get(rule);
             return (
+              (state.node.type === 'Rule' && /:has\s*\(/i.test(preludeText(state.node.prelude))
+                ? 'native :has() style invalidation pending'
+                : '') ||
               (!editedDeclarationBlocks.has(state.node.block) &&
                 firstReason(declarations(state.node.block), blitzUnsupportedDeclaration)) ||
               (entriesForBlock(state.node.block).some(
