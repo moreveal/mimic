@@ -119,6 +119,10 @@ the current behavioral reference.
 
 ## Changes
 
+- Write all public documentation and other public-facing project materials in
+  English. Keep technical identifiers, quoted evidence, and external titles in
+  their original form when changing them would lose meaning.
+
 - Expose one current public contract per mechanism. Do not add API contract
   versions, parallel legacy handlers, or compatibility modes for older Mimic
   releases. Clients inspect the Mimic release version and adapt. This applies

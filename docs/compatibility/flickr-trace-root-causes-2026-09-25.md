@@ -1,256 +1,255 @@
-# Flickr: аудит первопричин ошибок Mimic
+# Flickr: Mimic Error Root Cause Audit
 
-> **Дополнение после исправлений, 25 сентября 2026.** Утверждение ниже об
-> отсутствии подтверждённого токена относится только к исходным автоматическим
-> захватам. Пользователь показал непустой `cf-turnstile-response` в DevTools
-> своего обычного Chrome на той же вкладке, в том числе новый токен после
-> обновления. Проверка через расширение Computer Use показывала пустое значение
-> и не отражала это состояние DevTools. Успех обычного Chrome подтверждён
-> снимками пользователя; точная сеть этого сеанса расширением не доступна.
-> Frozen Chrome 152 и Mimic в отдельных автоматических сеансах за 90 секунд
-> токен не получили. Это разные окружения, и их исход нельзя переносить на
-> обычный Chrome пользователя.
+> **Addendum after the fixes, September 25, 2026.** The statement below that no
+> token was confirmed applies only to the initial automated captures. The user
+> showed a nonempty `cf-turnstile-response` in DevTools in their regular Chrome
+> session on the same tab, including a new token after refresh. A check through
+> the Computer Use extension showed an empty value and did not reflect the
+> DevTools state. The user's screenshots confirm success in regular Chrome; the
+> extension could not access that session's exact network traffic. Frozen Chrome
+> 152 and Mimic did not obtain a token within 90 seconds in separate automated
+> sessions. Those are different environments, and their results do not apply to
+> the user's regular Chrome session.
 
-Дата: 25 сентября 2026. Проверенный commit: `059a25dc8094a9860959f3f739d6424de561c6cf`.
-Эталон: frozen Chrome **152.0.7977.82**, Windows, Playwright/CDP.
+Date: September 25, 2026. Reviewed commit: `059a25dc8094a9860959f3f739d6424de561c6cf`. Reference: frozen Chrome **152.0.7977.82**, Windows, Playwright/CDP.
 
-**Изменений в реализацию нет.** Созданы только диагностические материалы и этот отчёт.
+**The initial audit made no implementation changes.** It produced diagnostic materials and this report. Later fixes are described in the addendum below.
 
-## Результат
+## Result
 
-Четыре исходные необработанные ошибки страницы объясняются несколькими независимыми дефектами браузерной семантики. Это не четыре ошибки Turnstile. Сбои затрагивают Weglot, Webflow и загрузку менеджера согласий. При сокращении примеров обнаружены дополнительные дефекты тех же границ.
+The four original unhandled page errors were attributed to several independent browser-semantic defects. They were not four Turnstile errors. The failures affect Weglot, Webflow, and consent manager loading. Reducing the cases exposed additional defects at the same boundaries.
 
-Основные причины: неверная сериализация URL; потеря канонической идентичности DOM при переходе между realm; проверка DOM через переопределяемый getter; локальное хранение состояния Event; вызов публичного `setAttribute` из отражаемых свойств скрипта; выбор случайного, иногда ещё не инициализированного realm для Trusted Types.
+Main reasons: incorrect URL serialization; loss of canonical DOM identity when transitioning between realms; DOM checking via overridable getter; local storage of Event state; calling public `setAttribute` from reflected script properties; selecting a random, sometimes not yet initialized realm for Trusted Types.
 
-| Наблюдение после загрузки Flickr | Mimic | Chrome 152 |
+| Observation after loading Flickr | Mimic | Chrome 152 |
 |---|---|---|
-| Главная страница | HTTP 200, readyState complete | HTTP 200, readyState complete |
-| Необработанные JS-ошибки в базовом захвате | 4 причины/места падения, 8 записей exception | Нет |
+| Home page | HTTP 200, readyState complete | HTTP 200, readyState complete |
+| Unhandled JS errors in baseline capture | 4 causes/failure sites, 8 exception records | None |
 | Weglot | undefined | object |
 | turnstile | undefined | object |
-| Поле cf-turnstile-response | Отсутствует | Есть, длина значения 0 |
-| Сетевые loadingFailed | Нет в базовом захвате | DNS и ORB, подробнее ниже |
+| Field cf-turnstile-response | Missing | Yes, value length 0 |
+| Network loadingFailed | None in baseline capture | DNS and ORB; details below |
 
-**Успешное получение токена не подтверждено ни для одного браузера.** В Chrome загружается Turnstile, но в контрольном захвате есть два `ERR_NAME_NOT_RESOLVED` для `brunhild.challenges.cloudflare.com` и сообщения Turnstile `600010`. Отдельно TrustArc блокируется `ERR_BLOCKED_BY_ORB`. Точная причина DNS-сбоя, связь с решением сервиса и политика ORB в этом аудите не устанавливались. Исправление найденных ошибок Mimic само по себе не доказывает прохождение проверки.
+**Successful token acquisition not confirmed for any browser.** Chrome loads Turnstile, but in the control capture there are two `ERR_NAME_NOT_RESOLVED` for `brunhild.challenges.cloudflare.com` and Turnstile message `600010`. Separately, TrustArc is blocked by `ERR_BLOCKED_BY_ORB`. The exact cause of the DNS failure, the relationship to the service solution, and the ORB policy were not determined in this audit. Fixing Mimic bugs found does not in itself prove passing the test.
 
-## Метод и границы проверки
+## Verification method and boundaries
 
-1. Выполнены независимые базовые захваты Flickr в Mimic и frozen Chrome; сохранены события CDP, тела документов/скриптов, состояние страницы и внутренняя трасса Mimic.
-2. Для извлечения стека добавлены диагностические обёртки к захваченным скриптам. Такие прогоны явно отделены от базового: обёртки могут влиять на выполнение.
-3. Для каждой основной причины выполнены сокращённые локальные проверки в обоих браузерах и сопоставление с исходниками.
-4. Проверены все категории ошибок, unsupported и semantic-missing в базовой трассе. Это аудит данного выполнения и связанных сокращённых примеров, а не заявление о проверке всех Web API или всех ветвей сайта.
+1. Performed independent basic Flickr captures in Mimic and frozen Chrome; CDP events, document/script bodies, page state and internal Mimic trace are saved.
+2. To extract the stack, diagnostic wrappers have been added to the captured scripts. Such runs are clearly decoupled from the base: wrappers can influence execution.
+3. For each root cause, abbreviated local checks were performed in both browsers and compared with the sources.
+4. All categories of errors, unsupported and semantic-missing in the base trace were checked. This is an audit of this implementation and associated shorthand examples, not a statement that all Web APIs or all branches of the site have been audited.
 
-Захват ожидал 15 секунд после DOMContentLoaded. Отсутствие токена относится к этому наблюдению. Полные внешние ресурсы двух живых загрузок могут отличаться; выводы о семантике основаны на локальных одинаковых примерах.
+The capture waited 15 seconds after DOMContentLoaded. The absence of a token relates to this observation. The complete external resources of the two live downloads may differ; inferences about semantics are based on locally identical examples.
 
-## Что именно есть в трассе
+## What the trace contains
 
-В `.build/flickr-audit/baseline-mimic/trace.json`:
+In `.build/flickr-audit/baseline-mimic/trace.json`:
 
-| Категория | Число | Интерпретация |
+| Category | Number | Interpretation |
 |---|---:|---|
-| exception | 8 | Четыре ошибки, каждая записана дважды |
-| error | 4 | Ошибки выполнения parser script tasks |
-| semantic-missing | 83 | 82 CSS.fontSizeResolution и 1 HTMLAnchorElement.type |
-| unsupported | 38 | В основном чтения отсутствующих свойств и проверки библиотек; не 38 недостающих API |
+| exception | 8 | Four errors, each recorded twice |
+| error | 4 | Parser script tasks execution errors |
+| semantic-missing | 83 | 82 CSS.fontSizeResolution and 1 HTMLAnchorElement.type |
+| unsupported | 38 | Mainly reading missing properties and checking libraries; not 38 missing APIs |
 
-Исходные падения: `NotFoundError` при загрузке Weglot; последующий вызов `Weglot.initialize` при undefined; `Illegal invocation` при старте Webflow; переполнение стека в цепочке SOE/Osano. В инструментированных прогонах дополнительно пойман альтернативный ранний сбой Trusted Types.
+Initial crashes: `NotFoundError` when loading Weglot; subsequent call to `Weglot.initialize` when undefined; `Illegal invocation` when starting Webflow; stack overflow in the SOE/Osano chain. The instrumented runs additionally caught the alternative early failure of Trusted Types.
 
-## Причинная цепочка страницы
+## Page causal chain
 
 ```text
-URL без завершающего / → Weglot решает, что требуется URL polyfill
-  → создание/настройка/вставка script через обёртки Osano
-    → Trusted Types может выбрать неинициализированный isolated world → TypeError
-    либо
-    → заимствованный parentNode из iframe меняет канонические DOM wrappers
-      → prepareInsertion сравнивает wrappers → ложный NotFoundError
-  → Weglot не установлен → Weglot.initialize падает вторично
+URL without trailing / → Weglot decides a URL polyfill is needed
+  → script creation/configuration/insertion through Osano wrappers
+    → Trusted Types may select an uninitialized isolated world → TypeError
+    or
+    → borrowed parentNode from iframe changes canonical DOM wrappers
+      → prepareInsertion compares wrappers → false NotFoundError
+  → Weglot is not installed → Weglot.initialize fails secondarily
 
-Повреждение wrapper BODY + локальное состояние Event
+Corrupted BODY wrapper + realm-local Event state
   → Webflow dispatchEvent(ix2-animation-started) → Illegal invocation
 
-SOE выставляет script.async → публичный setAttribute → обёртка Osano
-  → снова script.async → рекурсия → RangeError
+SOE sets script.async → public setAttribute → Osano wrapper
+  → script.async again → recursion → RangeError
 ```
 
-Ни `Weglot.initialize`, ни отсутствие поля Turnstile не являются достаточным диагнозом сами по себе. В базовом Mimic инициализация страницы уже прервана до наблюдаемой в Chrome загрузки Turnstile.
+Neither `Weglot.initialize` nor the absence of a Turnstile field is a sufficient diagnosis on its own. In basic Mimic, page initialization is already interrupted before Turnstile is observed to load in Chrome.
 
-## Подтверждённые дефекты
+## Confirmed defects
 
-### 1. HTTP URL с пустым path сериализуется без `/`
+### 1. HTTP URL with empty path is serialized without `/`
 
-**Где:** `internal/browser/url_host.go`, функции resolveURL/urlParts/setURLPart; `internal/webapi/fetch_primitives.js`, реализация URL.
+**Where:** `internal/browser/url_host.go`, functions resolveURL/urlParts/setURLPart; `internal/webapi/fetch_primitives.js`, URL implementation.
 
-Host использует `net/url` и возвращает `u.String()`/`u.EscapedPath()` без нормализации пустого пути special URL по наблюдаемому поведению Chrome. JS сохраняет полученное значение.
+Host uses `net/url` and returns `u.String()`/`u.EscapedPath()` without normalizing the empty special URL path to Chrome's observed behavior. JS saves the received value.
 
-`new URL('http://weglot.com').href`: Mimic `http://weglot.com`, Chrome `http://weglot.com/`. После изменения search разница сохраняется. URLSearchParams в этом сокращённом примере работает в обоих браузерах.
+`new URL('http://weglot.com').href`: Mimic `http://weglot.com`, Chrome `http://weglot.com/`. After changing search, the difference remains. URLSearchParams in this shortened example works in both browsers.
 
-В диагностике живого Weglot список недостающих возможностей равен `["URL"]`, после чего выбирается URL-polyfill. Значит, проблема не в отсутствии конструктора URL, а в его поведении. Проверка: `weglot-url-feature`.
+In Weglot's live diagnostics, the list of missing features is `["URL"]`, after which the URL-polyfill is selected. This means that the problem is not the absence of a URL constructor, but its behavior. Validation: `weglot-url-feature`.
 
-### 2. Возврат DOM из другого realm перезаписывает канонический wrapper
+### 2. Returning DOM from another realm overwrites the canonical wrapper
 
-**Где:** `internal/webapi/surface.js`: cachedDOMParent около 1581; Node.parentNode около 2979; wrap около 4539; ветка nodeId в unwrapCrossRealm около 7356.
+**Where:** `internal/webapi/surface.js`: cachedDOMParent about 1581; Node.parentNode about 2979; wrap about 4539; branch nodeId in unwrapCrossRealm around 7356.
 
-Заимствованный getter parentNode выполняет wrap в своём realm. При возврате узла unwrapCrossRealm записывает proxy в `elementWrappers` по существующему nodeId, заменяя локальный канонический объект.
+The borrowed getter parentNode performs a wrap in its realm. When returning a node, unwrapCrossRealm writes a proxy to `elementWrappers` over the existing nodeId, replacing the local canonical object.
 
-После `iframe.contentWindow.Node.prototype.parentNode` getter, вызванного на локальном ребёнке, в Mimic нарушаются сразу три равенства: возвращённый родитель с исходным, обычный child.parentNode с исходным, getElementById с исходным. В Chrome все сохраняются. Последующий insertBefore в Mimic падает.
+After calling the `iframe.contentWindow.Node.prototype.parentNode` getter on a local child, Mimic fails three identity checks: the returned parent against the original, the usual `child.parentNode` against the original, and `getElementById` against the original. All three identities hold in Chrome. A subsequent `insertBefore` fails in Mimic.
 
-Osano действительно заимствует Node.parentNode из своего iframe. В захвате Weglot перед вставкой оба родителя имеют имя HEAD, но `sameParent=false`, `sameHead=false`, при этом исходный первый ребёнок совпадает. Это ошибка идентичности, а не фактическое отсутствие reference node. Проверка: `borrowed-parent-canonical-identity`.
+Osano does borrow Node.parentNode from its iframe. In the Weglot capture before insertion, both parents are named HEAD, but `sameParent=false`, `sameHead=false`, with the original first child being the same. This is an identity error, not the actual absence of a reference node. Validation: `borrowed-parent-canonical-identity`.
 
-### 3. Проверка insertBefore зависит от публичного parentNode
+### 3. The insertBefore check depends on the public parentNode
 
-**Где:** `internal/webapi/surface.js:3132`, prepareInsertion, сравнение около 3151.
+**Where:** `internal/webapi/surface.js:3132`, prepareInsertion, compare about 3151.
 
-В пути вставки resource/script проверяется `before.parentNode !== parent`. Это чтение переопределяемого JS-свойства вместо проверки членства в авторитетном DOM по идентификаторам.
+The resource/script insertion path checks `before.parentNode !== parent`. This reads an overridable JS property instead of checking membership in the authoritative DOM by identifiers.
 
-Достаточно определить у настоящего ребёнка собственный getter parentNode, возвращающий null: вставка script перед ним в Mimic даёт NotFoundError, Chrome успешно вставляет. Этот самостоятельный дефект также усиливает проблему №2. Проверка: `insert-before-overridden-parent`.
+It is enough to define a real child’s own getter parentNode, which returns null: inserting a script before it into Mimic gives NotFoundError, Chrome inserts successfully. This independent defect also reinforces problem #2. Validation: `insert-before-overridden-parent`.
 
-### 4. dispatchEvent не принимает Event из другого realm
+### 4. dispatchEvent does not accept Event from another realm
 
-**Где:** `internal/webapi/events_compatibility.js:19`, stateOf; dispatchEventCore около 354; dispatchEvent около 480.
+**Where:** `internal/webapi/events_compatibility.js:19`, stateOf; dispatchEventCore about 354; dispatchEvent about 480.
 
-Состояние ищется через realm-local `eventSlots.get(event)`. Корректный Event из другого realm не имеет записи в этой таблице и отвергается как Illegal invocation.
+The state is looked up via realm-local `eventSlots.get(event)`. A valid Event from another realm does not have an entry in this table and is rejected as an Illegal invocation.
 
-Три проверки — foreign event/local target, local event/foreign target, borrowed dispatch/main event — падают в Mimic и успешны в Chrome.
+Three checks - foreign event/local target, local event/foreign target, borrowed dispatch/main event - fail in Mimic and are successful in Chrome.
 
-В живом захвате Webflow падает отправка **ix2-animation-started** на **BODY**: событие принадлежит локальному realm, target уже не проходит локальное `instanceof Node`. Стек приходит в stateOf через чужой Proxy.dispatchEvent. Связь с №2 подтверждена наблюдением wrapper; это сбой запуска анимаций Webflow, а не вызов Turnstile API.
+In the live Webflow capture, dispatching **ix2-animation-started** on **BODY** fails: the event belongs to the local realm, but the target no longer passes the local `instanceof Node` check. The stack reaches `stateOf` through a foreign `Proxy.dispatchEvent`. Wrapper observations confirm the connection with defect #2. This interrupts Webflow animation startup; it is not a Turnstile API call.
 
-### 5. async/defer вызывают переопределяемый setAttribute и создают рекурсию
+### 5. async/defer calls the overridden setAttribute and creates a recursion
 
-**Где:** `internal/webapi/surface.js:4103` и `:4112`, setters HTMLScriptElement.async/defer.
+**Where:** `internal/webapi/surface.js:4103` and `:4112`, setters HTMLScriptElement.async/defer.
 
-Setter вызывает `this.setAttribute(...)`. Osano оборачивает setAttribute и отражаемые свойства: установка атрибута async/defer вызывает соответствующее свойство. Возникает цикл между native-looking setter Mimic и библиотечной обёрткой.
+Setter calls `this.setAttribute(...)`. Osano wraps setAttribute and reflective properties: setting an async/defer attribute calls the corresponding property. A cycle arises between the native-looking setter Mimic and the library wrapper.
 
-Минимальная проверка с подменённым setAttribute: Mimic вызывает hook один раз и не выставляет атрибут; Chrome вообще не вызывает hook и выставляет свойство/атрибут. Проверка с ограничителем рекурсии: Mimic шесть вызовов до искусственного guard, Chrome ноль. Полный стек SOE повторяет эту цепочку до RangeError.
+Minimal check with overridden setAttribute: Mimic calls hook once and does not set the attribute; Chrome doesn't call the hook at all and exposes the property/attribute. Check with recursion limiter: Mimic six calls to artificial guard, Chrome zero. The full SOE stack repeats this chain until RangeError.
 
-Падает setupConsentManager при установке script.async, до завершения добавления менеджера согласий. Проверки: `script-async-public-hook`, `script-defer-public-hook`, обе `*-recursion`.
+setupConsentManager crashes when installing script.async before adding the consent manager is completed. Checks: `script-async-public-hook`, `script-defer-public-hook`, both `*-recursion`.
 
-### 6. Trusted Types выбирает произвольный realm документа, включая lazy world
+### 6. Trusted Types selects an arbitrary document realm, including the lazy world
 
-**Где:** `internal/browser/trusted_types.go:95`, trustedTypesOwner; `internal/browser/debugger_worlds.go`, isolatedWorld; `internal/browser/deferred_runtime.go`; `internal/webapi/trusted_types.js:387`.
+**Where:** `internal/browser/trusted_types.go:95`, trustedTypesOwner; `internal/browser/debugger_worlds.go`, isolatedWorld; `internal/browser/deferred_runtime.go`; `internal/webapi/trusted_types.js:387`.
 
-Владелец выбирается первым совпадением в Go map realmOwners по root/arena. Разные isolated worlds одного документа удовлетворяют условию. Lazy world может ещё не установить trustedTypesEnforcer. Пустое значение кодируется как cross-realm descriptor, JS проверяет truthiness descriptor и пытается вызвать результат unwrap, равный undefined.
+The owner is selected by the first match in the Go `realmOwners` map for root/arena. Different isolated worlds of the same document satisfy the condition. A lazy world may not have installed `trustedTypesEnforcer` yet. An empty value is encoded as a cross-realm descriptor. JS checks the descriptor's truthiness and tries to call the unwrapped result, which is `undefined`.
 
-Отсюда `TypeError: unwrapCrossRealm(...) is not a function`. Ошибка поймана в живом Weglot на пути trustedConvert → trustedAttributeValue → Proxy.setAttribute.
+Hence `TypeError: unwrapCrossRealm(...) is not a function`. The error was caught in live Weglot on the path trustedConvert → trustedAttributeValue → Proxy.setAttribute.
 
-Локальный цикл borrowed setAttribute для src: 83 успеха и 17 ошибок из 100. Контролируемый эксперимент с шестью lazy isolated worlds: 3 успеха и 97 ошибок; после инициализации всех соответствующих worlds — 100 успехов. Chrome: 100 успехов на обоих этапах. Числа описывают конкретный запуск, не фиксированную вероятность: порядок map не гарантирован.
+Local loop borrowed setAttribute for src: 83 successes and 17 errors out of 100. Controlled experiment with six lazy isolated worlds: 3 successes and 97 errors; after initializing all relevant worlds - 100 successes. Chrome: 100 successes in both stages. The numbers describe a specific run, not a fixed probability: the order of the map is not guaranteed.
 
-### 7. Заимствованный Document.createElement создаёт объект в realm метода
+### 7. Borrowed Document.createElement creates an object in the realm of the method
 
-**Где:** `internal/webapi/document_compatibility.js:155–187`; `internal/webapi/surface.js`, Document.createElement около 4925.
+**Where:** `internal/webapi/document_compatibility.js:155–187`; `internal/webapi/surface.js`, Document.createElement around 4925.
 
-Обёртка сначала вызывает original, создающий объект через локальный host/wrap, затем adopt меняет принадлежность документа. Это не исправляет prototype realm уже созданного объекта.
+The wrapper first calls original, which creates an object via local host/wrap, then adopt changes the ownership of the document. This does not fix the prototype realm of an already created object.
 
-`iframe.contentWindow.Document.prototype.createElement.call(document, 'div')`: ownerDocument и вставка корректны, но prototype в Mimic принадлежит iframe. Chrome возвращает prototype основного документа. Проверка: `borrowed-create-element`.
+`iframe.contentWindow.Document.prototype.createElement.call(document, 'div')`: ownerDocument and insertion are correct, but the prototype in Mimic belongs to the iframe. Chrome returns the prototype of the main document. Validation: `borrowed-create-element`.
 
-Найдено при сокращении проблемы realm; отдельное падение живого Flickr этим пунктом не доказано. Общая обёртка охватывает и другие create-методы, но результат приведён только для измеренного createElement.
+Found in reducing the realm problem; A separate fall of live Flickr has not been proven by this point. The general wrapper covers other create methods, but the result is only given for the measured createElement.
 
-### 8. getElementsByTagName проверяет realm через instanceof
+### 8. getElementsByTagName checks realm via instanceof
 
-**Где:** `internal/webapi/document_compatibility.js:256–259`.
+**Where:** `internal/webapi/document_compatibility.js:256–259`.
 
-Проверка `this instanceof Document/Element` относительно realm функции отвергает корректный Document другого realm. Заимствованный getElementsByTagName.call(mainDocument, 'head') даёт Illegal invocation в Mimic; Chrome возвращает правильный head. Проверка: `borrowed-tags-head`.
+Checking `this instanceof Document/Element` against a realm function rejects a valid Document of another realm. Borrowed getElementsByTagName.call(mainDocument, 'head') gives Illegal invocation in Mimic; Chrome returns the correct head. Validation: `borrowed-tags-head`.
 
-Это соседний подтверждённый дефект, найденный локальным тестом. Его нельзя смешивать с живым Illegal invocation Webflow: у того другой стек, описанный в №4.
+This is a nearby confirmed defect found by a local test. It cannot be mixed with the live Illegal invocation Webflow: it has a different stack, described in No. 4.
 
-### 9. JS-resolver размера шрифта не разрешает viewport units
+### 9. Font size JS resolver does not resolve viewport units
 
-**Где:** `internal/webapi/css_font_metrics.js:18`, cssResolveLength; cssComputedFontSize около 140; `internal/webapi/css_computed_values.js:387`.
+**Where:** `internal/webapi/css_font_metrics.js:18`, cssResolveLength; cssComputedFontSize about 140; `internal/webapi/css_computed_values.js:387`.
 
-Resolver умеет абсолютные единицы, em/rem/% и часть calc, но не vw. Формула корня Flickr `calc(0.017733564013841074rem + 1.3840830449826986vw)` возвращает null, создавая 82 semantic-missing записи. Зависимые пути местами подставляют 16 px.
+Resolver can do absolute units, em/rem/% and the calc part, but not vw. The Flickr root formula `calc(0.017733564013841074rem + 1.3840830449826986vw)` returns null, creating 82 semantic-missing entries. Dependent paths substitute 16 px in places.
 
-На начальном пустом документе эта формула и чистое vw дают 16 px; Chrome при ширине 1280 даёт соответственно 18 px и корректное viewport-значение. На загруженном HTTP-документе приоритет получает native producer — поэтому там ошибка выглядит иначе, см. №10. Это два пути вычисления наблюдаемого размера шрифта с разными результатами.
+On an initial blank document, this formula and a pure vw give 16 px; Chrome with a width of 1280 gives respectively 18 px and the correct viewport value. On a loaded HTTP document, the native producer takes priority - that’s why the error looks different there, see No. 10. These are two ways to calculate observed font size with different results.
 
-### 10. Native font-size наследует квантование Stylo, отличающееся от Chrome
+### 10. Native font-size inherits Stylo quantization, which is different from Chrome
 
-**Где:** `internal/webapi/surface.js:2092`, blitzStyleValue; `internal/layoutblitz/native/src/lib.rs`, style/style_batch; pinned blitz `19a72d4a4163038d748603fbcf709d38bfa6a998`, resolved_style.rs; dependency `stylo-0.21.0/values/specified/length.rs:947`, `font.rs:1023`.
+**Where:** `internal/webapi/surface.js:2092`, blitzStyleValue; `internal/layoutblitz/native/src/lib.rs`, style/style_batch; pinned blitz `19a72d4a4163038d748603fbcf709d38bfa6a998`, resolved_style.rs; dependency `stylo-0.21.0/values/specified/length.rs:947`, `font.rs:1023`.
 
-Stylo предварительно усекает viewport-результат в app units, а затем `FontSize::quantize_font_size` отбрасывает 14 бит мантиссы f32, оставляя 10 бит точности. Mimic возвращает сериализованный результат этого producer как computed style.
+Stylo pre-truncates the viewport result in app units, and then `FontSize::quantize_font_size` discards 14 bits of the f32 mantissa, leaving 10 bits of precision. Mimic returns the serialized result of this producer as computed style.
 
-При width=1280 на загруженном HTTP-документе:
+With width=1280 on a loaded HTTP document:
 
-| Вход font-size | Mimic | Chrome |
+| Input font-size | Mimic | Chrome |
 |---|---|---|
 | 18px | 18px | 18px |
 | 1.40625vw | 18px | 18px |
 | 1.3840830449826986vw | 17.6875px | 17.7163px |
 | 0.017733564013841074rem | 0.283691px | 0.283737px |
-| Формула Flickr из №9 | 17.9688px | 18px |
-| calc из двух px-слагаемых с суммой 18 | 18px | 18px |
+| Flickr formula from #9 | 17.9688px | 18px |
+| calc from two px terms with sum 18 | 18px | 18px |
 
-Проверки сохранены в font-matrix-http.json. Это несовместимость численного результата, а не доказанная причина падения JS или отказа Turnstile.
+The checks are saved in font-matrix-http.json. This is a numerical result inconsistency, not a proven cause of JS crash or Turnstile failure.
 
-### 11. Сериализация заданного font-size сохраняет исходные числа/calc
+### 11. Serializing a given font-size preserves the original numbers/calc
 
-**Где:** `internal/webapi/webkit_css.js:73`, normalizeCSSValue; `internal/webapi/surface.js`, CSSStyleDeclaration.setProperty/getPropertyValue.
+**Where:** `internal/webapi/webkit_css.js:73`, normalizeCSSValue; `internal/webapi/surface.js`, CSSStyleDeclaration.setProperty/getPropertyValue.
 
-Для проверенных значений font-size путь нормализации возвращает исходную строку без специализированного парсера/сериализатора. Поэтому style.fontSize сохраняет длинные дроби, а `calc(0.2837370242214572px + 17.716262975778544px)` остаётся таким же. Chrome возвращает нормализованные числа (`1.38408vw`, `0.0177336rem`) и `calc(18px)` соответственно.
+For checked font-size values, the normalization path returns the original string without a specialized parser/serializer. Therefore style.fontSize preserves long fractions, but `calc(0.2837370242214572px + 17.716262975778544px)` remains the same. Chrome returns the normalized numbers (`1.38408vw`, `0.0177336rem`) and `calc(18px)` respectively.
 
-Это самостоятельное наблюдаемое отличие CSSOM, подтверждённое обеими font-matrix, без доказанной связи с аварией сайта.
+This is an independent observable CSSOM difference, confirmed by both font-matrix, with no proven connection to the site crash.
 
-### 12. HTMLAnchorElement.type существует как заглушка
+### 12. HTMLAnchorElement.type exists as a stub
 
-**Где:** `internal/webapi/surface.js:4377`, HTMLAnchorElement; generic accessor fallback около 8912/8931.
+**Where:** `internal/webapi/surface.js:4377`, HTMLAnchorElement; generic accessor fallback around 8912/8931.
 
-У класса нет отражаемой реализации type; установлен generic getter/setter, вызывающий semanticMissing. До установки атрибута чтение даёт undefined вместо пустой строки. После setAttribute('type','text/html') свойство всё ещё undefined; запись свойства не меняет атрибут. Chrome корректно отражает обе стороны. В трассе одна запись HTMLAnchorElement.type. Проверка: `anchor-type`.
+The class has no reflective implementation of type; a generic getter/setter is installed that calls semanticMissing. Before setting the attribute, reading gives undefined instead of the empty string. After setAttribute('type','text/html') the property is still undefined; writing a property does not change the attribute. Chrome reflects both sides correctly. There is one HTMLAnchorElement.type entry in the trace. Validation: `anchor-type`.
 
-### 13. Parser-script ошибки обходят Window error и теряют структуру в CDP
+### 13. Parser-script errors bypass Window errors and lose structure in CDP
 
-**Где:** `internal/browser/realm.go`, evaluateClassicScript около 457 и Evaluate около 554; `internal/browser/page.go` около 792; `internal/cdp/server.go`, преобразование trace.Exception; `internal/engine/v8/spike.go`, exceptionError; `internal/webapi/window_errors.js`.
+**Where:** `internal/browser/realm.go`, evaluateClassicScript about 457 and Evaluate about 554; `internal/browser/page.go` about 792; `internal/cdp/server.go`, transform trace.Exception; `internal/engine/v8/spike.go`, exceptionError; `internal/webapi/window_errors.js`.
 
-Скриптовый путь не вызывает имеющийся reportWindowException. Ошибка отдельно записывается как evaluation и script, а CDP публикует обе записи. Исключение предварительно сведено к строке: теряются объект Error, stackTrace и полноценные координаты/context.
+The script path does not call the existing `reportWindowException`. The error is recorded separately as an evaluation and a script error, and CDP publishes both records. The exception is reduced to a string first, losing the Error object, stackTrace, and full coordinates/context.
 
-На одном inline `throw new Error('audit-uncaught-script')`:
+On one inline `throw new Error('audit-uncaught-script')`:
 
-- Mimic: обработчик window.error не вызван; два Runtime.exceptionThrown; line/column равны 0; нет structured stack/exception.
-- Chrome: один window.error и один Runtime.exceptionThrown с объектом, стеком и фактической колонкой.
+- Mimic: window.error handler not called; two Runtime.exceptionThrown; line/column are 0; no structured stack/exception.
+- Chrome: one window.error and one Runtime.exceptionThrown with object, stack and actual column.
 
-Это объясняет пустой массив ошибок диагностического init-script при реально упавшей странице и удвоение исходных четырёх исключений. Проверка: `parserScriptErrorReporting`. Отсутствующий DOMException.stack сюда не относится: он undefined и в Chrome, и в Mimic.
+This explains the empty error array of the diagnostic init-script when the page actually crashed and the doubling of the original four exceptions. Validation: `parserScriptErrorReporting`. The missing DOMException.stack does not apply here: it is undefined in both Chrome and Mimic.
 
-### 14. Явная навигация на about:blank не реализована в данном пути
+### 14. Explicit navigation to about:blank is not implemented in this path
 
-**Где:** `internal/browser/page.go:490–496`, beginNavigationRequestWithCommit.
+**Where:** `internal/browser/page.go:490-496`, beginNavigationRequestWithCommit.
 
-При подготовке дополнительной CSS-проверки `page.goto('about:blank')` вернул `unsupported navigation scheme "about"`. Причина явная: entry point принимает только http/https. Новый пустой Page при этом существует и позволяет выполнять JS; создание начального документа и явная навигация используют разные пути.
+When preparing an additional CSS check, `page.goto('about:blank')` returned `unsupported navigation scheme "about"`. The reason is obvious: entry point only accepts http/https. A new empty Page still exists and allows JS to be executed; initial document creation and explicit navigation use different paths.
 
-Это отдельно найденная неподдерживаемая граница навигации, не причина исходных ошибок Flickr. Для CSS-измерения использованы новый Page и локальный HTTP-документ, без изменения реализации.
+This is a separate unsupported navigation boundary, not a cause of the original Flickr errors. The CSS measurement used a new Page and a local HTTP document without changing the implementation.
 
-## Что не следует считать найденными недостающими API
+## What should not be considered missing APIs found
 
-В unsupported попали documentMode, Document.namespaceURI, globalPrivacyControl, script.node, document.document/type/uniqueID, div.type и динамические jQuery/sizzle-поля. Проверенные фиксированные свойства возвращают undefined и в frozen Chrome. Отсутствие библиотечного expando до его установки также не доказывает отсутствующий Web API.
+Unsupported included documentMode, Document.namespaceURI, globalPrivacyControl, script.node, document.document/type/uniqueID, div.type and dynamic jQuery/sizzle fields. Checked fixed properties return undefined in frozen Chrome too. The lack of library expando before installing it also does not prove a missing Web API.
 
-Следовательно, заполнять все 38 записей заглушками было бы неверно. Реальный HTMLAnchorElement.type выделен отдельно, поскольку его поведение отличается от Chrome. Остальные записи оставлены как диагностические наблюдения, без объявления неподтверждённых дефектов.
+Therefore, it would be incorrect to fill all 38 records with stubs. The actual HTMLAnchorElement.type is kept separate because it behaves differently from Chrome. The remaining entries are left as diagnostic observations, without declaring unconfirmed defects.
 
-## Приоритеты для будущего исправления
+## Priorities for future fixes
 
-Это порядок рассмотрения, а не выполненные изменения:
+This is the order of consideration, not the changes made:
 
-1. Каноническая DOM-идентичность и выбор realm-владельца, включая Trusted Types.
-2. DOM-проверки по авторитетному состоянию и передача Event между realm.
-3. Отражаемые свойства script без вызова пользовательских override; URL serialization.
-4. Pipeline ошибок: window.error, однократное CDP-событие, сохранение Error/stack/context.
-5. Остальные заимствованные DOM-методы, CSS-resolvers/serialization и anchor.type.
-6. Отдельно — навигационная граница about:blank.
+1. Canonical DOM identity and choice of realm owner, including Trusted Types.
+2. DOM checks based on the authoritative state and Event transmission between realms.
+3. Reflected script properties without calling custom override; URL serialization.
+4. Error pipeline: window.error, a single CDP event, and preserving Error/stack/context.
+5. Other borrowed DOM methods, CSS-resolvers/serialization and anchor.type.
+6. Separately, the about:blank navigation border.
 
-Проверять будущие изменения нужно сокращёнными примерами против frozen Chrome и повторным немодифицированным захватом Flickr. Получение Turnstile-токена должно оставаться отдельным результатом проверки; наличие API, поля или HTTP 200 его не заменяет.
+Future changes should be tested with reduced cases against frozen Chrome and a repeat unmodified Flickr capture. Obtaining a Turnstile token should remain a separate verification result; the presence of an API, field, or HTTP 200 does not replace it.
 
-## Доказательства и воспроизведение
+## Evidence and reproduction
 
-Все пути ниже относительно корня репозитория. `.build` — локальные игнорируемые материалы, не часть commit отчёта. Полные захваты могут содержать сетевые идентификаторы; в отчёт их значения не перенесены.
+All paths below are relative to the repository root. `.build` - local ignored materials, not part of the commit report. Full captures may contain network identifiers; their values ​​are not transferred to the report.
 
-| Материал | Путь |
+| Material | Path |
 |---|---|
-| Базовая трасса и ответы Mimic | `.build/flickr-audit/baseline-mimic/` |
-| Контроль Chrome | `.build/flickr-audit/baseline-chrome/` |
-| Стек Trusted Types | `.build/flickr-audit/dom-instrumented-mimic/capture.json` |
-| Weglot URL и DOM-вставка | `.build/flickr-audit/detailed-instrumented-mimic/capture.json` |
-| Живое событие Webflow | `.build/flickr-audit/detailed-event-instrumented-mimic/capture.json` |
-| Сокращённые сравнения | `.build/flickr-audit/probes-mimic.json`, `probes-chrome.json` |
-| CSS, новый пустой Page | `.build/flickr-audit/font-matrix.json` |
-| CSS, HTTP-документ | `.build/flickr-audit/font-matrix-http.json` |
-| Скрипты диагностики | `.build/flickr_audit.cjs`, `.build/flickr_probes.cjs`, `.build/flickr_font_audit.cjs` |
+| Basic Route and Mimic Answers | `.build/flickr-audit/baseline-mimic/` |
+| Control Chrome | `.build/flickr-audit/baseline-chrome/` |
+| Trusted Types Stack | `.build/flickr-audit/dom-instrumented-mimic/capture.json` |
+| Weglot URL and DOM Insertion | `.build/flickr-audit/detailed-instrumented-mimic/capture.json` |
+| Webflow Live Event | `.build/flickr-audit/detailed-event-instrumented-mimic/capture.json` |
+| Short comparisons | `.build/flickr-audit/probes-mimic.json`, `probes-chrome.json` |
+| CSS, new empty Page | `.build/flickr-audit/font-matrix.json` |
+| CSS, HTTP document | `.build/flickr-audit/font-matrix-http.json` |
+| Diagnostic scripts | `.build/flickr_audit.cjs`, `.build/flickr_probes.cjs`, `.build/flickr_font_audit.cjs` |
 
-Команды повторения основных проверок при запущенном Mimic на 127.0.0.1:9223:
+Commands for repeating basic checks when Mimic is running on 127.0.0.1:9223:
 
 ```powershell
 node .build/flickr_probes.cjs mimic
@@ -260,46 +259,14 @@ node .build/flickr_audit.cjs mimic repeat-mimic
 node .build/flickr_audit.cjs chrome repeat-chrome
 ```
 
-Числа Trusted Types могут меняться между запусками. Локальный font-скрипт в текущем виде повторяет HTTP-матрицу; исходная матрица пустого Page сохранена отдельным файлом. Live-capture зависит от внешних ресурсов и сети. Производственный код, frozen harnesses и reference expectations не изменялись.
+Trusted Types numbers may change between runs. The local font script in its current form repeats the HTTP matrix; the original empty Page matrix is ​​saved as a separate file. Live-capture depends on external resources and the network. Production code, frozen harnesses and reference expectations have not changed.
 
-## Дополнение: реализация и повторная проверка
+## Addendum: implementation and re-testing
 
-После исходного аудита дефекты №1–14 исправлены в общих механизмах URL,
-DOM/realm, Event, отражаемых атрибутов, Trusted Types, CSS, передачи ошибок и
-навигации. В `internal/browser/flickr_semantics_test.go` и существующих
-проверках добавлены или выполнены короткие регрессии. Это не меняет
-исторические результаты базового захвата выше.
+Since the initial audit, defects #1-14 have been fixed in the general URL, DOM/realm, Event, Reflected Attributes, Trusted Types, CSS, Error Passing, and Navigation mechanisms. Added or performed short regressions to `internal/browser/flickr_semantics_test.go` and existing tests. This does not change the historical base capture results above.
 
-На повторной странице перестали возникать необработанные ошибки Weglot,
-Webflow и Osano. `window.turnstile` и одно поле ответа появляются. Следующим
-отличием оказался жизненный цикл `IntersectionObserver`: Webflow начинает
-Turnstile для формы только после входа в область наблюдения. После создания
-первого теневого дерева Mimic переводил **всю** страницу с native layout на
-запасной JS layout. На Flickr тот ошибочно менял координаты нижних форм и
-инициализировал ещё два виджета. Для теневого хоста нулевого размера без
-обычных дочерних узлов исправление ограничивает переход затронутой веткой;
-хосты, способные менять поток документа, сохраняют общий запасной расчёт.
-После этого Mimic и frozen Chrome создают
-по одному виджету у формы поиска; две формы подписки остаются за пределами
-области наблюдения. В замере координаты верхней формы подписки составили
-`y=2764.56` (Mimic) и `y=2758.53` (Chrome), нижней — `y=4278.06` и
-`y=4270.61` соответственно. Существующие короткие проверки Shadow DOM,
-CSSOM и IntersectionObserver после правки проходят.
+Unhandled Weglot, Webflow, and Osano errors stopped occurring on the reloaded page. `window.turnstile` and one response field appear. The next difference involved the `IntersectionObserver` lifecycle: Webflow starts Turnstile for a form only when it enters the observed region. After the first shadow tree was created, Mimic switched **the entire** page from native layout to fallback JS layout. On Flickr, this incorrectly changed the coordinates of lower forms and initialized two extra widgets. For a zero-size shadow host without ordinary child nodes, the fix limits that switch to the affected branch; hosts that can change document flow retain the page-wide fallback calculation. Mimic and frozen Chrome then each create one widget for the search form; the two subscription forms remain outside the observed region. The upper subscription form measured `y=2764.56` in Mimic and `y=2758.53` in Chrome; the lower form measured `y=4278.06` and `y=4270.61`, respectively. Existing focused Shadow DOM, CSSOM, and IntersectionObserver checks pass after the fix.
 
-В отдельной 90-секундной сетевой трассе после исправлений Mimic показывает
-одно поле с пустым значением во всех 18 замерах. Страница не выдаёт
-необработанных JS-ошибок. В консоли Turnstile есть `600010` (Cloudflare относит
-семейство `600*` к общему сбою проверки, без публичной расшифровки суффикса;
-см. [официальную таблицу кодов](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/)); четыре обращения
-к `brunhild.challenges.cloudflare.com` завершились DNS-ошибкой. В отдельном
-захвате frozen Chrome 152 также не получил токен и встретил этот DNS-сбой.
-Поскольку обычный Chrome пользователя на той же странице получил токен,
-эти автоматические захваты не доказывают, что ошибка в реализации Mimic
-является причиной отказа Turnstile. Живая сеть и контекст успешного сеанса
-обычного Chrome не были доступны через расширение Computer Use.
+In a separate 90-second network trace, after corrections, Mimic shows one field with a blank value in all 18 measurements. The page does not throw any raw JS errors. There is `600010` in the Turnstile console (Cloudflare refers to the `600*` family as a general validation failure, without publicly decoding the suffix; see [official code table](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/)); four calls to `brunhild.challenges.cloudflare.com` failed with a DNS error. In a separate capture, frozen Chrome 152 also did not receive a token and encountered this DNS failure. Since the user's normal Chrome on the same page received the token, these automatic captures do not prove that a bug in Mimic's implementation is causing the Turnstile failure. The live network and successful session context of regular Chrome were not available through the Computer Use extension.
 
-Повторяемые материалы: `.build/flickr_io_audit.cjs`,
-`.build/flickr-audit/io-audit.txt`,
-`.build/flickr-audit/challenge-mimic/trace.json` и
-`.build/flickr-audit/challenge-chrome/trace.json`. Значения токенов в отчёт не
-переносились.
+Replays: `.build/flickr_io_audit.cjs`, `.build/flickr-audit/io-audit.txt`, `.build/flickr-audit/challenge-mimic/trace.json` and `.build/flickr-audit/challenge-chrome/trace.json`. Token values ​​were not transferred to the report.

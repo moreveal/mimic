@@ -1,195 +1,61 @@
-# Flickr Turnstile: путь VM после первого `/fo` (2026-09-26)
+# Flickr Turnstile: VM path after first `/fo` (2026-09-26)
 
-## Вывод, установленный трассой
+## Trace findings
 
-Mimic **попадает** в путь, отправляющий второй `/fo`. Предположение о том,
-что нужная ветка не исполняется, не подтвердилось. В обычных захватах Mimic
-первый запрос получает ответ, затем примерно через 11–16 секунд отправляется
-второй запрос. Frozen Chrome 152 отправляет аналогичный второй запрос примерно
-через секунду. В предоставленной пользователем успешной Performance-трассе
-Chrome интервал от завершения первого ответа до второго запроса составил
-около 0,927 секунды. Эти сеансы получили разные программы и
-не являются детерминированным сравнением одних и тех же инструкций.
-Повторный запуск frozen Chrome 152 после инструментирования также завершился
-`600010` и пустым токеном при интервале около 0,76 секунды. Следовательно,
-одна только задержка не объясняет различие между Mimic и успешным обычным
-Chrome пользователя.
+Mimic **reaches** the path that sends the second `/fo`. The hypothesis that the required branch does not execute was disproved. In ordinary Mimic captures, the first request receives a response, then a second request is sent about 11–16 seconds later. Frozen Chrome 152 sends a similar second request about a second later. In the user's successful Chrome Performance trace, the interval from completion of the first response to the second request was about 0.927 seconds. These sessions received different programs and are not a deterministic comparison of the same instructions. A repeat run of frozen Chrome 152 after instrumentation also ended with `600010` and an empty token, despite an interval of about 0.76 seconds. Thus, latency alone does not explain the difference between Mimic and the user's successful regular Chrome session.
 
-В живой трассе Mimic первый `/fo` вернул около 779 КБ `text/plain`, второй
-получил повторный большой `text/plain`; поле `cf-turnstile-response` осталось
-пустым, и Turnstile сообщил `600010`. В успешном HAR пользователя первый
-ответ имеет тот же порядок размера, второй — 4 208 байт `text/html`, после
-чего токен появился. Следовательно, непосредственное отличие результата
-находится в ответе сервера на второй запрос. Пока не установлено, какое поле
-запроса или свойство среды определило этот ответ.
+In the live Mimic trace, the first `/fo` returned about 779 KB of `text/plain`, the second received a repeated large `text/plain`; the `cf-turnstile-response` field was left empty and Turnstile reported `600010`. In a successful user HAR, the first response is of the same size order, the second is 4208 bytes of `text/html`, after which the token appeared. Therefore, the immediate difference in the result lies in the server's response to the second request. It has not yet been determined which request field or environment property determined this response.
 
-## Выполненный код VM
+## Executed VM code
 
-Исходный inline-скрипт iframe содержит два цикла диспетчера VM. Номера
-обработчиков сохраняют роль между наблюдёнными вариантами программы, имена
-функций и конкретный код меняются. Диагностический скрипт инструментирует
-оба цикла на входе в команду и отмечает вызовы обработчиков. После первого
-`/fo` вложенная VM вызывается через `Function.prototype.bind` и снова
-возвращается в основной цикл. В Mimic три длинных участка находились внутри
-обработчика команды 176 первого цикла: примерно 2,1, 1,5 и 4,1 секунды в
-одном запуске. **Команда 176 является общим вызовом функции**, а не специальным
-декодером. Два первых длинных вызова идут в обфусцированный helper, а третий
-вызывает `JSON.stringify` для `CSSStyleDeclaration`. Во frozen Chrome 152 с такой же диагностикой
-зафиксировано 123 217 команд до второго `/fo` против 104 476 в Mimic; длинных
-участков в обработчике 176 не было. В другом запуске этого же обработчика
-Mimic потратил примерно 4,5, 1,3 и 4,4 секунды. Изменяемая программа и
-диагностическая нагрузка не позволяют вывести коэффициент скорости отдельной
-чистой операции, но место длительного исполнения локализовано.
+The original iframe inline script contains two VM dispatcher loops. Handler numbers retain their role between observed program variants, function names and specific code change. The diagnostic script instruments both loops at the command input and marks the calls to the handlers. After the first `/fo`, the nested VM is called via `Function.prototype.bind` and returns to the main loop again. In Mimic, three long sections were inside the command 176 handler of the first loop: approximately 2.1, 1.5 and 4.1 seconds in one run. **Instruction 176 is a general function call** and not a special decoder. The first two long calls go to the obfuscated helper, and the third calls `JSON.stringify` for `CSSStyleDeclaration`. In frozen Chrome 152 with the same diagnostics, 123,217 commands were recorded up to the second `/fo` versus 104,476 in Mimic; there were no long sections in processor 176. In another run of the same handler, Mimic took approximately 4.5, 1.3, and 4.4 seconds. The variable program and diagnostic load do not allow the speed coefficient of a single pure operation to be deduced, but the place of long execution is localized.
 
-Успешная Performance-трасса пользователя содержит CPU-профиль iframe. Между
-первым ответом и вторым запросом зафиксированы вызовы `getImageData`,
-`appendChild` и функций VM. Это выборки стека, а не полная трасса значений
-регистров и ветвлений. Они подтверждают выполнение графического и DOM-пути,
-но сами по себе не доказывают причину отказа Mimic.
+A successful user performance trace contains an iframe CPU profile. Between the first response and the second request, calls to `getImageData`, `appendChild` and VM functions were recorded. These are stack samples, not a complete trace of register and branch values. They confirm the execution of the graphical and DOM path, but do not in themselves prove why Mimic failed.
 
-Отдельное инструментирование `JSON.stringify` измерило сериализацию объекта
-стилей с 1213 перечислимыми свойствами: в Mimic около 4–4,5 с до исправлений,
-во frozen Chrome 152 около 1,6–1,7 мс. Причина в CSSOM Mimic: числовой индекс
-вызывал `item()`, заново создававший массив всех 476 вычисленных свойств;
-чтение именованных свойств обращалось к движку стилей отдельно. Во вложенном
-фрейме пакетное чтение и прямое обращение к каталогу числовых имён сократили
-один измеренный вызов примерно до 2 с, но общий интервал до второго запроса
-остаётся около 11 с. На пустой странице тот же вызов сократился примерно с
-247 до 37 мс. Кроме того, Chrome 152 возвращает девять legacy-имён `epub*` в
-`Reflect.ownKeys(CSSStyleDeclaration)`, хотя их дескрипторы отсутствуют;
-Mimic прежде их пропускал. Реализация теперь воспроизводит это наблюдение.
+Separate instrumentation of `JSON.stringify` measured serialization of a styles object with 1213 enumerable properties: in Mimic about 4–4.5 s before corrections, in frozen Chrome 152 about 1.6–1.7 ms. The reason is CSSOM Mimic: the numeric index called `item()`, which re-created the array of all 476 calculated properties; reading named properties accessed the style engine separately. In the nested frame, batch reading and direct access to the numeric name directory reduced one measured call to about 2 s, but the total interval to the second request remained about 11 s. On a blank page, the same call dropped from about 247 ms to 37 ms. Additionally, Chrome 152 returns nine legacy `epub*` names in `Reflect.ownKeys(CSSStyleDeclaration)`, although their handles are missing; Mimic missed them before. The implementation now reproduces this observation.
 
-Независимый контроль на пустой странице сравнил JSON вычисленного стиля `body`:
-из 1213 перечислимых полей семь значений различаются между Mimic и frozen
-Chrome 152. Отличия относятся к `height`/`blockSize` и зависящим от них
-`perspectiveOrigin`/`transformOrigin` с alias-именами. Это отдельный
-подтверждённый пробел геометрии; текущая трасса не устанавливает, что VM
-читала стиль именно `body` или что эти семь значений вошли во второй POST.
+An independent check on a blank page compared the JSON of the computed `body` style: of the 1213 enumerable fields, seven values ​​differ between Mimic and frozen Chrome 152. The differences relate to `height`/`blockSize` and their dependent `perspectiveOrigin`/`transformOrigin` alias names. This is a separate confirmed geometry gap; The current trace does not establish that the VM read the style `body` or that these seven values ​​were included in the second POST.
 
-Предыдущий узкий захват условной команды по смещению 252 показал, что её
-предикат после первого ответа сначала ложен, затем становится истинным и
-исполнение продолжается к отправке второго `/fo`. Наблюдение согласуется с
-фактически отправленным вторым запросом. Оно не доказывает равенство
-сериализованного тела запроса с Chrome.
+A previous narrow capture of the conditional command at offset 252 showed that its predicate after the first response is initially false, then becomes true and execution continues until the second `/fo` is sent. The observation is consistent with the second request actually sent. It does not prove that the serialized request body is equal to Chrome.
 
-## Проверка воспроизведения успешного ответа
+## Checking the reproduction of a successful response
 
-Из HAR пользователя взяты HTML iframe и первый ответ `/fo` последнего
-успешного обновления. Подстановка только HTML в другой сеанс Chrome 152 не
-довела VM до первого запроса. Подстановка только ответа к новому живому
-iframe привела к `InvalidCharacterError` при `atob`: ответ нельзя
-декодировать с контекстом другого запуска. Поэтому HAR не является
-самостоятельным oracle для пошагового сравнения веток VM. Ответы и
-идентификаторы сеанса не включены в репозиторий.
+The HTML iframe and the first response `/fo` of the last successful update are taken from the user's HAR. Substituting just HTML into another Chrome 152 session didn't get the VM to the first request. Substituting only the response into a new live iframe resulted in an `InvalidCharacterError` on `atob`: the response cannot be decoded with the context of another launch. Therefore, HAR is not a standalone oracle for step-by-step comparison of VM branches. Responses and session IDs are not included in the repository.
 
-## Что осталось для причинного вывода
+## What's left for causal inference
 
-Остаётся неизвестным, какое именно поле второго запроса или сигнал среды
-приводит к отказу сервера. В предоставленном HAR успешного Chrome тело второго
-POST содержит около 87 КБ; последующий прямой захват CDP `Network.requestWillBeSent`
-показал, что Mimic тоже передаёт тело второго POST, хотя Playwright
-`request.postData()` возвращает пустое значение для этого соединения.
-Содержимое тел ещё не сопоставлено по полям. Следующие проверяемые границы:
-входные значения VM после первого ответа, вызовы браузерных API и значения,
-сериализованные во второй запрос. Разница времени исполнения сама по себе не
-доказывает, что сервер отказал именно из-за тайм-аута. Подменять ответ, токен
-или логику сайта в производственном Mimic на основании этих данных нельзя.
+It remains unknown which field of the second request or environmental signal causes the server to fail. In the successful Chrome-provided HAR, the body of the second POST contains about 87 KB; A subsequent direct capture of the CDP `Network.requestWillBeSent` showed that Mimic was also passing the body of the second POST, although Playwright `request.postData()` returned empty for that connection. The contents of the bodies have not yet been matched by fields. The following boundaries are checked: VM input values ​​after the first response, browser API calls, and values ​​serialized into the second request. The difference in execution time does not in itself prove that the server failed due to a timeout. You cannot replace the response, token, or site logic in production Mimic based on this data.
 
-Локальные диагностические файлы находятся в игнорируемом каталоге
-`.build/flickr-audit/vm-analysis/`; основной сценарий —
-`.build/flickr_vm_trace.cjs`. HAR остаётся только на машине пользователя.
-Сырой Performance trace и HAR остаются только на машине пользователя.
+Local diagnostic files are located in the ignored directory `.build/flickr-audit/vm-analysis/`; the main script is `.build/flickr_vm_trace.cjs`. HAR remains only on the user's machine. The raw Performance trace and HAR remain only on the user’s machine.
 
-## Успешный frozen Chrome 152 и графические расхождения
+## Successful frozen Chrome 152 and graphical discrepancies
 
-Отдельный headful Chrome 152, запущенный с постоянным CDP-портом без запуска
-через Playwright, получил токен. В этом сеансе `navigator.webdriver` был
-`false`; два POST имели тела 3 874 и 88 076 байт. Контрольная трасса, HTML
-iframe, предоставленные пользователем HAR и Performance trace сохранены
-локально в `.build/flickr-audit/chrome152-success-frozen-20260926/` вместе с
-SHA256-квитанцией. Эти приватные файлы могут содержать идентификаторы сеанса и
-не должны попадать в Git. Повторять успешный запуск Chrome для проверки каждой
-гипотезы не требуется.
+A separate headful Chrome 152 launched with a persistent CDP port without running through Playwright received a token. In this session, `navigator.webdriver` was `false`; the two POSTs had bodies of 3,874 and 88,076 bytes. The audit trace, HTML iframe, user-provided HAR and Performance trace are saved locally in `.build/flickr-audit/chrome152-success-frozen-20260926/` along with the SHA256 receipt. These private files may contain session IDs and should not end up in Git. There is no need to repeat a successful launch of Chrome to test each hypothesis.
 
-В сохранённой VM трассе есть прямые чтения пикселей. При одинаковых операциях
-рисования Chrome и Mimic расходились следующим образом:
+The saved VM trace contains direct pixel readings. For the same drawing operations, Chrome and Mimic diverged as follows:
 
-| Чтение | Chrome 152 | Mimic до исправлений | Mimic после исправлений |
+| Reading | Chrome 152 | Mimic before corrections | Mimic after corrections |
 | --- | ---: | ---: | ---: |
-| Холст 48×48, ненулевые байты | 7 948 | 2 921 | 8 241 |
-| Холст 49×44, ненулевые байты | 6 900 | 0 до исправления полного оборота дуги | 6 904 |
-| Уменьшение 80×24 до 1×1 после `difference` | `[0,0,0,255]` | `[255,255,255,255]` | `[0,0,0,255]` |
+| Canvas 48×48, nonzero bytes | 7,948 | 2,921 | 8,241 |
+| Canvas 49×44, nonzero bytes | 6,900 | 0 before the full-circle arc fix | 6,904 |
+| Downscale 80×24 to 1×1 after `difference` | `[0,0,0,255]` | `[255,255,255,255]` | `[0,0,0,255]` |
 
-У холста 48×48 совпадает последовательность операций, включая тени с ненулевым
-`shadowBlur`. Mimic прежде только хранил состояние тени и не добавлял её в
-буфер пикселей. Общая модель теперь снимает состояние тени при операции,
-размывает маску источника и смешивает её до самого источника для путей и текста.
-Остаточное отличие 293 ненулевых байта связано с приближённой моделью
-растеризации и требует отдельной проверки влияния на сериализованное поле VM.
+The 48×48 canvas has the same sequence of drawing operations, including shadows with a nonzero `shadowBlur`. Mimic previously stored shadow state without adding the shadow to the pixel buffer. The shared model now snapshots shadow state for each operation, blurs the source mask, and blends the shadow before the source for paths and text. The remaining difference of 293 nonzero bytes comes from the approximate rasterization model; its effect on the serialized VM field needs separate investigation.
 
-Отдельный участок VM рисует 80×24, копирует его с фильтром `grayscale(1)`,
-затем повторно копирует с `globalCompositeOperation='difference'` и читает
-уменьшенную копию. Mimic прежде не выполнял `drawImage` для режима `difference`.
-Теперь режимы смешивания идут через общий пиксельный композитор; `grayscale()`
-применяется к копируемым пикселям. Проверка этого участка дала тот же чёрный
-пиксель, что и сохранённый Chrome.
+A separate section of the VM draws 80x24, copies it with the `grayscale(1)` filter, then re-copies it with `globalCompositeOperation='difference'` and reads the smaller copy. Mimic has not previously executed `drawImage` for `difference` mode. Blending modes now go through the general pixel composer; `grayscale()` is applied to the copied pixels. Checking this area gave the same black pixel as the saved Chrome.
 
-Остались меньшие графические расхождения: чтение 2×2 после частичной дуги
-различается на 6–11 уровней отдельных каналов, холст 16×16 на три ненулевых
-байта, холст 49×44 на четыре ненулевых байта. Также у отдельных проб текста,
-включая эмодзи, отличается покрытие глифа. Точная растеризация глифов и краёв
-находится за пределами текущей модели без нативного графического backend;
-подменять значения отдельных сайтов или символов нельзя. Цветовые пробы P3
-в этой трассе совпали. Для причинного вывода необходимо установить, какие из
-оставшихся различий VM вносит в тело второго POST.
+Smaller graphics differences remain: a 2×2 readback after a partial arc differs by 6–11 levels in individual channels, a 16×16 canvas by three nonzero bytes, and a 49×44 canvas by four nonzero bytes. Some text probes, including emoji, also differ in glyph coverage. Exact glyph and edge rasterization is outside the current model without a native graphics backend; substituting values for individual sites or characters is inappropriate. The P3 color probes in this trace matched. Causal attribution requires determining which remaining differences the VM puts into the second POST body.
 
-После исправлений один новый запуск Mimic отправил второй POST с телом 85 580
-байт, но получил `600010` и пустое поле. Это не эквивалентно успешному
-серверному ответу Chrome. Сохранённые HAR и VM трасса не являются полным
-`offline_replay` bundle с состоянием профиля и всеми сетевыми фикстурами, так
-что строгий replay receipt по методологии для этого сеанса пока недоступен.
-Контрольный запуск Mimic без VM-инструментирования также отправил два POST,
-получил `600010` и оставил поле пустым.
+After the fixes, one new run of Mimic sent a second POST with a body of 85,580 bytes, but received `600010` and an empty field. This is not equivalent to a successful Chrome server response. The saved HAR and VM trace is not a complete `offline_replay` bundle with the profile state and all network fixtures, so a strict replay receipt according to the methodology for this session is not yet available. A test run of Mimic without VM instrumentation also sent two POSTs, received `600010` and left the field blank.
 
-## Точная подстановка результатов Chrome в VM
+## Exact substitution of Chrome results in VM
 
-По запросу пользователя проведён временный диагностический эксперимент без
-изменений production Mimic. Ранее сохранённая успешная трасса Chrome содержала
-только первые 16 байт каждого `getImageData`; поэтому в уже запущенном headful
-Chrome 152 выполнен один целевой захват полных массивов. Он сам получил токен.
-Все 16 хешей результатов побайтно совпали с хешами предыдущей успешной трассы.
-Полные массивы сохранены только в игнорируемом
-`.build/flickr-audit/chrome152-success-frozen-20260926/chrome152-success-full-render.json`;
-SHA256 внесён в локальную квитанцию.
+At the user's request, a temporary diagnostic experiment was conducted without changing production Mimic. The previously saved successful Chrome trace contained only the first 16 bytes of each `getImageData` result. One targeted capture of the complete arrays was therefore made in the already running headful Chrome 152; that run also obtained a token. All 16 result hashes matched those from the previous successful trace byte for byte. Complete arrays are stored only in the ignored `.build/flickr-audit/chrome152-success-frozen-20260926/chrome152-success-full-render.json`; its SHA256 was added to the local receipt.
 
-Диагностический `getImageData` в Mimic сначала создавал обычный результат,
-затем заменял его `data` на массив Chrome с тем же типом, размером холста и
-размером чтения. Совпали все 16 вызовов, пропусков не было. Инструментирование
-`ImageData.prototype.data` показало, что перед вторым POST VM действительно
-читает эти массивы. Дополнительные счётчики зафиксировали один
-`transferToImageBitmap`, после которого пиксели снова читаются через
-`getImageData`; `WebGL.readPixels`, `toDataURL`, `toBlob` и `convertToBlob` на
-наблюдённом пути не вызывались.
+Mimic's diagnostic `getImageData` first produced the normal result, then replaced its `data` with a Chrome array of the same type, canvas size and read size. All 16 calls coincided, there were no passes. Instrumentation of `ImageData.prototype.data` showed that before the second POST the VM actually reads these arrays. Additional counters recorded one `transferToImageBitmap`, after which the pixels are read again via `getImageData`; `WebGL.readPixels`, `toDataURL`, `toBlob` and `convertToBlob` were not called on the observed path.
 
-С точными Chrome-массивами Mimic отправил два POST, но получил `600010` и
-оставил поле пустым. Второй ответ имел `text/html` и 2 444 байта в одном
-захвате. Контроль Mimic с той же обёрткой, но без замены данных, тоже отправил
-два POST, получил короткий `text/html` (2 444–2 480 байт) и `600010`.
-Успешный HAR обычного Chrome содержит второй ответ `text/html` размером 4 208
-байт. MIME сам по себе не означает успех: полезная нагрузка ответа закодирована.
+With the exact Chrome arrays, Mimic sent two POSTs but received `600010` and left the field blank. The second response had `text/html` and 2444 bytes in one capture. The Mimic control with the same wrapper, but without data replacement, also sent two POSTs, received a short `text/html` (2,444–2,480 bytes) and `600010`. A successful HAR of regular Chrome contains a second `text/html` response of 4,208 bytes. MIME itself does not mean success: the response payload is encoded.
 
-Последующее прямое сравнение объектов VM **до** упаковки обоих POST в живых
-Chrome и Mimic описано в [отчёте по prepack-данным](flickr-turnstile-prepack-2026-09-26.md).
-Оно обнаружило отказ Trusted Types внутри одного блока проб, целиком
-отсутствующий блок Mimic и другие структурные расхождения. Проверка с точными
-пикселями ниже не заменяет этого сравнения и не является успешным серверным
-вердиктом.
+A subsequent direct comparison of VM objects **before** packing both POSTs in live Chrome and Mimic is described in the [prepack data report](flickr-turnstile-prepack-2026-09-26.md). It found a Trusted Types failure within one probe block, an entirely missing Mimic block, and other structural differences. The exact-pixel experiment above does not replace that comparison and did not yield a successful server response.
 
-Это исключает **точность этих 16 пиксельных readback как достаточное одиночное
-исправление** для текущего отказа. VM не останавливается до второго POST; код
-`600010` появляется после его ответа. Не доказано, что пиксели вообще не входят
-в тело POST или не используются сервером вместе с другими полями. Состав и
-критерий серверной проверки остаются неизвестными. Попытка подставить вместе
-HTML iframe и первый `/fo` из старого HAR в новый сеанс не дошла до первого
-запроса, поэтому такой частичный replay не даёт детерминированного сравнения
-тел при изменении одного графического значения.
+This rules out **exactness of these 16 pixel readbacks as a sufficient fix by itself** for the current failure. The VM continues through the second POST; `600010` appears after its response. The experiment does not prove that pixels are absent from the POST body or unused by the server alongside other fields. The contents and criteria of the server check remain unknown. Substituting both the iframe HTML and first `/fo` response from an older HAR into a new session did not reach the first request, so this partial replay cannot compare request bodies deterministically while changing one graphics value.
