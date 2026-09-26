@@ -148,3 +148,29 @@ Mimic transport can deliver admitted responses, and several conspicuous
 environment differences are individually insufficient explanations. A claim
 that a particular remaining field causes rejection still requires a controlled
 counterfactual or server-side decision evidence.
+
+## Legacy event divergence and focused fix
+
+The saved failing Mimic bootstrap from the later crossover experiment exercises
+legacy mouse event creation. An instrumented offline replay recorded 313 events
+in Mimic versus 1055 in Chrome 152. At the divergence, Chrome observes
+`initMouseEvent` and `screenY`; Mimic subsequently reads `screenY` from an
+undefined value. A separate local document oracle confirms that Mimic rejected
+`MouseEvent`, `MouseEvents`, `UIEvent`, and `UIEvents` with `NotSupportedError`.
+Chrome creates the corresponding events.
+
+The shared fix supports these creation aliases and initializes the existing
+canonical UI/mouse event slots. Event reinitialization resets cancellation and
+propagation flags and is ignored during dispatch. Focused tests cover aliases,
+parameters, defaults, integer conversion, reinitialization, dispatch protection,
+and callable arity. Existing CustomEvent and platform member-order tests pass.
+
+After the fix, the same instrumented bootstrap records 1051 events, with the
+mouse-event failure removed. Sequence alignment leaves one four-event Chrome
+block involving indexed string access and `charCodeAt`; this remaining difference
+has not been classified. Both uninstrumented saved bootstrap cases also reach
+the next navigation without page exceptions. These are offline semantic results;
+no fresh Google server acceptance is established by this checkpoint.
+
+Private captures, recorder output, and oracle scripts remain in ignored `.build`.
+No historical challenge answers or cookies are added to public source.

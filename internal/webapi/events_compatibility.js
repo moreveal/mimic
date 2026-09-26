@@ -528,6 +528,20 @@
     accessor(UIEvent.prototype, name, function () {
       return uiSlots.get(this)?.[name];
     });
+  const initializeUIEvent = (event, type, bubbles, cancelable, view, detail) => {
+    if (!uiSlots.has(event)) throw new TypeError('Illegal invocation');
+    if (stateOf(event).dispatching) return false;
+    Event.prototype.initEvent.call(event, type, bubbles, cancelable);
+    uiSlots.set(event, { view, detail: Number(detail) >> 0, which: 0 });
+    return true;
+  };
+  member(
+    UIEvent.prototype,
+    'initUIEvent',
+    function (type, bubbles = false, cancelable = false, view = null, detail = 0) {
+      initializeUIEvent(this, type, bubbles, cancelable, view, detail);
+    },
+  );
   class MouseEvent extends UIEvent {
     constructor(type, init = {}) {
       super(type, init);
@@ -548,6 +562,45 @@
       mouseSlots.set(this, data);
     }
   }
+  member(
+    MouseEvent.prototype,
+    'initMouseEvent',
+    function (
+      type,
+      bubbles = false,
+      cancelable = false,
+      view = null,
+      detail = 0,
+      screenX = 0,
+      screenY = 0,
+      clientX = 0,
+      clientY = 0,
+      ctrlKey = false,
+      altKey = false,
+      shiftKey = false,
+      metaKey = false,
+      button = 0,
+      relatedTarget = null,
+    ) {
+      if (!mouseSlots.has(this)) throw new TypeError('Illegal invocation');
+      if (!initializeUIEvent(this, type, bubbles, cancelable, view, detail)) return;
+      mouseSlots.set(this, {
+        screenX: Number(screenX) >> 0,
+        screenY: Number(screenY) >> 0,
+        clientX: Number(clientX) >> 0,
+        clientY: Number(clientY) >> 0,
+        ctrlKey: !!ctrlKey,
+        altKey: !!altKey,
+        shiftKey: !!shiftKey,
+        metaKey: !!metaKey,
+        button: (Number(button) << 16) >> 16,
+        buttons: 0,
+        movementX: 0,
+        movementY: 0,
+        relatedTarget,
+      });
+    },
+  );
   for (const name of [
     'screenX',
     'screenY',

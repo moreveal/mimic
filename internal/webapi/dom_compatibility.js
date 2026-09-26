@@ -1605,9 +1605,14 @@ const compatibilityElementState = {};
     value: function (type, bubbles = false, cancelable = false) {
       const s = eventSlots.get(this);
       if (!s) throw new TypeError('Illegal invocation');
+      if (s.dispatching) return;
       s.type = String(type);
       s.bubbles = !!bubbles;
       s.cancelable = !!cancelable;
+      s.defaultPrevented = false;
+      s.stopped = false;
+      s.immediate = false;
+      s.target = null;
     },
     writable: true,
     configurable: true,
@@ -1622,6 +1627,12 @@ const compatibilityElementState = {};
           return new Event('');
         case 'customevent':
           return new CustomEvent('');
+        case 'uievent':
+        case 'uievents':
+          return new UIEvent('');
+        case 'mouseevent':
+        case 'mouseevents':
+          return new MouseEvent('');
         default:
           throw new DOMException('The provided event type is invalid.', 'NotSupportedError');
       }
