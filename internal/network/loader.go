@@ -620,7 +620,9 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	res := Response{Status: raw.StatusCode, Headers: raw.Header.Clone(), Body: body, URL: r.URL, Partial: partial, Duration: monotime.Since(start), EncodedBodySize: encodedBodySize, Protocol: raw.Proto, TransportTiming: timingSnapshot, BrowserVisibleTiming: browserTiming}
 	res.policyOwner, res.policySnapshot = l.resourcePolicy, r.policySnapshot
 	acceptedBefore := l.session.ClientHints(r.URL)
-	l.session.AcceptClientHints(r.URL, res.Headers.Get("Accept-CH"))
+	// Accept-CH is a list-valued field. Header.Get reads only the first
+	// field line, while opt-in must include every line of this response.
+	l.session.AcceptClientHints(r.URL, strings.Join(res.Headers.Values("Accept-CH"), ","))
 	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
 		l.cookies.SetFromResponse(r.URL, res.Headers, r.cookieContext())
 	}

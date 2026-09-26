@@ -8,8 +8,37 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/trace"
 )
+
+func TestResponseClientHintFieldLinesApplyToNextRequest(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/accept" {
+			w.Header().Add("Accept-CH", "Sec-CH-Prefers-Color-Scheme")
+			w.Header().Add("Accept-CH", "Sec-CH-UA-Arch")
+			w.Header().Add("Accept-CH", "Sec-CH-UA-Bitness")
+		} else {
+			if got := r.Header.Get("Sec-CH-UA-Arch"); got != `"x86"` {
+				t.Errorf("accepted architecture = %q, want x86", got)
+			}
+			if got := r.Header.Get("Sec-CH-UA-Bitness"); got != `"64"` {
+				t.Errorf("accepted bitness = %q, want 64", got)
+			}
+		}
+		_, _ = io.WriteString(w, "ok")
+	}))
+	defer server.Close()
+	environment := testEnvironment()
+	environment.Platform.Architecture = "x86_64"
+	loader := NewLoaderWithSession(func() state.Environment { return environment }, NewCookieStore(), NewSessionState(), trace.New())
+	for _, path := range []string{"/accept", "/probe"} {
+		u, _ := url.Parse(server.URL + path)
+		if _, err := loader.Load(context.Background(), Request{URL: u, Initiator: Navigation}); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
 
 func TestClientHintsRedirectRechecksDocumentPermission(t *testing.T) {
 	child := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

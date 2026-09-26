@@ -96,7 +96,9 @@ func (t *criticalCHTransport) RoundTrip(req *http.Request) (*http.Response, erro
 	t.requests = append(t.requests, req.Clone(req.Context()))
 	headers := make(http.Header)
 	if len(t.requests) == 1 {
-		headers.Set("Accept-CH", "Sec-CH-UA-Arch, Sec-CH-UA-Bitness")
+		// List-valued response headers may be split across field lines.
+		// A leading unsupported hint must not hide later accepted hints.
+		headers["Accept-Ch"] = []string{"Sec-CH-Prefers-Color-Scheme", "Sec-CH-UA-Arch", "Sec-CH-UA-Bitness"}
 		headers.Set("Critical-CH", "Sec-CH-UA-Arch")
 	}
 	headers.Set("Cache-Control", "no-store")
