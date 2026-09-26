@@ -829,7 +829,8 @@ const installNavigatorCapabilities = () => {
   const deliverLocation = (request) => {
     if (!locations.has(request.id)) return;
     const status = permission('geolocation');
-    if (!state('geolocationPolicy')) {
+    // Blink reports insecure-origin denial before Permissions Policy denial.
+    if (secureContext && !state('geolocationPolicy')) {
       finishLocation(
         request,
         create('GeolocationPositionError', {

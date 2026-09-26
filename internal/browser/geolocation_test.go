@@ -8,6 +8,17 @@ import (
 	"testing"
 )
 
+func TestGeolocationInsecureOriginPrecedesPermissionsPolicy(t *testing.T) {
+	parallelBrowserTest(t)
+	p := testPage(t)
+	value, err := p.Evaluate(context.Background(), `Promise.all(['getCurrentPosition','watchPosition'].map(method => new Promise(resolve => {
+	 navigator.geolocation[method](() => resolve(false), error => resolve(error.code === 1 && error.message === 'Only secure origins are allowed (see: https://goo.gl/Y0ZkNV).'));
+	}))).then(values => values.every(Boolean))`)
+	if err != nil || value != true {
+		t.Fatalf("insecure geolocation: %#v, %v", value, err)
+	}
+}
+
 func TestGeolocationOverrideCoordinatesAndSubscriptions(t *testing.T) {
 	parallelBrowserTest(t)
 	p := testPage(t)
