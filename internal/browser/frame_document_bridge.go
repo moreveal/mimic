@@ -48,6 +48,20 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		return r.val(r.crossValueSeq), nil
 	}))
 	host["installFrameReferenceBridge"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		// A restored snapshot must supply the complete current bridge contract.
+		// Reject corrupt bindings before indexing arguments or retaining callbacks,
+		// so initialization can discard the snapshot and retry the ordinary path.
+		if len(args) != 9 {
+			return nil, fmt.Errorf("frame reference bridge requires 9 arguments, got %d", len(args))
+		}
+		for index, callback := range args[:8] {
+			if r.runtime.TypeOf(callback) != "function" {
+				return nil, fmt.Errorf("frame reference bridge callback %d is not a function", index)
+			}
+		}
+		if r.runtime.TypeOf(args[8]) != "object" {
+			return nil, fmt.Errorf("frame reference bridge requires a parent-node intrinsic holder")
+		}
 		if r.frameReferenceImport != nil {
 			return nil, fmt.Errorf("frame reference bridge already installed")
 		}
