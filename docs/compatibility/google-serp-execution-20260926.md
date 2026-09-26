@@ -174,3 +174,24 @@ no fresh Google server acceptance is established by this checkpoint.
 
 Private captures, recorder output, and oracle scripts remain in ignored `.build`.
 No historical challenge answers or cookies are added to public source.
+
+## First post-fix live checkpoint
+
+The remaining four-event alignment gap is enumeration and serialization of the
+`runtime` key on Chrome's `chrome` object. This is the component extension surface
+already covered by the successful extension-free Chrome control above. It does
+not establish a missing core browser API and does not justify a fabricated
+`chrome.runtime` implementation.
+
+One fresh post-fix Mimic crossover run used the Mimic HTTP/3 forwarding bridge
+for both document requests, static Mimic request headers, and cookies generated
+by its own fresh context. The second `/search` response was HTTP 200 over HTTP/3,
+contained nine result headings and a search container, and did not contain the
+usual unusual-traffic text. The response was captured before browser commit;
+this checkpoint establishes returned search HTML, not full rendered-page behavior.
+No saved Chrome challenge answer or session cookie was substituted.
+
+This single live success is consistent with the removed legacy event divergence,
+but does not prove stable acceptance or isolate that fix as the sole cause.
+Private evidence and binary/script hashes are retained under `.build`, including
+`legacy-event-live-success-manifest.json`.
