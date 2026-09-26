@@ -8676,7 +8676,8 @@
     };
   };
   const chromeCSI = function csi() {
-    return { startE: performance.timeOrigin, onloadT: 0, pageT: performance.now(), tran: 15 };
+    const values = host.legacyChromeCSI();
+    return { startE: values[0], onloadT: values[1], pageT: values[2], tran: values[3] };
   };
   const chromeApp = {
     isInstalled: false,

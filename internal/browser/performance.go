@@ -424,6 +424,26 @@ func (p *performanceTimeline) install(host map[string]any) {
 
 func (r *Realm) initPerformance(host map[string]any) {
 	p := r.agent.Page()
+	// The legacy Chrome extension reports microsecond elapsed time and integral
+	// epoch stamps. It does not read the script-visible, clamped Performance API.
+	host["legacyChromeCSI"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		onload := int64(0)
+		if stamp := r.performanceLifecycleTimes["domContentLoadedEventEnd"]; !stamp.IsZero() {
+			onload = stamp.UnixMilli()
+		}
+		elapsed := r.performanceClockNow().Sub(r.performanceOrigin).Microseconds()
+		if elapsed < 0 {
+			elapsed = 0
+		}
+		transition := 15
+		switch r.navigationType {
+		case "reload":
+			transition = 16
+		case "back_forward":
+			transition = 6
+		}
+		return r.val([]any{r.performanceOrigin.UnixMilli(), onload, float64(elapsed) / 1000, transition}), nil
+	})
 	r.performance = newPerformanceTimeline(r.runtime, r.scheduler, func() float64 {
 		return p.performanceClamper.now(r.performanceClockNow(), r.performanceOrigin, r.securityState().crossOriginIsolated)
 	}, r.performanceNavigationID, false)

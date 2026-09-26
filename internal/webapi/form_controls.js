@@ -548,12 +548,12 @@
       return 'textarea';
     },
   });
+  define('HTMLTextAreaElement', 'textLength', {
+    get() {
+      return this.value.length;
+    },
+  });
   for (const name of ['HTMLInputElement', 'HTMLTextAreaElement']) {
-    define(name, 'textLength', {
-      get() {
-        return this.value.length;
-      },
-    });
     for (const property of ['selectionStart', 'selectionEnd', 'selectionDirection'])
       define(name, property, {
         get() {

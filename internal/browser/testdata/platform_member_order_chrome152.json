@@ -1,0 +1,137 @@
+{
+  "provenance": {
+    "version": "152.0.7977.82",
+    "captured": "2026-09-26",
+    "source": "Headful frozen Chrome, local intercepted HTTPS fixture"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "GamepadButton": [
+          "pressed",
+          "touched",
+          "value",
+          "constructor"
+        ],
+        "MutationObserver": [
+          "disconnect",
+          "observe",
+          "takeRecords",
+          "constructor"
+        ],
+        "DataTransferItem": [
+          "kind",
+          "type",
+          "getAsFile",
+          "getAsString",
+          "webkitGetAsEntry",
+          "getAsFileSystemHandle",
+          "constructor"
+        ],
+        "PluginArray": [
+          "length",
+          "item",
+          "namedItem",
+          "refresh",
+          "constructor"
+        ],
+        "PaymentResponse": [
+          "requestId",
+          "methodName",
+          "details",
+          "shippingAddress",
+          "shippingOption",
+          "payerName",
+          "payerEmail",
+          "payerPhone",
+          "onpayerdetailchange",
+          "complete",
+          "retry",
+          "toJSON",
+          "constructor"
+        ],
+        "AudioNode": [
+          "context",
+          "numberOfInputs",
+          "numberOfOutputs",
+          "channelCount",
+          "channelCountMode",
+          "channelInterpretation",
+          "connect",
+          "disconnect",
+          "constructor"
+        ],
+        "USB": [
+          "onconnect",
+          "ondisconnect",
+          "getDevices",
+          "constructor",
+          "requestDevice"
+        ],
+        "HTMLInputElement": [
+          "accept",
+          "alt",
+          "autocomplete",
+          "defaultChecked",
+          "checked",
+          "dirName",
+          "disabled",
+          "form",
+          "files",
+          "formAction",
+          "formEnctype",
+          "formMethod",
+          "formNoValidate",
+          "formTarget",
+          "height",
+          "indeterminate",
+          "list",
+          "max",
+          "maxLength",
+          "min",
+          "minLength",
+          "multiple",
+          "name",
+          "pattern",
+          "placeholder",
+          "readOnly",
+          "required",
+          "size",
+          "src",
+          "step",
+          "type",
+          "defaultValue",
+          "value",
+          "valueAsDate",
+          "valueAsNumber",
+          "width",
+          "willValidate",
+          "validity",
+          "validationMessage",
+          "labels",
+          "selectionStart",
+          "selectionEnd",
+          "selectionDirection",
+          "align",
+          "useMap",
+          "webkitdirectory",
+          "incremental",
+          "popoverTargetElement",
+          "popoverTargetAction",
+          "checkValidity",
+          "reportValidity",
+          "select",
+          "setCustomValidity",
+          "setRangeText",
+          "setSelectionRange",
+          "showPicker",
+          "stepDown",
+          "stepUp",
+          "webkitEntries",
+          "createValueRange",
+          "constructor"
+        ]
+      }
+    }
+  }
+}

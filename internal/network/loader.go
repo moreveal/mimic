@@ -413,6 +413,21 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		if d.Response != nil {
 			res := *d.Response
 			res.Synthetic = true
+			// Fulfillment replaces transport, not the browser's response handling.
+			// Its wait is observable even though no socket phases took place.
+			if res.BrowserVisibleTiming.Phases == nil {
+				begin := float64(requestStarted.Sub(r.operationStarted)) / float64(time.Millisecond)
+				end := float64(monotime.Since(r.operationStarted)) / float64(time.Millisecond)
+				res.BrowserVisibleTiming.Phases = map[string]float64{
+					"dnsStart": begin, "dnsEnd": begin,
+					"tcpConnectStart": begin, "tcpConnectEnd": begin,
+					"tlsHandshakeStart": begin, "tlsHandshakeEnd": begin,
+					"requestHeadersSent": begin, "firstResponseByte": end,
+					"responseComplete": end,
+				}
+				res.Duration = monotime.Since(requestStarted)
+			}
+			l.acceptResponseState(r, res)
 			return l.after(ctx, r, res)
 		}
 	}
@@ -620,12 +635,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	res := Response{Status: raw.StatusCode, Headers: raw.Header.Clone(), Body: body, URL: r.URL, Partial: partial, Duration: monotime.Since(start), EncodedBodySize: encodedBodySize, Protocol: raw.Proto, TransportTiming: timingSnapshot, BrowserVisibleTiming: browserTiming}
 	res.policyOwner, res.policySnapshot = l.resourcePolicy, r.policySnapshot
 	acceptedBefore := l.session.ClientHints(r.URL)
-	// Accept-CH is a list-valued field. Header.Get reads only the first
-	// field line, while opt-in must include every line of this response.
-	l.session.AcceptClientHints(r.URL, strings.Join(res.Headers.Values("Accept-CH"), ","))
-	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
-		l.cookies.SetFromResponse(r.URL, res.Headers, r.cookieContext())
-	}
+	l.acceptResponseState(r, res)
 	if missing := criticalClientHintsForRestart(l.env(), r, res, acceptedBefore); len(missing) != 0 {
 		releaseAcquisition()
 		releaseAcquisition = func() {}
@@ -645,6 +655,16 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	releaseAcquisition()
 	releaseAcquisition = func() {}
 	return l.after(ctx, r, res)
+}
+
+// Both received and fulfilled responses update the context-owned session.
+// Cache reads do not repeat these effects (notably Set-Cookie expiry/order).
+func (l *Loader) acceptResponseState(r Request, res Response) {
+	// Accept-CH is list-valued; all field lines contribute to the opt-in.
+	l.session.AcceptClientHints(r.URL, strings.Join(res.Headers.Values("Accept-CH"), ","))
+	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
+		l.cookies.SetFromResponse(r.URL, res.Headers, r.cookieContext())
+	}
 }
 
 func (l *Loader) cachedResponse(request Request, policy PolicySnapshot) (Response, bool, error) {
