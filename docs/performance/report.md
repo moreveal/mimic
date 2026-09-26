@@ -3177,3 +3177,38 @@ two seconds after closing all Contexts. The 100 sampled profiles selected 37
 different renderers. Compared with the four-recipe sample, the larger catalog
 did not materially change process RSS; both results are diagnostic snapshots,
 not a controlled A/B peak-memory comparison. The temporary probe was removed.
+
+## 2026-09-26 -- Flickr Turnstile borrowed DOM getter
+
+The live Flickr workload previously reached a Turnstile token about 40–44 s
+after navigation started. A per-realm transaction count attributed roughly
+60,000 reads of a foreign function's `call` property and 60,000 calls of the
+borrowed `Node.parentNode` getter to the main Page. These crossed the realm
+bridge even when the receiver was a local canonical DOM wrapper. The main
+realm spent about 22 s in the corresponding frame transactions in the
+instrumented baseline; this is inclusive timing, not an additive CPU total.
+
+Commit `e0449ff` recognizes the exact native getter after binding finalization
+and invokes it on a local DOM receiver in that receiver's realm. It also uses
+the internal ShadowRoot slot in the native style admission walk, avoiding
+prototype-chain traversal through foreign proxies. Cross-origin checks and
+foreign receivers retain the ordinary bridge path. Focused cross-realm,
+snapshot and shadow-style tests passed; the full local suite was not run.
+
+Two subsequent uninstrumented live runs obtained both Turnstile POSTs and a
+730-character token at about 20.7 s after navigation began. The main document
+response took about 0.7 s, response-to-DOMContentLoaded about 8 s, iframe
+response-to-first-POST about 1.4 s, and first-POST-response-to-second-POST
+about 8.5 s. This is a large improvement, but still slower than the preserved
+successful Chrome reload HAR, where document-to-second-POST was about 4.8 s.
+The HAR was a warm Chrome reload, so its absolute time is not a matched A/B
+baseline.
+
+The remaining instrumented workload attributed about 6.2 s / 63,699 frame
+transactions to the main realm, dominated by live reads of the foreign
+`Function.prototype.call` property. A Turnstile iframe realm spent about
+5.0 s / 32,166 transactions plus 1.0 s / 10,047 foreign global reads. The
+first-to-second-POST gap remained about 8–9 s. These live mutable reads cannot
+be memoized without an invalidation model that preserves cross-realm writes;
+the residual latency is not a network-response delay. Temporary diagnostics
+were removed from production source after measurement.
