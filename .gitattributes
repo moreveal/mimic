@@ -14,3 +14,27 @@ benchmark/** -text
 
 # Retain third-party legal texts, including upstream whitespace.
 tools/release/licenses/*.txt -whitespace
+
+# GitHub language statistics should describe maintained source, not payloads.
+# Keep handwritten fixtures visible in diffs while excluding them from stats.
+**/testdata/** linguist-detectable=false
+**/fixtures/** linguist-detectable=false
+compatibility/corpus/** linguist-detectable=false
+compatibility/captures/** linguist-detectable=false
+benchmark/results/** linguist-detectable=false
+benchmark/runs/** linguist-detectable=false
+docs/** linguist-documentation=true
+
+# Third-party source and bundled libraries are not Mimic's authored code.
+third_party/** linguist-vendored=true
+**/vendor/** linguist-vendored=true
+internal/webapi/*_vendor.js linguist-vendored=true
+
+# This directory mixes generated projections, captures and a handwritten adapter.
+# Exclude its payloads without hiding the adapter's changes in GitHub diffs.
+chrome/*/generated/** linguist-detectable=false
+chrome/*/generated/bundle_data.go linguist-generated=true
+chrome/*/generated/surface.js linguist-generated=true
+internal/cdp/protocol_*_generated.go linguist-generated=true
+internal/cdp/protocol_inventory_generated.json linguist-generated=true
+docs/cdp-coverage-generated.md linguist-generated=true
