@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"sort"
 	"strings"
 
@@ -260,6 +261,44 @@ func (s *Server) disposeContext(id string) error {
 func (s *session) handleTarget(m message, p map[string]any) (any, bool, error) {
 	empty := map[string]any{}
 	switch m.Method {
+	case "Browser.setPermission", "Browser.grantPermissions", "Browser.resetPermissions":
+		permissionContext := s.server.Context
+		if id := stringValue(p["browserContextId"]); id != "" {
+			var ok bool
+			permissionContext, ok = s.server.Browser.Context(id)
+			if !ok {
+				return nil, true, fmt.Errorf("Failed to find context with id %s", id)
+			}
+		}
+		if m.Method == "Browser.resetPermissions" {
+			permissionContext.ResetPermissions()
+			return empty, true, nil
+		}
+		origin := stringValue(p["origin"])
+		if origin != "" {
+			parsed, err := url.Parse(origin)
+			if err != nil || parsed.Host == "" || (parsed.Scheme != "https" && parsed.Scheme != "http") {
+				return nil, true, fmt.Errorf("Invalid permission origin")
+			}
+			origin = parsed.Scheme + "://" + parsed.Host
+		}
+		if m.Method == "Browser.setPermission" {
+			descriptor, _ := p["permission"].(map[string]any)
+			if stringValue(descriptor["name"]) != "geolocation" {
+				return nil, true, fmt.Errorf("Only geolocation permission emulation is supported")
+			}
+			return empty, true, permissionContext.SetPermission(origin, "geolocation", stringValue(p["setting"]))
+		}
+		permissions, _ := p["permissions"].([]any)
+		grants := []string{}
+		for _, value := range permissions {
+			if stringValue(value) != "geolocation" {
+				return nil, true, fmt.Errorf("Only geolocation permission emulation is supported")
+			}
+			grants = append(grants, "geolocation")
+		}
+		permissionContext.GrantPermissions(origin, grants)
+		return empty, true, nil
 	case "Browser.getVersion":
 		return map[string]any{"protocolVersion": "1.3", "product": s.server.Browser.String(), "revision": s.server.Browser.Compatibility().Version().ChromiumCommit, "userAgent": s.page.Environment().Navigator().UserAgent, "jsVersion": "virtual"}, true, nil
 	case "Browser.setDownloadBehavior":

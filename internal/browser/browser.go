@@ -137,6 +137,9 @@ type Context struct {
 	storage          map[string]map[string]string
 	capabilities     map[string]*originCapabilities
 	pages            map[string]*Page
+
+	permissionDefaults        map[string]string // Context-wide CDP overrides; protected by mu.
+	permissionDefaultFallback string
 }
 
 func (c *Context) NewPage() (*Page, error) {

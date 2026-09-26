@@ -1,9 +1,9 @@
 package browser
 
-// AI features use the self allowlist by default. Reuse the existing header and
-// iframe allow parsers, intersecting each ancestor's policy rather than reading
-// only the requesting document's Permissions-Policy header.
-func (r *Realm) aiPolicyAllows(feature string) bool {
+// Features such as AI and geolocation use the self allowlist by default.
+// Intersect the existing header and iframe allow parsers at each ancestor,
+// rather than reading only the requesting document's Permissions-Policy.
+func (r *Realm) selfPolicyAllows(feature string) bool {
 	if r.inactive || r.origin == "null" {
 		return false
 	}
@@ -15,7 +15,7 @@ func (r *Realm) aiPolicyAllows(feature string) bool {
 		return true
 	}
 	parent := frame.parent.Realm
-	if !parent.aiPolicyAllows(feature) {
+	if !parent.selfPolicyAllows(feature) {
 		return false
 	}
 	if list, declared := hintPolicy(parent.securityState().permissionsPolicy, parent.origin)[feature]; declared && !hintAllows(list, r.origin) {

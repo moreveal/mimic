@@ -605,6 +605,7 @@ const installNavigatorCapabilities = () => {
     'payment-handler': 'payment_handler',
   };
   globalThis.__mimicPermissionChanged = (name) => {
+    if (name === 'geolocation') refreshLocations();
     for (const status of permissionStatuses) {
       const s = slots.get(status);
       if (s.name === name && s.lastState !== permission(name)) {
@@ -803,35 +804,125 @@ const installNavigatorCapabilities = () => {
     true,
   );
   let watchID = 0;
-  const watches = new Set();
+  const locations = new Map();
+  let cachedPosition = null;
+  const positionFrom = (provider) => {
+    const coords = create('GeolocationCoordinates', {
+      latitude: provider.latitude,
+      longitude: provider.longitude,
+      accuracy: provider.accuracy,
+      altitude: provider.altitude ?? null,
+      altitudeAccuracy: provider.altitudeAccuracy ?? null,
+      heading: provider.heading ?? null,
+      speed: provider.speed ?? null,
+    });
+    return create('GeolocationPosition', { coords, timestamp: Date.now() });
+  };
+  const finishLocation = (request, value, failed) => {
+    if (!locations.has(request.id)) return;
+    if (request.timer !== null) clearTimeout(request.timer);
+    request.timer = null;
+    if (!request.watch) locations.delete(request.id);
+    const callback = failed ? request.failure : request.success;
+    if (typeof callback === 'function') callback(value);
+  };
+  const deliverLocation = (request) => {
+    if (!locations.has(request.id)) return;
+    const status = permission('geolocation');
+    if (!state('geolocationPolicy')) {
+      finishLocation(
+        request,
+        create('GeolocationPositionError', {
+          code: 1,
+          message: 'Geolocation has been disabled in this document by permissions policy.',
+        }),
+        true,
+      );
+      locations.delete(request.id);
+      return;
+    }
+    if (secureContext && status === 'prompt' && state('presentation').mode === 'headful') return;
+    if (!secureContext || status !== 'granted') {
+      finishLocation(
+        request,
+        create('GeolocationPositionError', {
+          code: 1,
+          message: !secureContext
+            ? 'Only secure origins are allowed (see: https://goo.gl/Y0ZkNV).'
+            : 'User denied Geolocation',
+        }),
+        true,
+      );
+      locations.delete(request.id);
+      return;
+    }
+    if (
+      cachedPosition &&
+      request.maximumAge > 0 &&
+      Date.now() - slots.get(cachedPosition).timestamp <= request.maximumAge
+    ) {
+      finishLocation(request, cachedPosition, false);
+      return;
+    }
+    if (request.timeout === 0) {
+      finishLocation(
+        request,
+        create('GeolocationPositionError', { code: 3, message: 'Timeout expired' }),
+        true,
+      );
+      return;
+    }
+    const provider = state('geolocation');
+    if (
+      provider &&
+      provider.latitude !== null &&
+      provider.longitude !== null &&
+      provider.accuracy !== null
+    ) {
+      cachedPosition = positionFrom(provider);
+      finishLocation(request, cachedPosition, false);
+    } else {
+      finishLocation(
+        request,
+        create('GeolocationPositionError', {
+          code: 2,
+          message: provider ? '' : 'Position unavailable',
+        }),
+        true,
+      );
+    }
+  };
+  const refreshLocations = () => {
+    cachedPosition = null;
+    for (const request of locations.values()) setTimeout(() => deliverLocation(request), 0);
+  };
+  globalThis.__mimicGeolocationChanged = refreshLocations;
   const locate = (success, failure, options, watch) => {
     if (typeof success !== 'function')
       throw new TypeError('The callback provided as parameter 1 is not a function.');
-    const id = ++watchID;
-    if (watch) watches.add(id);
-    if (
-      secureContext &&
-      permission('geolocation') === 'prompt' &&
-      state('presentation').mode === 'headful'
-    )
-      return id;
-    setTimeout(() => {
-      if (watch && !watches.has(id)) return;
-      if (typeof failure === 'function') {
-        const denied = !secureContext || permission('geolocation') !== 'granted';
-        failure(
-          create('GeolocationPositionError', {
-            code: denied ? 1 : 2,
-            message: !secureContext
-              ? 'Only secure origins are allowed (see: https://goo.gl/Y0ZkNV).'
-              : denied
-                ? 'User denied Geolocation'
-                : 'Position unavailable',
-          }),
-        );
-      }
-    }, 0);
-    return id;
+    if (failure != null && typeof failure !== 'function')
+      throw new TypeError('The callback provided as parameter 2 is not a function.');
+    options = options ?? {};
+    const bounded = (value, fallback) =>
+      value === undefined
+        ? fallback
+        : Math.min(4294967295, Math.max(0, Math.trunc(Number(value) || 0)));
+    const enableHighAccuracy = !!options.enableHighAccuracy;
+    const maximumAge = bounded(options.maximumAge, 0);
+    const timeout = bounded(options.timeout, 4294967295);
+    const request = {
+      id: ++watchID,
+      success,
+      failure,
+      watch,
+      enableHighAccuracy,
+      maximumAge,
+      timeout,
+      timer: null,
+    };
+    locations.set(request.id, request);
+    setTimeout(() => deliverLocation(request), 0);
+    return request.id;
   };
   method('Geolocation', 'getCurrentPosition', (_s, success, failure, options) => {
     locate(success, failure, options, false);
@@ -840,8 +931,34 @@ const installNavigatorCapabilities = () => {
     locate(success, failure, options, true),
   );
   method('Geolocation', 'clearWatch', (_s, id) => {
-    watches.delete(Number(id));
+    id = Number(id) >> 0;
+    const request = locations.get(id);
+    if (request && request.timer !== null) clearTimeout(request.timer);
+    locations.delete(id);
   });
+  attribute('GeolocationPosition', 'coords', (s) => s.coords);
+  attribute('GeolocationPosition', 'timestamp', (s) => s.timestamp);
+  for (const name of [
+    'latitude',
+    'longitude',
+    'accuracy',
+    'altitude',
+    'altitudeAccuracy',
+    'heading',
+    'speed',
+  ])
+    attribute('GeolocationCoordinates', name, (s) => s[name]);
+  const coordinatesJSON = (s) =>
+    Object.fromEntries(
+      ['accuracy', 'latitude', 'longitude', 'altitude', 'altitudeAccuracy', 'heading', 'speed'].map(
+        (name) => [name, s[name]],
+      ),
+    );
+  method('GeolocationCoordinates', 'toJSON', coordinatesJSON);
+  method('GeolocationPosition', 'toJSON', (s) => ({
+    coords: coordinatesJSON(slots.get(s.coords)),
+    timestamp: s.timestamp,
+  }));
   attribute('GeolocationPositionError', 'code', (s) => s.code);
   attribute('GeolocationPositionError', 'message', (s) => s.message);
 

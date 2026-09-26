@@ -30,6 +30,8 @@ type documentSecurity struct {
 	permissionsPolicy   string
 }
 type Page struct {
+	geolocationOverride *GeolocationOverride // Protected by mu; persists across navigation.
+
 	previewObservers   map[*PreviewSubscription]struct{} // command-owned; nil without viewers
 	debuggers          map[*Debugger]struct{}
 	inputIgnored       bool   // Page command owned; survives document navigation.

@@ -13,13 +13,14 @@ import (
 // Origin capability state is owned by the context, shared by its same-origin
 // pages, and discarded with it. JS wrappers never own a second permission store.
 type originCapabilities struct {
-	permissions   map[string]string
-	clipboard     string
-	preventSilent bool
-	login         string
-	buckets       map[string]*storageBucket
-	locks         []*capabilityLock
-	sequence      int64
+	permissionFallback string
+	permissions        map[string]string
+	clipboard          string
+	preventSilent      bool
+	login              string
+	buckets            map[string]*storageBucket
+	locks              []*capabilityLock
+	sequence           int64
 }
 
 type storageBucket struct {
@@ -43,11 +44,14 @@ func (c *Context) originCapabilities(origin string) *originCapabilities {
 	}
 	s := c.capabilities[origin]
 	if s == nil {
-		s = &originCapabilities{permissions: map[string]string{}}
+		s = &originCapabilities{permissions: map[string]string{}, permissionFallback: c.permissionDefaultFallback}
 		for name, value := range c.env.Permissions {
 			if value == "default" {
 				value = "prompt"
 			}
+			s.permissions[name] = value
+		}
+		for name, value := range c.permissionDefaults {
 			s.permissions[name] = value
 		}
 		c.capabilities[origin] = s
@@ -61,8 +65,73 @@ func (c *Context) SetPermission(origin, name, value string) error {
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	if origin == "" {
+		if c.permissionDefaults == nil {
+			c.permissionDefaults = map[string]string{}
+		}
+		c.permissionDefaults[name] = value
+		for existing := range c.capabilities {
+			c.setPermissionLocked(existing, name, value)
+		}
+		return nil
+	}
 	c.setPermissionLocked(origin, name, value)
 	return nil
+}
+
+// ResetPermissions restores the selected environment's permission defaults.
+func (c *Context) ResetPermissions() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.permissionDefaults = nil
+	c.permissionDefaultFallback = ""
+	for origin, state := range c.capabilities {
+		state.permissionFallback = ""
+		for name := range state.permissions {
+			value := c.env.Permissions[name]
+			if value == "" || value == "default" {
+				value = "prompt"
+			}
+			c.setPermissionLocked(origin, name, value)
+		}
+	}
+}
+
+// GrantPermissions replaces the allowlist and denies other permission names.
+func (c *Context) GrantPermissions(origin string, permissions []string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	grants := map[string]bool{}
+	for _, name := range permissions {
+		grants[name] = true
+	}
+	apply := func(origin string) {
+		state := c.originCapabilities(origin)
+		state.permissionFallback = "denied"
+		for name := range state.permissions {
+			if !grants[name] {
+				c.setPermissionLocked(origin, name, "denied")
+			}
+		}
+		for name := range grants {
+			c.setPermissionLocked(origin, name, "granted")
+		}
+	}
+	if origin != "" {
+		apply(origin)
+		return
+	}
+	c.permissionDefaultFallback = "denied"
+	c.permissionDefaults = map[string]string{}
+	for name := range c.env.Permissions {
+		c.permissionDefaults[name] = "denied"
+	}
+	for name := range grants {
+		c.permissionDefaults[name] = "granted"
+	}
+	for existing := range c.capabilities {
+		apply(existing)
+	}
 }
 
 func (c *Context) setPermissionLocked(origin, name, value string) {
@@ -102,10 +171,31 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		e := p.environmentView()
 		switch strarg(a, 0) {
+		case "geolocationPolicy":
+			return r.val(r.selfPolicyAllows("geolocation")), nil
+		case "geolocation":
+			p.mu.RLock()
+			location := p.geolocationOverride
+			p.mu.RUnlock()
+			if location == nil {
+				return r.val(nil), nil
+			}
+			values := map[string]any{}
+			for name, value := range map[string]*float64{
+				"latitude": location.Latitude, "longitude": location.Longitude, "accuracy": location.Accuracy,
+				"altitude": location.Altitude, "altitudeAccuracy": location.AltitudeAccuracy,
+				"heading": location.Heading, "speed": location.Speed,
+			} {
+				values[name] = nil
+				if value != nil {
+					values[name] = *value
+				}
+			}
+			return r.val(values), nil
 		case "ai":
 			// The selected runtime has no model service. Exposure is independent
 			// of backend availability; creation still respects document policy.
-			return r.val(map[string]any{"available": false, "policyAllowed": r.aiPolicyAllows(strarg(a, 1))}), nil
+			return r.val(map[string]any{"available": false, "policyAllowed": r.selfPolicyAllows(strarg(a, 1))}), nil
 		case "feature":
 			enabled, ok := e.Features[strarg(a, 1)]
 			return r.val(!ok || enabled), nil
@@ -265,6 +355,9 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 				return r.val("denied"), nil
 			}
 			value := s.permissions[strarg(a, 1)]
+			if value == "" {
+				value = s.permissionFallback
+			}
 			if value == "" {
 				value = "prompt"
 			}

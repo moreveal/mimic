@@ -90,6 +90,7 @@ type Realm struct {
 	inputDispatcher          engine.Value
 	protocolScroll           engine.Value
 	permissionNotifier       engine.Value
+	geolocationNotifier      engine.Value
 	networkStateEvent        engine.Value
 	agent                    ExecutionAgent
 	runtime                  engine.Runtime
@@ -2326,8 +2327,9 @@ func (r *Realm) installBindingsOnOwner() error {
 	r.documentStreamEvent = r.runtime.Get("__mimicDocumentStreamEvent")
 	r.inputDispatcher = r.runtime.Get("__mimicDispatchInput")
 	r.permissionNotifier = r.runtime.Get("__mimicPermissionChanged")
+	r.geolocationNotifier = r.runtime.Get("__mimicGeolocationChanged")
 	r.networkStateEvent = r.runtime.Get("__mimicNetworkStateEvent")
-	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicImportMetaResolveFactory;delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicNetworkStateEvent;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
+	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicImportMetaResolveFactory;delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicGeolocationChanged;delete globalThis.__mimicNetworkStateEvent;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
 		return err
 	}
 	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")

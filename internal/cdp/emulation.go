@@ -4,12 +4,32 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/moreveal/mimic/internal/browser"
 	"github.com/moreveal/mimic/internal/state"
 )
 
 func (s *session) handleEmulation(method string, p map[string]any) (any, bool, error) {
 	empty := map[string]any{}
 	switch method {
+	case "Emulation.setGeolocationOverride", "Page.setGeolocationOverride":
+		location := &browser.GeolocationOverride{}
+		for name, field := range map[string]**float64{
+			"latitude": &location.Latitude, "longitude": &location.Longitude,
+			"accuracy": &location.Accuracy, "altitude": &location.Altitude,
+			"altitudeAccuracy": &location.AltitudeAccuracy, "heading": &location.Heading,
+			"speed": &location.Speed,
+		} {
+			if raw, exists := p[name]; exists {
+				value, ok := raw.(float64)
+				if !ok {
+					return nil, true, fmt.Errorf("Invalid geolocation")
+				}
+				*field = &value
+			}
+		}
+		return empty, true, s.page.SetGeolocationOverride(location)
+	case "Emulation.clearGeolocationOverride", "Page.clearGeolocationOverride":
+		return empty, true, s.page.SetGeolocationOverride(nil)
 	case "Emulation.setDeviceMetricsOverride":
 		if mobile, _ := p["mobile"].(bool); mobile {
 			return nil, true, fmt.Errorf("Mobile viewport emulation is not supported")
